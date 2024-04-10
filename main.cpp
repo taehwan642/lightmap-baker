@@ -10,9 +10,12 @@ int main()
     dataManager->Load("...");
     std::shared_ptr<Renderer::Renderer> renderer = std::make_shared<Renderer::Renderer>();
     renderer->Initialize();
-    renderer->Update();
     std::shared_ptr<Light::Radiosity> radiosity = std::make_shared<Light::Radiosity>();
-    renderer->Render();
+    while (!renderer->WindowShouldClose()) 
+    {
+        renderer->Update();
+        renderer->Render();
+    }
     renderer->Exit();
     dataManager->Save("...");
 
