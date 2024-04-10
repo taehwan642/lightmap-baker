@@ -11,8 +11,8 @@ void LightmapBaker::Renderer::Renderer::Initialize()
 
 void LightmapBaker::Renderer::Renderer::Update()
 {
-    ImGuiUpdate();
     GLFWUpdate();
+    ImGuiUpdate();
 }
 
 void LightmapBaker::Renderer::Renderer::Render()
@@ -20,8 +20,8 @@ void LightmapBaker::Renderer::Renderer::Render()
     glClearColor(0.3f, 0.3f, 0.3f, 1);
     glClear(GL_COLOR_BUFFER_BIT);
 
-    ImGuiRender();
     GLFWRender();
+    ImGuiRender();
 
     glfwSwapBuffers(glfwWindow);
 }
@@ -33,8 +33,8 @@ bool LightmapBaker::Renderer::Renderer::WindowShouldClose()
 
 void LightmapBaker::Renderer::Renderer::Exit()
 {
-    ImGuiExit();
     GLFWExit();
+    ImGuiExit();
 }
 
 void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
@@ -48,7 +48,9 @@ void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scanc
 void LightmapBaker::Renderer::Renderer::GLFWInitialize()
 {
     glfwInit();
-    glfwWindow = glfwCreateWindow(640, 480, "Lightmap Baker", 0, 0);
+    glfwWindow = glfwCreateWindow(SCW, SCH, "Lightmap Baker", 0, 0);
+
+    quadricObj = gluNewQuadric();
 
     glfwMakeContextCurrent(glfwWindow);
 
@@ -65,7 +67,33 @@ void LightmapBaker::Renderer::Renderer::GLFWUpdate()
 
 void LightmapBaker::Renderer::Renderer::GLFWRender()
 {
+    // Perspective Camera Setting
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
 
+    float aspect_ratio = ((float)SCW) / SCH;
+    gluPerspective(80, (1.f / aspect_ratio), 0.0f, 200.0f); // FOV, ratio, zNear, zFar
+
+    // Model Setting
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
+
+    static float angle = 0.0f;
+    angle += 0.5f;
+    camAngleX += 0.5f;
+
+    //glRotatef(angle, 0, 0, 1);
+
+    float camX = distance * -sinf(camAngleX * (M_PI / 180)) * cosf((camAngleY) * (M_PI / 180));
+    float camY = distance * -sinf((camAngleY) * (M_PI / 180));
+    float camZ = -distance * cosf((camAngleX) * (M_PI / 180)) * cosf((camAngleY) * (M_PI / 180));
+    gluLookAt(camX, camY, camZ,
+        0.0, 0.0, 0.0,    // Look at point
+        0.0, 1.0, 0.0);   // Up vector
+
+    glColor3f(1, 1, 0);
+    gluQuadricDrawStyle(quadricObj, GLU_LINE);
+    gluCylinder(quadricObj, 10, 10, 30, 10, 10);
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWExit()

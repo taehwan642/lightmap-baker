@@ -3,7 +3,7 @@
 #include "Light/Light.hpp"
 #include "Renderer/Renderer.hpp"
 
-int main() 
+int main()
 {
     using namespace LightmapBaker;
     std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
