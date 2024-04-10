@@ -3,6 +3,20 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
+{
+    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
+    {
+        glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+    // Test key input for changing state
+    else if (key == GLFW_KEY_0 && action == GLFW_PRESS)
+    {
+        // change state
+        // Renderer's toolState.toolState.UpdateCurrentState(ToolStateEnum::...);
+    }
+}
+
 void LightmapBaker::Renderer::Renderer::Initialize()
 {
     GLFWInitialize();
@@ -37,18 +51,10 @@ void LightmapBaker::Renderer::Renderer::Exit()
     ImGuiExit();
 }
 
-void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
-{
-    if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
-    {
-        glfwSetWindowShouldClose(window, GLFW_TRUE);
-    }
-}
-
 void LightmapBaker::Renderer::Renderer::GLFWInitialize()
 {
     glfwInit();
-    glfwWindow = glfwCreateWindow(SCW, SCH, "Lightmap Baker", 0, 0);
+    glfwWindow = glfwCreateWindow(screenWidth, screenHeight, "Lightmap Baker", 0, 0);
 
     quadricObj = gluNewQuadric();
 
@@ -67,29 +73,27 @@ void LightmapBaker::Renderer::Renderer::GLFWUpdate()
 
 void LightmapBaker::Renderer::Renderer::GLFWRender()
 {
-    // Perspective Camera Setting
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    float aspect_ratio = ((float)SCW) / SCH;
-    gluPerspective(80, (1.f / aspect_ratio), 0.0f, 200.0f); // FOV, ratio, zNear, zFar
+    float aspect_ratio = ((float)screenWidth) / screenHeight;
+    gluPerspective(80, (1.f / aspect_ratio), 0.0f, 200.0f);
 
-    // Model Setting
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
     static float angle = 0.0f;
     angle += 0.5f;
-    camAngleX += 0.5f;
+    cameraAngleX += 0.5f;
 
     //glRotatef(angle, 0, 0, 1);
 
-    float camX = distance * -sinf(camAngleX * (M_PI / 180)) * cosf((camAngleY) * (M_PI / 180));
-    float camY = distance * -sinf((camAngleY) * (M_PI / 180));
-    float camZ = -distance * cosf((camAngleX) * (M_PI / 180)) * cosf((camAngleY) * (M_PI / 180));
+    float camX = cameraDistance * -sinf(cameraAngleX * (M_PI / 180)) * cosf((cameraAngleY) * (M_PI / 180));
+    float camY = cameraDistance * -sinf((cameraAngleY) * (M_PI / 180));
+    float camZ = -cameraDistance * cosf((cameraAngleX) * (M_PI / 180)) * cosf((cameraAngleY) * (M_PI / 180));
     gluLookAt(camX, camY, camZ,
-        0.0, 0.0, 0.0,    // Look at point
-        0.0, 1.0, 0.0);   // Up vector
+        0.0, 0.0, 0.0,
+        0.0, 1.0, 0.0);
 
     glColor3f(1, 1, 0);
     gluQuadricDrawStyle(quadricObj, GLU_LINE);
@@ -107,8 +111,8 @@ void LightmapBaker::Renderer::Renderer::ImGuiInitialize()
     IMGUI_CHECKVERSION();
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;     // Enable Keyboard Controls
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; 
 
     ImGui::StyleColorsDark();
 
@@ -122,11 +126,7 @@ void LightmapBaker::Renderer::Renderer::ImGuiUpdate()
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
 
-    ImGui::Begin("Controller");
-    if (ImGui::Button("Calculate Radiosity"))
-    {
-    }
-    ImGui::End();
+    toolState.RenderCurrentUI();
 }
 
 void LightmapBaker::Renderer::Renderer::ImGuiRender()

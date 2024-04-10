@@ -51,6 +51,9 @@
     <ClInclude Include="Dependency\imgui\imstb_textedit.h">
       <Filter>imgui</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\ToolState.hpp">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data\DataManager.cpp">
@@ -83,6 +86,9 @@
     </ClCompile>
     <ClCompile Include="Dependency\imgui\imgui_widgets.cpp">
       <Filter>imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\ToolState.cpp">
+      <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

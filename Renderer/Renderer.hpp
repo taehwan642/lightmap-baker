@@ -5,6 +5,7 @@
 #include "GLFW/glfw3.h"
 #include "GLUT/glut.h"
 
+#include "ToolState.hpp"
 
 namespace LightmapBaker
 {
@@ -13,14 +14,17 @@ namespace Renderer
     class Renderer
     {
     private:
-        GLFWwindow* glfwWindow;
+        const int screenWidth = 640;
+        const int screenHeight = 480;
+        GLFWwindow* glfwWindow = nullptr;
+
         const char* glslVersion = "#version 130";
 
-        // ~~ Camera Settings ~~ //
         GLUquadric* quadricObj = nullptr;
-        float camAngleX = 0;
-        float camAngleY = 0;
-        float distance = 100;
+
+        float cameraAngleX = 0;
+        float cameraAngleY = 0;
+        float cameraDistance = 100;
 
         void GLFWInitialize();
         void GLFWUpdate();
@@ -33,10 +37,10 @@ namespace Renderer
         void ImGuiRender();
         void ImGuiExit();
 
-    public:
-        const int SCW = 640;
-        const int SCH = 480;
+    private:
+        ToolState toolState;
 
+    public:
         void Initialize();
         void Update();
         void Render();
