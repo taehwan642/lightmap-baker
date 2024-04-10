@@ -1,5 +1,4 @@
 #pragma once
-#include <memory>
 #include <GLFW/glfw3.h>
 
 namespace LightmapBaker
@@ -10,6 +9,19 @@ namespace Renderer
     {
     private:
         GLFWwindow* glfwWindow;
+        const char* glslVersion = "#version 130";
+
+        void GLFWInitialize();
+        void GLFWUpdate();
+        void GLFWRender();
+        void GLFWExit();
+
+    private:
+        void ImGuiInitialize();
+        void ImGuiUpdate();
+        void ImGuiRender();
+        void ImGuiExit();
+
     public:
         void Initialize();
         void Update();

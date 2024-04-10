@@ -146,12 +146,28 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Data\DataManager.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Light\Light.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\DataManager.hpp" />
+    <ClInclude Include="Dependency\imgui\imconfig.h" />
+    <ClInclude Include="Dependency\imgui\imgui.h" />
+    <ClInclude Include="Dependency\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="Dependency\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Dependency\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Dependency\imgui\imgui_internal.h" />
+    <ClInclude Include="Dependency\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Dependency\imgui\imstb_textedit.h" />
+    <ClInclude Include="Dependency\imgui\imstb_truetype.h" />
     <ClInclude Include="Light\Light.hpp" />
     <ClInclude Include="Renderer\Renderer.hpp" />
   </ItemGroup>
