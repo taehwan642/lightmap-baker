@@ -57,7 +57,7 @@ void LightmapBaker::Renderer::Renderer::GLFWInitialize()
     glfwWindow = glfwCreateWindow(screenWidth, screenHeight, "Lightmap Baker", 0, 0);
 
     quadricObj = gluNewQuadric();
-    glfwGetCursorPos(glfwWindow, &mousePositionX, &mousePositionY);
+    glfwGetCursorPos(glfwWindow, &mousePosX, &mousePosY);
 
     glfwMakeContextCurrent(glfwWindow);
 
@@ -75,15 +75,15 @@ void LightmapBaker::Renderer::Renderer::GLFWUpdate()
     glfwGetCursorPos(glfwWindow, &xpos, &ypos);
     if (glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
     {
-        cameraAngleX += mousePositionX - xpos;
-        cameraAngleY += mousePositionY - ypos;
+        cameraAngleX += mousePosX - xpos;
+        cameraAngleY += mousePosY - ypos;
 
         const double polarCap = (M_PI / 2.0f - 0.00001f) * (180 / M_PI);
         if (cameraAngleY > polarCap) cameraAngleY = polarCap;
         if (cameraAngleY < -polarCap) cameraAngleY = -polarCap;
     }
-    mousePositionX = xpos;
-    mousePositionY = ypos;
+    mousePosX = xpos;
+    mousePosY = ypos;
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWRender()
