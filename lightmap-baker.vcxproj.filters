@@ -54,6 +54,9 @@
     <ClInclude Include="Renderer\ToolState.hpp">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Mesh.hpp">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data\DataManager.cpp">
@@ -88,6 +91,9 @@
       <Filter>imgui</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\ToolState.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Mesh.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
