@@ -57,6 +57,7 @@ void LightmapBaker::Renderer::Renderer::GLFWInitialize()
     glfwWindow = glfwCreateWindow(screenWidth, screenHeight, "Lightmap Baker", 0, 0);
 
     quadricObj = gluNewQuadric();
+    glfwGetCursorPos(glfwWindow, &mousePosX, &mousePosY);
 
     glfwMakeContextCurrent(glfwWindow);
 
@@ -69,6 +70,20 @@ void LightmapBaker::Renderer::Renderer::GLFWInitialize()
 void LightmapBaker::Renderer::Renderer::GLFWUpdate()
 {
     glfwPollEvents();
+
+    static double xpos, ypos;
+    glfwGetCursorPos(glfwWindow, &xpos, &ypos);
+    if (glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
+    {
+        cameraAngleX += mousePosX - xpos;
+        cameraAngleY += mousePosY - ypos;
+
+        const double polarCap = (M_PI / 2.0f - 0.00001f) * (180 / M_PI);
+        if (cameraAngleY > polarCap) cameraAngleY = polarCap;
+        if (cameraAngleY < -polarCap) cameraAngleY = -polarCap;
+    }
+    mousePosX = xpos;
+    mousePosY = ypos;
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWRender()
@@ -82,12 +97,6 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    static float angle = 0.0f;
-    angle += 0.5f;
-    cameraAngleX += 0.5f;
-
-    //glRotatef(angle, 0, 0, 1);
-
     float camX = cameraDistance * -sinf(cameraAngleX * (M_PI / 180)) * cosf((cameraAngleY) * (M_PI / 180));
     float camY = cameraDistance * -sinf((cameraAngleY) * (M_PI / 180));
     float camZ = -cameraDistance * cosf((cameraAngleX) * (M_PI / 180)) * cosf((cameraAngleY) * (M_PI / 180));
@@ -95,7 +104,7 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
         0.0, 0.0, 0.0,
         0.0, 1.0, 0.0);
 
-    glColor3f(1, 1, 0);
+    glColor3f(1, 1, 1);
     gluQuadricDrawStyle(quadricObj, GLU_LINE);
     gluCylinder(quadricObj, 10, 10, 30, 10, 10);
 }
@@ -112,7 +121,7 @@ void LightmapBaker::Renderer::Renderer::ImGuiInitialize()
     ImGui::CreateContext();
     ImGuiIO& io = ImGui::GetIO(); (void)io;
     io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;
-    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad; 
+    io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;
 
     ImGui::StyleColorsDark();
 

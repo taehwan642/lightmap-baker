@@ -1,6 +1,7 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <math.h>
+#include <iostream>
 
 #include "GLFW/glfw3.h"
 #include "GLUT/glut.h"
@@ -25,6 +26,9 @@ namespace Renderer
         float cameraAngleX = 0;
         float cameraAngleY = 0;
         float cameraDistance = 100;
+
+        double mousePosX = 0;
+        double mousePosY = 0;
 
         void GLFWInitialize();
         void GLFWUpdate();
