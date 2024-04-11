@@ -65,11 +65,20 @@ void LightmapBaker::Renderer::Renderer::GLFWInitialize()
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
+
+    __int64 periodFrequency;
+    QueryPerformanceFrequency((LARGE_INTEGER*)&periodFrequency);
+    QueryPerformanceCounter((LARGE_INTEGER*)&lastDeltaQuery);
+    QueryScale = 1.0 / (double)periodFrequency;
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWUpdate()
 {
     glfwPollEvents();
+
+    QueryPerformanceCounter((LARGE_INTEGER*)&curDeltaQuery);
+    deltaTime = (double)(curDeltaQuery - lastDeltaQuery) * QueryScale;
+    lastDeltaQuery = curDeltaQuery;
 
     static double xpos, ypos;
     glfwGetCursorPos(glfwWindow, &xpos, &ypos);
@@ -92,7 +101,7 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glLoadIdentity();
 
     float aspect_ratio = ((float)screenWidth) / screenHeight;
-    gluPerspective(80, (1.f / aspect_ratio), 0.0f, 200.0f);
+    gluPerspective(80, (1.f / aspect_ratio), 0.01f, 200.0f);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -105,6 +114,11 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
         0.0, 1.0, 0.0);
 
     glColor3f(1, 1, 1);
+
+    static float angle = 0;
+    angle += 360 * deltaTime;
+    glRotatef(angle, 1, 0, 0);
+
     gluQuadricDrawStyle(quadricObj, GLU_LINE);
     gluCylinder(quadricObj, 10, 10, 30, 10, 10);
 }
