@@ -27,8 +27,8 @@ namespace Renderer
         float cameraAngleY = 0;
         float cameraDistance = 100;
 
-        double mousePosX = 0;
-        double mousePosY = 0;
+        double mousePositionX = 0;
+        double mousePositionY = 0;
 
         void GLFWInitialize();
         void GLFWUpdate();
