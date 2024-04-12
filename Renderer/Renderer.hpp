@@ -27,6 +27,11 @@ namespace Renderer
         float cameraAngleY = 0;
         float cameraDistance = 100;
 
+        __int64 currentDeltaQuery;
+        __int64 lastDeltaQuery;
+        double deltaTime = 0;
+        double queryScale = 0;
+
         double mousePositionX = 0;
         double mousePositionY = 0;
 
