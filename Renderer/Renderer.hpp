@@ -37,16 +37,18 @@ namespace Renderer
         void ImGuiRender();
         void ImGuiExit();
 
-    private:
-        ToolState toolState;
-
     public:
         void Initialize();
         void Update();
         void Render();
         bool WindowShouldClose();
         void Exit();
+
+    public:
+        /*static*/ ToolState toolState;
     };
     void KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
+
+    //ToolState Renderer::toolState = ToolState();
 }
 }

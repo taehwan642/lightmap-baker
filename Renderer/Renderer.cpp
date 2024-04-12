@@ -14,6 +14,7 @@ void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scanc
     {
         // change state
         // Renderer's toolState.toolState.UpdateCurrentState(ToolStateEnum::...);
+        //Renderer::toolState.UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION);
     }
 }
 
@@ -118,6 +119,8 @@ void LightmapBaker::Renderer::Renderer::ImGuiInitialize()
 
     ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
     ImGui_ImplOpenGL3_Init(glslVersion);
+
+    toolState.UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
 }
 
 void LightmapBaker::Renderer::Renderer::ImGuiUpdate()
