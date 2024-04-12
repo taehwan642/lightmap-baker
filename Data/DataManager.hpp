@@ -1,5 +1,7 @@
 #pragma once
 #include <string>
+#include <list>
+#include "../Renderer/Mesh.hpp"
 
 namespace LightmapBaker
 {
@@ -10,7 +12,7 @@ namespace Data
     private:
     public:
         void Save(std::string path);
-        void Load(std::string path);
+        std::list<std::shared_ptr<Renderer::Mesh>> Load(std::string path);
     };
 }
 }
