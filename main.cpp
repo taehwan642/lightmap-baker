@@ -12,7 +12,7 @@ int main()
     renderer->Initialize();
     std::shared_ptr<Light::Radiosity> radiosity = std::make_shared<Light::Radiosity>();
 
-    const int TARGET_FPS = 15;
+    const int TARGET_FPS = 60;
     double lasttime = glfwGetTime();
     while (!renderer->WindowShouldClose()) 
     {
