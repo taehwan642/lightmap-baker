@@ -8,7 +8,7 @@ void LightmapBaker::Data::DataManager::Save(std::string path)
     std::cout << "Save " << " " << path << std::endl;
 }
 
-std::list<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Data::DataManager::Load(std::string path)
+std::list<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Data::DataManager::Load(const std::string& path)
 {
     std::cout << "Load " << " " << path << std::endl;
 
