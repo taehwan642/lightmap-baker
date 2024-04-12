@@ -13,15 +13,15 @@ int main()
     std::shared_ptr<Light::Radiosity> radiosity = std::make_shared<Light::Radiosity>();
 
     const int TARGET_FPS = 60;
-    double lasttime = glfwGetTime();
+    double lastTime = glfwGetTime();
     while (!renderer->WindowShouldClose()) 
     {
         renderer->Update();
         renderer->Render();
-        while (glfwGetTime() < lasttime + 1.0 / TARGET_FPS) {
+        while (glfwGetTime() < lastTime + 1.0 / TARGET_FPS) {
             // Put the thread to sleep, yield, or simply do nothing
         }
-        lasttime += 1.0 / TARGET_FPS;
+        lastTime += 1.0 / TARGET_FPS;
     }
     renderer->Exit();
     dataManager->Save("...");

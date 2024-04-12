@@ -69,30 +69,30 @@ void LightmapBaker::Renderer::Renderer::GLFWInitialize()
     __int64 periodFrequency;
     QueryPerformanceFrequency((LARGE_INTEGER*)&periodFrequency);
     QueryPerformanceCounter((LARGE_INTEGER*)&lastDeltaQuery);
-    QueryScale = 1.0 / (double)periodFrequency;
+    queryScale = 1.0 / (double)periodFrequency;
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWUpdate()
 {
     glfwPollEvents();
 
-    QueryPerformanceCounter((LARGE_INTEGER*)&curDeltaQuery);
-    deltaTime = (double)(curDeltaQuery - lastDeltaQuery) * QueryScale;
-    lastDeltaQuery = curDeltaQuery;
+    QueryPerformanceCounter((LARGE_INTEGER*)&currentDeltaQuery);
+    deltaTime = (double)(currentDeltaQuery - lastDeltaQuery) * queryScale;
+    lastDeltaQuery = currentDeltaQuery;
 
-    static double xpos, ypos;
-    glfwGetCursorPos(glfwWindow, &xpos, &ypos);
+    static double xPos, yPos;
+    glfwGetCursorPos(glfwWindow, &xPos, &yPos);
     if (glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
     {
-        cameraAngleX += mousePositionX - xpos;
-        cameraAngleY += mousePositionY - ypos;
+        cameraAngleX += mousePositionX - xPos;
+        cameraAngleY += mousePositionY - yPos;
 
         const double polarCap = (M_PI / 2.0f - 0.00001f) * (180 / M_PI);
         if (cameraAngleY > polarCap) cameraAngleY = polarCap;
         if (cameraAngleY < -polarCap) cameraAngleY = -polarCap;
     }
-    mousePositionX = xpos;
-    mousePositionY = ypos;
+    mousePositionX = xPos;
+    mousePositionY = yPos;
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWRender()
@@ -100,8 +100,8 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    float aspect_ratio = ((float)screenWidth) / screenHeight;
-    gluPerspective(80, (1.f / aspect_ratio), 0.01f, 200.0f);
+    float aspectRatio = ((float)screenWidth) / screenHeight;
+    gluPerspective(80, (1.f / aspectRatio), 0.01f, 200.0f);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
