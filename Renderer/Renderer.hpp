@@ -17,6 +17,8 @@ namespace Renderer
     private:
         const int screenWidth = 640;
         const int screenHeight = 480;
+        int framebufferWidth;
+        int framebufferHeight;
         GLFWwindow* glfwWindow = nullptr;
 
         const char* glslVersion = "#version 130";
@@ -57,6 +59,6 @@ namespace Renderer
         void Exit();
     };
     void KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
-    void framebuffer_size_callback(GLFWwindow* window, int width, int height);
+    void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
 }
 }

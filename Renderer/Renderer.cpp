@@ -17,7 +17,7 @@ void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scanc
     }
 }
 
-void LightmapBaker::Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+void LightmapBaker::Renderer::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
 }
@@ -67,7 +67,10 @@ void LightmapBaker::Renderer::Renderer::GLFWInitialize()
     glfwMakeContextCurrent(glfwWindow);
 
     glfwSetKeyCallback(glfwWindow, KeyCallBack);
-    glfwSetFramebufferSizeCallback(glfwWindow, framebuffer_size_callback);
+
+    glfwGetFramebufferSize(glfwWindow, &framebufferWidth, &framebufferHeight);
+    glViewport(0, 0, framebufferWidth, framebufferHeight);
+    glfwSetFramebufferSizeCallback(glfwWindow, FramebufferSizeCallback);
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
@@ -106,7 +109,7 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    float aspectRatio = ((float)screenWidth) / screenHeight;
+    float aspectRatio = screenWidth / (float)screenHeight;
     gluPerspective(80, (1.f / aspectRatio), 0.01f, 200.0f);
 
     glMatrixMode(GL_MODELVIEW);
