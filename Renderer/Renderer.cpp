@@ -17,6 +17,11 @@ void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scanc
     }
 }
 
+void LightmapBaker::Renderer::framebuffer_size_callback(GLFWwindow* window, int width, int height)
+{
+    glViewport(0, 0, width, height);
+}
+
 void LightmapBaker::Renderer::Renderer::Initialize()
 {
     GLFWInitialize();
@@ -62,6 +67,7 @@ void LightmapBaker::Renderer::Renderer::GLFWInitialize()
     glfwMakeContextCurrent(glfwWindow);
 
     glfwSetKeyCallback(glfwWindow, KeyCallBack);
+    glfwSetFramebufferSizeCallback(glfwWindow, framebuffer_size_callback);
 
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
