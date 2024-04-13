@@ -45,10 +45,8 @@ namespace Renderer
         void Exit();
 
     public:
-        /*static*/ ToolState toolState;
+        ToolState toolState;
     };
     void KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
-
-    //ToolState Renderer::toolState = ToolState();
 }
 }

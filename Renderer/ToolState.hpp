@@ -25,12 +25,15 @@ namespace Renderer
 		void RenderAfterLightmapBakeUI();
 
 	private:
-		float progressValue = 0.7f;
-		void ProgressUI(float& _value, std::string _text);
-		void AfterProgressButtonUI(std::string _text);
+		float radiosityCalculationProgressValue = 0.0f;
+		float lightmapBakeProgressValue = 0.0f;
+		int lightMapQuality = 1;
+		void ProgressUI(const float& progress, const std::string& text);
+		void CompareUI();
 
 	public:
 		void UpdateCurrentState(const ToolStateEnum& state);
+		void Update();
 		void RenderCurrentUI();
 	};
 }
