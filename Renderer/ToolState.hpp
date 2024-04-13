@@ -1,3 +1,6 @@
+#pragma once
+#include <string>
+
 namespace LightmapBaker
 {
 namespace Renderer
@@ -21,8 +24,16 @@ namespace Renderer
 		void RenderProgressLightmapBakeUI();
 		void RenderAfterLightmapBakeUI();
 
+	private:
+		float radiosityCalculationProgressValue = 0.0f;
+		float lightmapBakeProgressValue = 0.0f;
+		int lightMapQuality = 1;
+		void ProgressUI(const float& progress, const std::string& text);
+		void CompareUI();
+
 	public:
 		void UpdateCurrentState(const ToolStateEnum& state);
+		void Update();
 		void RenderCurrentUI();
 	};
 }
