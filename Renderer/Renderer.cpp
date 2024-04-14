@@ -117,8 +117,8 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    float aspectRatio = screenWidth / (float)screenHeight;
-    gluPerspective(80, (1.f / aspectRatio), 0.01f, cameraDistance * 2);
+    float aspectRatio = screenHeight / (float)screenWidth;
+    gluPerspective(80, aspectRatio, 0.01f, cameraDistance * 2);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
