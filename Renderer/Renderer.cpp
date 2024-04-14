@@ -51,12 +51,16 @@ void LightmapBaker::Renderer::Renderer::Exit()
     ImGuiExit();
 }
 
+void LightmapBaker::Renderer::Renderer::AddRenderMesh(const std::shared_ptr<Mesh>& mesh)
+{
+    renderMeshList.push_back(mesh);
+}
+
 void LightmapBaker::Renderer::Renderer::GLFWInitialize()
 {
     glfwInit();
     glfwWindow = glfwCreateWindow(screenWidth, screenHeight, "Lightmap Baker", 0, 0);
 
-    quadricObj = gluNewQuadric();
     glfwGetCursorPos(glfwWindow, &mousePositionX, &mousePositionY);
 
     glfwMakeContextCurrent(glfwWindow);
@@ -119,16 +123,24 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
 
     glColor3f(1, 1, 1);
 
-    static float angle = 0;
-    angle += 360 * deltaTime;
-    glRotatef(angle, 1, 0, 0);
+    /*static float angle = 0;
+    angle += 10 * deltaTime;
+    glRotatef(angle, 1, 0, 0);*/
 
-    gluQuadricDrawStyle(quadricObj, GLU_LINE);
-    gluCylinder(quadricObj, 10, 10, 30, 10, 10);
+    for (int i = 0; i < renderMeshList.size(); ++i)
+    {
+        renderMeshList[i]->Render();
+    }
+
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWExit()
 {
+    for (int i = 0; i < renderMeshList.size(); ++i)
+    {
+        renderMeshList[i]->Destroy();
+    }
+
     glfwDestroyWindow(glfwWindow);
     glfwTerminate();
 }

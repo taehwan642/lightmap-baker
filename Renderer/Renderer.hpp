@@ -2,11 +2,13 @@
 #define _USE_MATH_DEFINES
 #include <math.h>
 #include <iostream>
+#include <vector>
 
 #include "GLFW/glfw3.h"
 #include "GLUT/glut.h"
 
 #include "ToolState.hpp"
+#include "Mesh.hpp"
 
 namespace LightmapBaker
 {
@@ -23,8 +25,6 @@ namespace Renderer
 
         const char* glslVersion = "#version 130";
 
-        GLUquadric* quadricObj = nullptr;
-
         float cameraAngleX = 0;
         float cameraAngleY = 0;
         float cameraDistance = 100;
@@ -36,6 +36,8 @@ namespace Renderer
 
         double mousePositionX = 0;
         double mousePositionY = 0;
+
+        std::vector<std::shared_ptr<Mesh>> renderMeshList;
 
         void GLFWInitialize();
         void GLFWUpdate();
@@ -54,6 +56,7 @@ namespace Renderer
         void Render();
         bool WindowShouldClose();
         void Exit();
+        void AddRenderMesh(const std::shared_ptr<Mesh>& mesh);
 
     public:
         ToolState toolState;
