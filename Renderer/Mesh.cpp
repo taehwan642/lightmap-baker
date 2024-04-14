@@ -10,7 +10,6 @@ LightmapBaker::Renderer::Mesh::Mesh()
 	emission = glm::vec3(0, 0, 0);
 }
 
-LightmapBaker::Renderer::Mesh::Mesh(const std::vector<glm::vec3>& vertices, const std::vector<int>& indices, const glm::vec3& normal, const int& patchLevel, const int& elementLevel, const float& area, const glm::vec3& reflectance, const glm::vec3& emission)
 LightmapBaker::Renderer::Mesh::Mesh(const std::vector<glm::vec3>& vertices, const std::vector<GLubyte>& indices, const glm::vec3& normal, const int& patchLevel, const int& elementLevel, const float& area, const glm::vec3& reflectance, const glm::vec3& emission)
 {
 	this->vertices = vertices;
