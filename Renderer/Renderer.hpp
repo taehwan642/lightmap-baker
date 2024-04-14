@@ -27,7 +27,6 @@ namespace Renderer
 
         float cameraAngleX = 0;
         float cameraAngleY = 0;
-        float cameraDistance = 100;
 
         __int64 currentDeltaQuery;
         __int64 lastDeltaQuery;
@@ -51,6 +50,8 @@ namespace Renderer
         void ImGuiExit();
 
     public:
+        static float cameraDistance;
+
         void Initialize();
         void Update();
         void Render();
@@ -63,5 +64,6 @@ namespace Renderer
     };
     void KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
     void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
+    void ScrollCallback(GLFWwindow* window, double xoffset, double yoffset);
 }
 }

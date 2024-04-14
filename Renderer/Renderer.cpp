@@ -3,6 +3,8 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+float LightmapBaker::Renderer::Renderer::cameraDistance = 500.0f;
+
 void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
@@ -14,6 +16,11 @@ void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scanc
 void LightmapBaker::Renderer::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
+}
+
+void LightmapBaker::Renderer::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
+{
+    LightmapBaker::Renderer::Renderer::cameraDistance += yoffset;
 }
 
 void LightmapBaker::Renderer::Renderer::Initialize()
@@ -71,6 +78,8 @@ void LightmapBaker::Renderer::Renderer::GLFWInitialize()
     glViewport(0, 0, framebufferWidth, framebufferHeight);
     glfwSetFramebufferSizeCallback(glfwWindow, FramebufferSizeCallback);
 
+    glfwSetScrollCallback(glfwWindow, ScrollCallback);
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 0);
 
@@ -109,7 +118,7 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glLoadIdentity();
 
     float aspectRatio = screenWidth / (float)screenHeight;
-    gluPerspective(80, (1.f / aspectRatio), 0.01f, 200.0f);
+    gluPerspective(80, (1.f / aspectRatio), 0.01f, cameraDistance * 2);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
@@ -121,17 +130,14 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
         0.0, 0.0, 0.0,
         0.0, 1.0, 0.0);
 
-    glColor3f(1, 1, 1);
-
-    /*static float angle = 0;
-    angle += 10 * deltaTime;
-    glRotatef(angle, 1, 0, 0);*/
+    //static float angle = 0;
+    //angle += 10 * deltaTime;
+    //glScalef(cos(angle), cos(angle), cos(angle));
 
     for (int i = 0; i < renderMeshList.size(); ++i)
     {
         renderMeshList[i]->Render();
     }
-
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWExit()
