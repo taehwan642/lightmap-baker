@@ -11,6 +11,13 @@ int main()
     std::cout << meshList.size() << std::endl;
     std::shared_ptr<Renderer::Renderer> renderer = std::make_shared<Renderer::Renderer>();
     renderer->Initialize();
+
+    auto preparedMeshList = dataManager->Load();
+    for (int i = 0; i < preparedMeshList.size(); ++i)
+    {
+        renderer->AddRenderMesh(preparedMeshList[i]);
+    }
+
     std::shared_ptr<Light::Radiosity> radiosity = std::make_shared<Light::Radiosity>();
 
     const int TARGET_FPS = 60;
