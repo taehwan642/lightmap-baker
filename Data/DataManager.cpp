@@ -2,6 +2,8 @@
 #include <iostream>
 #include <fstream>
 #include <stack>
+#include "GLFW/glfw3.h"
+#include "GLUT/glut.h"
 
 void LightmapBaker::Data::DataManager::Save(std::string path)
 {
@@ -150,25 +152,25 @@ std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Data:
     const glm::vec3 lightGrey = glm::vec3(0.9, 0.9, 0.9);
     const glm::vec3 black = glm::vec3(0.0, 0.0, 0.0);
     const glm::vec3 lightGreen = glm::vec3(0.63, 0.85, 0.58);
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{4, 5, 6, 4, 6, 7}, glm::vec3(0, -1, 0), 2, 8, (216 * 215), lightGrey, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{0, 3, 2, 0, 2, 1}, glm::vec3(0, 1, 0), 3, 8, (216 * 215), lightGrey, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{0, 4, 7, 0, 7, 3}, glm::vec3(1, 0, 0), 2, 8, (221 * 215), red, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{0, 1, 5, 0, 5, 4}, glm::vec3(0, 0, 1), 2, 8, (221 * 216), lightGrey, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{2, 6, 5, 2, 5, 1}, glm::vec3(-1, 0, 0), 2, 8, (221 * 215), blue, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{2, 3, 7, 2, 7, 6}, glm::vec3(0, 0, -1), 2, 8, (221 * 216), lightGrey, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{8, 9, 10, 8, 10, 11}, glm::vec3(0, -1, 0), 2, 1, (40 * 45), black, white));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{16, 19, 18, 16, 18, 17}, glm::vec3(0, 1, 0), 1, 5, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{12, 13, 14, 12, 14, 15}, glm::vec3(0, -1, 0), 1, 1, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{12, 15, 19, 12, 19, 16}, glm::vec3(-0.866, 0, -0.5), 1, 5, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{12, 16, 17, 12, 17, 13}, glm::vec3(0.5, 0, -0.866), 1, 5, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{14, 13, 17, 14, 17, 18}, glm::vec3(0.866, 0, 0.5), 1, 5, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{14, 18, 19, 14, 19, 15}, glm::vec3(-0.5, 0, 0.866), 1, 5, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{24, 27, 26, 24, 26, 25}, glm::vec3(0, 1, 0), 1, 5, (65 * 65), lightGreen, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{20, 21, 22, 20, 22, 23}, glm::vec3(0, -1, 0), 1, 1, (65 * 65), lightGreen, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{20, 23, 27, 20, 27, 24}, glm::vec3(-0.866, 0, -0.5), 1, 6, (65 * 130), lightGreen, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{20, 24, 25, 20, 25, 21}, glm::vec3(0.5, 0, -0.866), 1, 6, (65 * 130), lightGreen, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{22, 21, 25, 22, 25, 26}, glm::vec3(0.866, 0, 0.5), 1, 6, (65 * 130), lightGreen, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<int>{22, 26, 27, 22, 27, 23}, glm::vec3(-0.5, 0, 0.866), 1, 6, (65 * 130), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{4, 5, 6, 4, 6, 7}, glm::vec3(0, -1, 0), 2, 8, (216 * 215), lightGrey, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{0, 3, 2, 0, 2, 1}, glm::vec3(0, 1, 0), 3, 8, (216 * 215), lightGrey, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{0, 4, 7, 0, 7, 3}, glm::vec3(1, 0, 0), 2, 8, (221 * 215), red, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{0, 1, 5, 0, 5, 4}, glm::vec3(0, 0, 1), 2, 8, (221 * 216), lightGrey, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{2, 6, 5, 2, 5, 1}, glm::vec3(-1, 0, 0), 2, 8, (221 * 215), blue, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{2, 3, 7, 2, 7, 6}, glm::vec3(0, 0, -1), 2, 8, (221 * 216), lightGrey, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{8, 9, 10, 8, 10, 11}, glm::vec3(0, -1, 0), 2, 1, (40 * 45), black, white));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{16, 19, 18, 16, 18, 17}, glm::vec3(0, 1, 0), 1, 5, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{12, 13, 14, 12, 14, 15}, glm::vec3(0, -1, 0), 1, 1, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{12, 15, 19, 12, 19, 16}, glm::vec3(-0.866, 0, -0.5), 1, 5, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{12, 16, 17, 12, 17, 13}, glm::vec3(0.5, 0, -0.866), 1, 5, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{14, 13, 17, 14, 17, 18}, glm::vec3(0.866, 0, 0.5), 1, 5, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{14, 18, 19, 14, 19, 15}, glm::vec3(-0.5, 0, 0.866), 1, 5, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{24, 27, 26, 24, 26, 25}, glm::vec3(0, 1, 0), 1, 5, (65 * 65), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{20, 21, 22, 20, 22, 23}, glm::vec3(0, -1, 0), 1, 1, (65 * 65), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{20, 23, 27, 20, 27, 24}, glm::vec3(-0.866, 0, -0.5), 1, 6, (65 * 130), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{20, 24, 25, 20, 25, 21}, glm::vec3(0.5, 0, -0.866), 1, 6, (65 * 130), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{22, 21, 25, 22, 25, 26}, glm::vec3(0.866, 0, 0.5), 1, 6, (65 * 130), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLubyte>{22, 26, 27, 22, 27, 23}, glm::vec3(-0.5, 0, 0.866), 1, 6, (65 * 130), lightGreen, black));
     return meshes;
 }
 
