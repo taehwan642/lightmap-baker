@@ -32,10 +32,9 @@ void LightmapBaker::Renderer::Mesh::Render()
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glVertexPointer(3, GL_FLOAT, 0, vertices.data());
-	glCullFace(GL_CW);
+	glCullFace(GL_BACK);
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_BYTE, indices.data());
 	glDisableClientState(GL_VERTEX_ARRAY);
-
 }
 
 void LightmapBaker::Renderer::Mesh::Destroy()

@@ -39,7 +39,7 @@ void LightmapBaker::Renderer::Renderer::Update()
 void LightmapBaker::Renderer::Renderer::Render()
 {
     glClearColor(0.3f, 0.3f, 0.3f, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     GLFWRender();
     ImGuiRender();
@@ -129,15 +129,15 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     gluLookAt(camX, camY, camZ,
         0.0, 0.0, 0.0,
         0.0, 1.0, 0.0);
-
-    //static float angle = 0;
-    //angle += 10 * deltaTime;
-    //glScalef(cos(angle), cos(angle), cos(angle));
-
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
     for (int i = 0; i < renderMeshList.size(); ++i)
     {
         renderMeshList[i]->Render();
     }
+
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWExit()
