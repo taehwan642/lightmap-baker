@@ -1,5 +1,6 @@
 #pragma once
 #include <string>
+#include <list>
 
 namespace LightmapBaker
 {
@@ -18,6 +19,8 @@ namespace Renderer
 	{
 	private:
 		ToolStateEnum currentState = ToolStateEnum::BEFORE_RADIOSITY_CALCULATION;
+		std::list<double> frames;
+
 		void RenderBeforeRadiosityCalculationUI();
 		void RenderProgressRadiosityCalculationUI();
 		void RenderBeforeLightmapBakeUI();
@@ -28,6 +31,7 @@ namespace Renderer
 		float radiosityCalculationProgressValue = 0.0f;
 		float lightmapBakeProgressValue = 0.0f;
 		int lightMapQuality = 1;
+
 		void ProgressUI(const float& progress, const std::string& text);
 		void CompareUI();
 
@@ -35,6 +39,7 @@ namespace Renderer
 		void UpdateCurrentState(const ToolStateEnum& state);
 		void Update();
 		void RenderCurrentUI();
+		void SetFrame(double frame);
 	};
 }
 }

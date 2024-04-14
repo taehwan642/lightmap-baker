@@ -2,12 +2,26 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
-#include <iostream>
+#include <vector>
 
 void LightmapBaker::Renderer::ToolState::RenderBeforeRadiosityCalculationUI()
 {
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 155, ImGui::GetMainViewport()->Size.y - 33));
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 255, 33));
 	ImGui::Begin("Controller", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	
+	while (frames.size() > 100) frames.pop_front();
+
+	std::vector<float> framesVector;
+	for (const auto& value : frames)
+	{
+		framesVector.push_back((float)value);
+	}
+
+	ImGui::PlotLines("Frames", framesVector.data(), framesVector.size());
+	ImGui::End();
+
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 155, ImGui::GetMainViewport()->Size.y - 33));
+	ImGui::Begin("Controller2", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::Button("Calculate Radiosity", ImVec2(141.0f, 19.0f)))
 	{
 		UpdateCurrentState(ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION);
@@ -206,4 +220,9 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 	default:
 		break;
 	}
+}
+
+void LightmapBaker::Renderer::ToolState::SetFrame(double frame)
+{
+	frames.push_back(frame);
 }
