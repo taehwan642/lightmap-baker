@@ -29,6 +29,14 @@ void LightmapBaker::Renderer::Mesh::Initialize()
 
 void LightmapBaker::Renderer::Mesh::Render()
 {
+	glColor3f(reflectance.r, reflectance.g, reflectance.b);
+	glEnableClientState(GL_VERTEX_ARRAY);
+
+	glVertexPointer(3, GL_FLOAT, 0, vertices.data());
+	glCullFace(GL_CW);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_BYTE, indices.data());
+	glDisableClientState(GL_VERTEX_ARRAY);
+
 }
 
 void LightmapBaker::Renderer::Mesh::Destroy()
