@@ -155,6 +155,7 @@
     <ClCompile Include="Dependency\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Light\Light.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Renderer\Camera.cpp" />
     <ClCompile Include="Renderer\Mesh.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Renderer\ToolState.cpp" />
@@ -171,6 +172,7 @@
     <ClInclude Include="Dependency\imgui\imstb_textedit.h" />
     <ClInclude Include="Dependency\imgui\imstb_truetype.h" />
     <ClInclude Include="Light\Light.hpp" />
+    <ClInclude Include="Renderer\Camera.hpp" />
     <ClInclude Include="Renderer\Mesh.hpp" />
     <ClInclude Include="Renderer\Renderer.hpp" />
     <ClInclude Include="Renderer\ToolState.hpp" />

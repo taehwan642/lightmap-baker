@@ -3,13 +3,42 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
-float LightmapBaker::Renderer::Renderer::cameraDistance = 500.0f;
+LightmapBaker::Renderer::Camera LightmapBaker::Renderer::Renderer::camera = LightmapBaker::Renderer::Camera();
+double LightmapBaker::Renderer::Renderer::deltaTime = 0.0;
 
 void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
+    using namespace LightmapBaker::Renderer;
     if (key == GLFW_KEY_ESCAPE && action == GLFW_PRESS)
     {
         glfwSetWindowShouldClose(window, GLFW_TRUE);
+    }
+    
+    if (action == GLFW_REPEAT)
+    {
+        switch (key)
+        {
+        case GLFW_KEY_W:
+            Renderer::camera.position.z += 100.0f * Renderer::deltaTime;
+            break;
+        case GLFW_KEY_A:
+            Renderer::camera.position.x += 100.0f * Renderer::deltaTime;
+            break;
+        case GLFW_KEY_S:
+            Renderer::camera.position.z -= 100.0f * Renderer::deltaTime;
+            break;
+        case GLFW_KEY_D:
+            Renderer::camera.position.x -= 100.0f * Renderer::deltaTime;
+            break;
+        case GLFW_KEY_Q:
+            Renderer::camera.position.y += 100.0f * Renderer::deltaTime;
+            break;
+        case GLFW_KEY_E:
+            Renderer::camera.position.y -= 100.0f * Renderer::deltaTime;
+            break;
+        default:
+            break;
+        }
     }
 }
 
@@ -20,7 +49,7 @@ void LightmapBaker::Renderer::FramebufferSizeCallback(GLFWwindow* window, int wi
 
 void LightmapBaker::Renderer::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    LightmapBaker::Renderer::Renderer::cameraDistance += yoffset;
+    LightmapBaker::Renderer::Renderer::camera.distance += yoffset;
 }
 
 void LightmapBaker::Renderer::Renderer::Initialize()
@@ -101,12 +130,12 @@ void LightmapBaker::Renderer::Renderer::GLFWUpdate()
     glfwGetCursorPos(glfwWindow, &xPos, &yPos);
     if (glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
     {
-        cameraAngleX += mousePositionX - xPos;
-        cameraAngleY += mousePositionY - yPos;
+        camera.angle.x += mousePositionX - xPos;
+        camera.angle.y += mousePositionY - yPos;
 
         const double polarCap = (M_PI / 2.0f - 0.00001f) * (180 / M_PI);
-        if (cameraAngleY > polarCap) cameraAngleY = polarCap;
-        if (cameraAngleY < -polarCap) cameraAngleY = -polarCap;
+        if (camera.angle.y > polarCap) camera.angle.y = polarCap;
+        if (camera.angle.y < -polarCap) camera.angle.y = -polarCap;
     }
     mousePositionX = xPos;
     mousePositionY = yPos;
@@ -118,14 +147,14 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glLoadIdentity();
 
     float aspectRatio = screenHeight / (float)screenWidth;
-    gluPerspective(80, aspectRatio, 0.01f, cameraDistance * 2);
+    gluPerspective(80, aspectRatio, 0.01f, camera.distance * 2);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
-    float camX = cameraDistance * -sinf(cameraAngleX * (M_PI / 180)) * cosf((cameraAngleY) * (M_PI / 180));
-    float camY = cameraDistance * -sinf((cameraAngleY) * (M_PI / 180));
-    float camZ = -cameraDistance * cosf((cameraAngleX) * (M_PI / 180)) * cosf((cameraAngleY) * (M_PI / 180));
+    float camX = (camera.distance * -sinf(camera.angle.x * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.x;
+    float camY = (camera.distance * -sinf((camera.angle.y) * (M_PI / 180))) + camera.position.y;
+    float camZ = (-camera.distance * cosf((camera.angle.x) * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.z;
     gluLookAt(camX, camY, camZ,
         0.0, 0.0, 0.0,
         0.0, 1.0, 0.0);

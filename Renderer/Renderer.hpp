@@ -9,6 +9,7 @@
 
 #include "ToolState.hpp"
 #include "Mesh.hpp"
+#include "Camera.hpp"
 
 namespace LightmapBaker
 {
@@ -25,12 +26,8 @@ namespace Renderer
 
         const char* glslVersion = "#version 130";
 
-        float cameraAngleX = 0;
-        float cameraAngleY = 0;
-
         __int64 currentDeltaQuery;
         __int64 lastDeltaQuery;
-        double deltaTime = 0;
         double queryScale = 0;
 
         double mousePositionX = 0;
@@ -50,8 +47,6 @@ namespace Renderer
         void ImGuiExit();
 
     public:
-        static float cameraDistance;
-
         void Initialize();
         void Update();
         void Render();
@@ -61,6 +56,10 @@ namespace Renderer
 
     public:
         ToolState toolState;
+
+    public:
+        static double deltaTime;
+        static Camera camera;
     };
     void KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
     void FramebufferSizeCallback(GLFWwindow* window, int width, int height);
