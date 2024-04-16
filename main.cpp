@@ -18,7 +18,7 @@ int main()
         renderer->AddRenderMesh(preparedMeshList[i]);
     }
 
-    std::shared_ptr<Light::Radiosity> radiosity = std::make_shared<Light::Radiosity>();
+    // std::shared_ptr<Light::Radiosity> radiosity = std::make_shared<Light::Radiosity>();
 
     const int TARGET_FPS = 60;
     double lastTime = glfwGetTime();
