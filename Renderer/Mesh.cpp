@@ -40,3 +40,8 @@ void LightmapBaker::Renderer::Mesh::Render()
 void LightmapBaker::Renderer::Mesh::Destroy()
 {
 }
+
+glm::vec3 LightmapBaker::Renderer::Mesh::GetVertexByIndex(int index)
+{
+	return vertices[index];
+}
