@@ -2,7 +2,11 @@
 
 #include <memory>
 #include "GLM/vec3.hpp"
+#include "GLM/vec4.hpp"
+#include "../Renderer/Renderer.hpp"
 #include "../Renderer/Mesh.hpp"
+#include "../Renderer/Camera.hpp"
+#include "GLUT/glut.h"
 
 namespace LightmapBaker
 {
@@ -19,8 +23,8 @@ namespace Light
         float viewFar;
         int resolutionX;
         int resolutionY;
-        void* buffer;
-        View(glm::vec3 center, glm::vec3 lookAt, glm::vec3 up, float fovX, float fovY, float viewNear, float viewFar, int resolutionX, int resolutionY, void* buffer) {
+        std::vector<UINT8> buffer;
+        View(glm::vec3 center, glm::vec3 lookAt, glm::vec3 up, float fovX, float fovY, float viewNear, float viewFar, int resolutionX, int resolutionY, std::vector<UINT8> buffer) {
             this->center = center;
             this->lookAt = lookAt;
             this->up = up;
@@ -63,6 +67,7 @@ namespace Light
         glm::vec3 normal;
         glm::vec3 unShotRadiosity;
         float area;
+        Patch(){}
         Patch(glm::vec3 reflectance, glm::vec3 emission, glm::vec3 center, glm::vec3 normal, glm::vec3 unShotRadiosity, float area)
         {
             this->reflectance = reflectance;
@@ -110,12 +115,52 @@ namespace Light
         }
     };
 
+    struct HemiCubeRenderTarget
+    {
+        GLuint frameBuffer;
+        GLuint renderedTexture;
+        GLuint depthrenderbuffer;
+    };
+
     class RadiosityManager
     {
+    private:
+        std::shared_ptr<Renderer::Renderer> renderer;
+    public:
+        std::vector<std::shared_ptr<Renderer::Mesh>> models;
+        std::vector<std::shared_ptr<Patch>> patches;
+        std::vector<std::shared_ptr<Element>> elements;
+        std::shared_ptr<Radiosity> radiosity;
+        std::shared_ptr<HemiCube> hemiCube;
+        std::vector<glm::vec3> subDividedVertices;
+        std::vector<float> formFactors;
+        float totalEnergy;
+
+        HemiCubeRenderTarget hemiCubeRenderTarget;
+        std::shared_ptr<Renderer::Camera> hemiCubeCamera;
+
+        std::vector<UINT8> readBuffer;
+    public:
+        void SubDivideMesh(std::shared_ptr<Renderer::Mesh> modelData, int& vertexOffset, int& patchesIndex, int& elementIndex);
+        glm::vec3 ConvertUVtoPoint(std::vector<glm::vec3> vertices, float u, float v);
+        std::vector<float> MakeTopFactors(int halfResolution);
+        std::vector<float> MakeSideFactors(int halfResolution);
+
+        int DoOneIteration();
+        bool FindShootPatch(int& shootPatchIndex);
+        void SumFormFactors(int resolutionX, int resolutionY, std::vector<UINT8>& buffer, std::vector<float>& deltaFactors, int startY);
+
+        void BeginDrawHemiCube(glm::vec4 planeEquation);
+        void DrawHemiCubeElement(std::shared_ptr<Element> element, int index);
+        void EndDrawHemiCube();
+
+        void ComputeFormFactors(int shootPatchIndex);
+        void DistributeRadiosity(int shootPatchIndex);
     public:
         void Initialize();
         void Update();
-        void InitRadiosityParameter();
+        float InitRadiosityParameter();
+        void SetRenderer(std::shared_ptr<Renderer::Renderer> renderer);
     };
 }
 }
