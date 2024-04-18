@@ -17,14 +17,15 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
             60, 60,
             1, 550,
             200, 200,
-            std::vector<UINT8>(hemiCube->view->resolutionX * hemiCube->view->resolutionY * 4)),
+            std::vector<UINT8>()),
         100,
         250,
         50,
         1
     );
     const int hemiCubeResolution = (floor((radiosity->hemiCubeResolution / 2) + 0.5) * 2);
-    hemiCube = std::make_shared<HemiCube>(
+    radiosity->view->buffer.resize(hemiCubeResolution * hemiCubeResolution * 4);
+        hemiCube = std::make_shared<HemiCube>(
         std::make_shared<View>(
             glm::vec3(0, 0, 1),
             glm::vec3(0, 0, 0),
@@ -34,13 +35,13 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
             radiosity->worldSize,
             hemiCubeResolution,
             hemiCubeResolution,
-            std::vector<UINT8>(hemiCube->view->resolutionX * hemiCube->view->resolutionY * 4)),
+            std::vector<UINT8>(hemiCubeResolution * hemiCubeResolution * 4)),
         MakeTopFactors(hemiCubeResolution / 2),
         MakeSideFactors(hemiCubeResolution / 2)
     );
 
     // r g b a -> times 4
-    readBuffer.reserve(hemiCube->view->resolutionX * hemiCube->view->resolutionY * 4);
+    readBuffer.resize(hemiCube->view->resolutionX * hemiCube->view->resolutionY * 4);
 
     std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
     models = dataManager->Load();
@@ -64,6 +65,7 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
         SubDivideMesh(models[i], vertexOffset, patchesIndex, elementIndex);
     }
 
+    formFactors.resize(elements.size());
     for (int i = 0; i < elements.size(); ++i)
     {
         formFactors[i] = 0;
