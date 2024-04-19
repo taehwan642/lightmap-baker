@@ -156,7 +156,7 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     float camY = (camera.distance * -sinf((camera.angle.y) * (M_PI / 180))) + camera.position.y;
     float camZ = (-camera.distance * cosf((camera.angle.x) * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.z;
     gluLookAt(camX, camY, camZ,
-        0.0, 0.0, 0.0,
+        camera.position.x, camera.position.y, camera.position.z,
         0.0, 1.0, 0.0);
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
