@@ -29,7 +29,7 @@ void LightmapBaker::Renderer::Mesh::Initialize()
 
 void LightmapBaker::Renderer::Mesh::Render()
 {
-	glColor3f(reflectance.r, reflectance.g, reflectance.b);
+	glColor3f(color.r, color.g, color.b);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
 	glVertexPointer(3, GL_FLOAT, 0, vertices.data());
