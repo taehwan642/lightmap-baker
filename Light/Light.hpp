@@ -4,6 +4,7 @@
 #include "GLM/vec3.hpp"
 #include "GLM/vec4.hpp"
 #include "../Renderer/Renderer.hpp"
+#include "../Renderer/RenderTarget.hpp"
 #include "../Renderer/Mesh.hpp"
 #include "../Renderer/Camera.hpp"
 #include "GLUT/glut.h"
@@ -83,13 +84,13 @@ namespace Light
     {
     public:
         std::shared_ptr<Renderer::Mesh> mesh;
-        std::vector<GLubyte> indices;
+        std::vector<GLuint> indices;
         glm::vec3 normal;
         glm::vec3 radiosity;
         float area;
         std::shared_ptr<Patch> parentPatch;
         glm::vec3 reflectance;
-        Element(std::shared_ptr<Renderer::Mesh> mesh, std::vector<GLubyte> indices, glm::vec3 normal, glm::vec3 radiosity, float area, std::shared_ptr<Patch> parentPatch, glm::vec3 reflectance)
+        Element(std::shared_ptr<Renderer::Mesh> mesh, std::vector<GLuint> indices, glm::vec3 normal, glm::vec3 radiosity, float area, std::shared_ptr<Patch> parentPatch, glm::vec3 reflectance)
         {
             this->mesh = mesh;
             this->indices = indices;
@@ -115,13 +116,6 @@ namespace Light
         }
     };
 
-    struct HemiCubeRenderTarget
-    {
-        GLuint frameBuffer;
-        GLuint renderedTexture;
-        GLuint depthrenderbuffer;
-    };
-
     class RadiosityManager
     {
     private:
@@ -136,7 +130,7 @@ namespace Light
         std::vector<float> formFactors;
         float totalEnergy;
 
-        HemiCubeRenderTarget hemiCubeRenderTarget;
+        Renderer::RenderTarget hemiCubeRenderTarget;
         std::shared_ptr<Renderer::Camera> hemiCubeCamera;
 
         std::vector<UINT8> readBuffer;

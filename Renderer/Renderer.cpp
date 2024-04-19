@@ -160,6 +160,8 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
         0.0, 1.0, 0.0);
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
+
+    glCullFace(GL_BACK);
     for (int i = 0; i < renderMeshList.size(); ++i)
     {
         renderMeshList[i]->Render();

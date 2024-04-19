@@ -9,9 +9,11 @@ namespace Renderer
 {
 	class Mesh
 	{
+    private:
+        GLuint ibo;
     public:
         std::vector<glm::vec3> vertices;
-        std::vector<GLubyte> indices;
+        std::vector<GLuint> indices;
         glm::vec3 normal;
         int patchLevel;
         int elementLevel;
@@ -23,11 +25,12 @@ namespace Renderer
 
     public:
         Mesh();
-        Mesh(const std::vector<glm::vec3>& vertices, const std::vector<GLubyte>& indices, const glm::vec3& normal, const int& patchLevel, const int& elementLevel, const float& area, const glm::vec3& reflectance, const glm::vec3& emission);
+        Mesh(const std::vector<glm::vec3>& vertices, const std::vector<GLuint>& indices, const glm::vec3& normal, const int& patchLevel, const int& elementLevel, const float& area, const glm::vec3& reflectance, const glm::vec3& emission);
         void Initialize();
         void Render();
         void Destroy();
         glm::vec3 GetVertexByIndex(int index);
+        void CreateIndexBuffer();
 	};
 }
 }
