@@ -71,28 +71,11 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
         formFactors[i] = 0;
     }
 
-    const float totalEnergy = InitRadiosityParameter();
+    totalEnergy = InitRadiosityParameter();
 
     glm::vec2 renderTargetSize = glm::vec2(hemiCube->view->resolutionX, hemiCube->view->resolutionY);
 
-    glGenFramebuffers(1, &hemiCubeRenderTarget.frameBuffer);
-    glBindFramebuffer(GL_FRAMEBUFFER, hemiCubeRenderTarget.frameBuffer);
-
-    glGenTextures(1, &hemiCubeRenderTarget.renderedTexture);
-
-    glBindTexture(GL_TEXTURE_2D, hemiCubeRenderTarget.renderedTexture);
-
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, renderTargetSize.x, renderTargetSize.y, 0, GL_RGBA, GL_UNSIGNED_BYTE, 0);
-
-    glGenRenderbuffers(1, &hemiCubeRenderTarget.depthrenderbuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, hemiCubeRenderTarget.depthrenderbuffer);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, renderTargetSize.x, renderTargetSize.y);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, hemiCubeRenderTarget.depthrenderbuffer);
-
-    glFramebufferTexture(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, hemiCubeRenderTarget.renderedTexture, 0);
-
-    GLenum DrawBuffers[1] = { GL_COLOR_ATTACHMENT0 };
-    glDrawBuffers(1, DrawBuffers);
+    // hemiCubeRenderTarget.Initialize(renderTargetSize);
 
     for (int i = 0; i < elements.size(); ++i)
     {
@@ -100,7 +83,7 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
         mesh->vertices = subDividedVertices;
         mesh->normal = elements[i]->normal;
         mesh->indices = elements[i]->indices;
-        mesh->color = elements[i]->radiosity;
+        mesh->color = elements[i]->parentPatch->reflectance;
 
         elements[i]->mesh = mesh;
         renderer->AddRenderMesh(elements[i]->mesh);
@@ -109,16 +92,16 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
 
 void LightmapBaker::Light::RadiosityManager::Update()
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, hemiCubeRenderTarget.frameBuffer);
-    DoOneIteration();
-
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    //glBindFramebuffer(GL_FRAMEBUFFER, hemiCubeRenderTarget.frameBuffer);
+    // DoOneIteration();
+
+    //glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
     for (int i = 0; i < elements.size(); ++i)
     {
-        elements[i]->mesh->color = elements[i]->radiosity * radiosity->intensityScale;
+        // elements[i]->mesh->color = elements[i]->radiosity * radiosity->intensityScale;
     }
 }
 
@@ -153,7 +136,7 @@ void LightmapBaker::Light::RadiosityManager::SubDivideMesh(std::shared_ptr<Rende
     float du, dv;
     int i, j;
     float u, v;
-    int fi, fj;
+    float fi, fj;
     int pi, pj;
     int verticesCount = 0;
 
@@ -177,31 +160,34 @@ void LightmapBaker::Light::RadiosityManager::SubDivideMesh(std::shared_ptr<Rende
 
     nu = modelData->patchLevel * modelData->elementLevel;
     nv = modelData->patchLevel * modelData->elementLevel;
-    du = 1.0 / (float)nu;
-    dv = 1.0 / (float)nv;
-    for (i = 0, u = du / 2.0; i < nu; i++, u += du) {
-        for (j = 0, v = dv / 2.0; j < nv; j++, v += dv, elementIndex++) {
-            fi = i / nu;
-            fj = j / nv;
+    du = 1.0f / (float)nu;
+    dv = 1.0f / (float)nv;
+    for (i = 0, u = du / 2.0; i < nu; i++, u += du)
+    {
+        for (j = 0, v = dv / 2.0; j < nv; j++, v += dv, elementIndex++)
+        {
+            fi = i / (float)nu;
+            fj = j / (float)nv;
             pi = floor(fi * (modelData->patchLevel));
             pj = floor(fj * (modelData->patchLevel));
 
-            elements.push_back(std::make_shared<Element>(
+            std::shared_ptr<Element> element = std::make_shared<Element>(
                 nullptr,
-                std::vector<GLubyte>{
-                    (GLubyte)((i* (nv + 1) + j) + vertexOffset),
-                    (GLubyte)(((i + 1)* (nv + 1) + (j + 1)) + vertexOffset),
-                    (GLubyte)(((i + 1)* (nv + 1) + j) + vertexOffset),
-                    (GLubyte)((i* (nv + 1) + j) + vertexOffset),
-                    (GLubyte)((i* (nv + 1) + (j + 1)) + vertexOffset),
-                    (GLubyte)(((i + 1)* (nv + 1) + (j + 1)) + vertexOffset)
+                std::vector<GLuint>{
+                    (GLuint)((i* (nv + 1) + j) + vertexOffset),
+                    (GLuint)(((i + 1)* (nv + 1) + (j + 1)) + vertexOffset),
+                    (GLuint)(((i + 1)* (nv + 1) + j) + vertexOffset),
+                    (GLuint)((i* (nv + 1) + j) + vertexOffset),
+                    (GLuint)((i* (nv + 1) + (j + 1)) + vertexOffset),
+                    (GLuint)(((i + 1)* (nv + 1) + (j + 1)) + vertexOffset)
                 },
                 modelData->normal,
                 glm::vec3(0, 0, 0),
                 modelData->area / (nu * nv),
                 patches[patchesIndex + pi * modelData->patchLevel + pj],
                 modelData->reflectance
-            ));
+            );
+            elements.push_back(element);
         }
     }
 
