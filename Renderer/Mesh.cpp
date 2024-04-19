@@ -1,4 +1,3 @@
-#include "GLEW/glew.h"
 #include "Mesh.hpp"
 
 LightmapBaker::Renderer::Mesh::Mesh()
@@ -11,7 +10,7 @@ LightmapBaker::Renderer::Mesh::Mesh()
 	emission = glm::vec3(0, 0, 0);
 }
 
-LightmapBaker::Renderer::Mesh::Mesh(const std::vector<glm::vec3>& vertices, const std::vector<GLuint>& indices, const glm::vec3& normal, const int& patchLevel, const int& elementLevel, const float& area, const glm::vec3& reflectance, const glm::vec3& emission)
+LightmapBaker::Renderer::Mesh::Mesh(const std::vector<glm::vec3>& vertices, const std::vector<GLubyte>& indices, const glm::vec3& normal, const int& patchLevel, const int& elementLevel, const float& area, const glm::vec3& reflectance, const glm::vec3& emission)
 {
 	this->vertices = vertices;
 	this->indices = indices;
@@ -34,13 +33,7 @@ void LightmapBaker::Renderer::Mesh::Render()
 
 	glVertexPointer(3, GL_FLOAT, 0, vertices.data());
 	glCullFace(GL_BACK);
-
-	GLuint ibo;
-	glGenBuffers(1, &ibo);
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(indices[0]), indices.data(), GL_STATIC_DRAW);
-
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_BYTE, indices.data());
 	glDisableClientState(GL_VERTEX_ARRAY);
 }
 
