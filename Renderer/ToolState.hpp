@@ -1,4 +1,5 @@
 #pragma once
+#include "GLUT/glut.h"
 #include <string>
 #include <list>
 
@@ -26,6 +27,12 @@ namespace Renderer
 		void RenderBeforeLightmapBakeUI();
 		void RenderProgressLightmapBakeUI();
 		void RenderAfterLightmapBakeUI();
+
+	private:
+		int my_image_width = 0;
+		int my_image_height = 0;
+		GLuint my_image_texture = 0;
+		void RenderHemicubeRenderedImage();
 
 	private:
 		float radiosityCalculationProgressValue = 0.0f;

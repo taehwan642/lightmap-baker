@@ -68,13 +68,14 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
     formFactors.resize(elements.size());
     for (int i = 0; i < elements.size(); ++i)
     {
-        formFactors[i] = 0;
+        formFactors[i] = 0.0f;
     }
 
     totalEnergy = InitRadiosityParameter();
 
     glm::vec2 renderTargetSize = glm::vec2(hemiCube->view->resolutionX, hemiCube->view->resolutionY);
-    // hemiCubeRenderTarget.Initialize(renderTargetSize);
+    hemiCubeRenderTarget.Initialize(renderTargetSize);
+    Renderer::RenderTarget::BindDefault();
 
     for (int i = 0; i < elements.size(); ++i)
     {
@@ -92,16 +93,15 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
 
 void LightmapBaker::Light::RadiosityManager::Update()
 {
-    // glBindFramebuffer(GL_FRAMEBUFFER, hemiCubeRenderTarget.frameBuffer);
-    // DoOneIteration();
-
-    // glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    hemiCubeRenderTarget.Bind();
+    DoOneIteration();
+    Renderer::RenderTarget::BindDefault();
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (int i = 0; i < elements.size(); ++i)
     {
-        // elements[i]->mesh->color = elements[i]->radiosity * radiosity->intensityScale;
+        elements[i]->mesh->color = elements[i]->radiosity * radiosity->intensityScale;
     }
 }
 
@@ -338,7 +338,13 @@ void LightmapBaker::Light::RadiosityManager::BeginDrawHemiCube(glm::vec4 planeEq
     /* clear the frame buffer with color */
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glMatrixMode(GL_PROJECTION);
+    glLoadIdentity();
 
+    gluPerspective(hemiCube->view->fovX, hemiCube->view->fovX / hemiCube->view->fovY, hemiCube->view->viewNear, hemiCube->view->viewFar);
+
+    glMatrixMode(GL_MODELVIEW);
+    glLoadIdentity();
     gluLookAt(
         hemiCube->view->lookAt.x, hemiCube->view->lookAt.y, hemiCube->view->lookAt.z,
         hemiCube->view->center.x, hemiCube->view->center.y, hemiCube->view->center.z,
@@ -348,11 +354,30 @@ void LightmapBaker::Light::RadiosityManager::BeginDrawHemiCube(glm::vec4 planeEq
 void LightmapBaker::Light::RadiosityManager::DrawHemiCubeElement(std::shared_ptr<Element> element, int index)
 {
     element->mesh->color = glm::vec3((index / 65536) / 255, ((index % 65536) / 256) / 255, (index % 256) / 255);
+    element->mesh->Render();
 }
 
 void LightmapBaker::Light::RadiosityManager::EndDrawHemiCube()
 {
-    glGetTexImage(GL_TEXTURE_2D, 0, GL_RGBA, GL_UNSIGNED_BYTE, readBuffer.data());
+    glReadPixels(0, 0, hemiCube->view->resolutionX,  hemiCube->view->resolutionY, GL_RGBA, GL_UNSIGNED_BYTE, readBuffer.data());
+
+    //for (int i = 0; i < readBuffer.size(); ++i)
+    //{
+    //    // 3 + 4n = i
+    //    // i - 3 = 4n
+    //    // (i - 3) / 4 = n
+    //    float index = (i - 3) / (float)4;
+    //    float div = 0;
+    //    float mod = modf(index, &div);
+    //    if (mod != 0 && readBuffer[i] != 0)
+    //    {
+
+    //        
+    //        UINT8 ind = readBuffer[i];
+    //        ind = readBuffer[i];
+    //    }
+    //}
+
     std::vector<UINT8> newBuffer;
     int index = 0;
     for (int i = 0; i < readBuffer.size(); ++i)
@@ -385,13 +410,12 @@ void LightmapBaker::Light::RadiosityManager::ComputeFormFactors(int shootPatchIn
 
     std::vector<glm::vec3> up;
     std::vector<glm::vec3> lookAt;
-    glm::vec3 center = glm::vec3(shootPatch->center.x, shootPatch->center.y, shootPatch->center.z);
-    glm::vec3 normal = glm::vec3(shootPatch->normal.x, shootPatch->normal.y, shootPatch->normal.z);
+    glm::vec3 center = shootPatch->center;
+    glm::vec3 normal = shootPatch->normal;
     glm::vec3 tangentU;
     glm::vec3 tangentV;
     glm::vec3 vec;
-    float norm = 0;
-
+    float norm = 0.0f;
 
     glm::vec4 planeEquation;
     planeEquation.x = shootPatch->normal.x;
@@ -429,12 +453,11 @@ void LightmapBaker::Light::RadiosityManager::ComputeFormFactors(int shootPatchIn
     // /* clear the formfactors */
     for (int i = 0; i < formFactors.size(); ++i)
     {
-        formFactors[i] = 0;
+        formFactors[i] = 0.0f;
     }
 
     for (int face = 0; face < 5; ++face)
     {
-
         hemiCube->view->lookAt = lookAt[face];
         hemiCube->view->up = up[face];
 
@@ -443,10 +466,6 @@ void LightmapBaker::Light::RadiosityManager::ComputeFormFactors(int shootPatchIn
         {
             DrawHemiCubeElement(elements[i], i);
         }
-
-        // render by hemicubecamera
-
-
         EndDrawHemiCube();
 
         if (face == 0)
@@ -476,8 +495,10 @@ void LightmapBaker::Light::RadiosityManager::DistributeRadiosity(int shootPatchI
 
     std::shared_ptr<Patch> shootPatch = patches[shootPatchIndex];
 
-    for (int i = 0; i < elements.size(); ++i) {
-        if (formFactors[i] != 0) {
+    for (int i = 0; i < elements.size(); ++i)
+    {
+        if (formFactors[i] != 0)
+        {
             deltaRad.r = shootPatch->unShotRadiosity.r * formFactors[i] * elements[i]->parentPatch->reflectance.r;
             deltaRad.g = shootPatch->unShotRadiosity.g * formFactors[i] * elements[i]->parentPatch->reflectance.g;
             deltaRad.b = shootPatch->unShotRadiosity.b * formFactors[i] * elements[i]->parentPatch->reflectance.b;

@@ -3,6 +3,7 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include <vector>
+#include "../Light/Light.hpp"
 
 void LightmapBaker::Renderer::ToolState::RenderBeforeRadiosityCalculationUI()
 {
@@ -132,6 +133,16 @@ void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
 	CompareUI();
 }
 
+void LightmapBaker::Renderer::ToolState::RenderHemicubeRenderedImage()
+{
+	ImVec2 resolution = ImVec2(Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.x, Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.y);
+	ImGui::Begin("OpenGL Texture Text");
+	ImGui::Text("pointer = %x", Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.renderTexture);
+	ImGui::Text("size = %d x %d", (int)resolution.x, (int)resolution.y);
+	ImGui::Image((void*)(intptr_t)Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.renderTexture, resolution);
+	ImGui::End();
+}
+
 void LightmapBaker::Renderer::ToolState::ProgressUI(const float& progress, const std::string& text)
 {
 	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - 55));
@@ -199,6 +210,9 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 
 	ImGui::PlotLines("Frames", framesVector.data(), framesVector.size());
 	ImGui::End();
+
+	RenderHemicubeRenderedImage();
+
 	switch (currentState)
 	{
 	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_RADIOSITY_CALCULATION:

@@ -18,8 +18,6 @@ namespace Renderer
     class Renderer
     {
     private:
-        const int screenWidth = 640;
-        const int screenHeight = 480;
         int framebufferWidth;
         int framebufferHeight;
         GLFWwindow* glfwWindow = nullptr;
@@ -55,6 +53,8 @@ namespace Renderer
         void AddRenderMesh(const std::shared_ptr<Mesh>& mesh);
 
     public:
+        static const int screenWidth = 640;
+        static const int screenHeight = 480;
         ToolState toolState;
 
     public:

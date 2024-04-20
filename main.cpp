@@ -27,15 +27,14 @@ int main()
         renderer->AddRenderMesh(preparedMeshList[i]);
     }*/
 
-    std::shared_ptr<Light::RadiosityManager> radiosity = std::make_shared<Light::RadiosityManager>();
-    radiosity->SetRenderer(renderer);
-    radiosity->Initialize();
+    Light::RadiosityManager::GetInstance().SetRenderer(renderer);
+    Light::RadiosityManager::GetInstance().Initialize();
 
     const int TARGET_FPS = 60;
     double lastTime = glfwGetTime();
     while (!renderer->WindowShouldClose()) 
     {
-        radiosity->Update();
+        Light::RadiosityManager::GetInstance().Update();
         renderer->Update();
         renderer->Render();
         while (glfwGetTime() < lastTime + 1.0 / TARGET_FPS) {

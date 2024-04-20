@@ -119,6 +119,12 @@ namespace Light
     class RadiosityManager
     {
     private:
+        RadiosityManager() {}
+        RadiosityManager(const RadiosityManager&) {}
+        RadiosityManager& operator=(const RadiosityManager&) {}
+        ~RadiosityManager() {}
+
+    private:
         std::shared_ptr<Renderer::Renderer> renderer;
     public:
         std::vector<std::shared_ptr<Renderer::Mesh>> models;
@@ -155,6 +161,12 @@ namespace Light
         void Update();
         float InitRadiosityParameter();
         void SetRenderer(std::shared_ptr<Renderer::Renderer> renderer);
+
+    public:
+        static RadiosityManager& GetInstance() {
+            static RadiosityManager s;
+            return s;
+        }
     };
 }
 }
