@@ -29,9 +29,6 @@ namespace Renderer
 		void RenderAfterLightmapBakeUI();
 
 	private:
-		int my_image_width = 0;
-		int my_image_height = 0;
-		GLuint my_image_texture = 0;
 		void RenderHemicubeRenderedImage();
 
 	private:

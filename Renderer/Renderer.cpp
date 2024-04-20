@@ -65,11 +65,14 @@ void LightmapBaker::Renderer::Renderer::Update()
     ImGuiUpdate();
 }
 
-void LightmapBaker::Renderer::Renderer::Render()
+void LightmapBaker::Renderer::Renderer::BeforeRender()
 {
     glClearColor(0.3f, 0.3f, 0.3f, 1);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+}
 
+void LightmapBaker::Renderer::Renderer::Render()
+{
     GLFWRender();
     ImGuiRender();
 

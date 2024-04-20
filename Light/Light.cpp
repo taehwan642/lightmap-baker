@@ -333,7 +333,7 @@ void LightmapBaker::Light::RadiosityManager::SumFormFactors(int resolutionX, int
     }
 }
 
-void LightmapBaker::Light::RadiosityManager::BeginDrawHemiCube(glm::vec4 planeEquation)
+void LightmapBaker::Light::RadiosityManager::BeginDrawHemiCube()
 {
     /* clear the frame buffer with color */
     glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
@@ -417,14 +417,6 @@ void LightmapBaker::Light::RadiosityManager::ComputeFormFactors(int shootPatchIn
     glm::vec3 vec;
     float norm = 0.0f;
 
-    glm::vec4 planeEquation;
-    planeEquation.x = shootPatch->normal.x;
-    planeEquation.y = shootPatch->normal.y;
-    planeEquation.z = shootPatch->normal.z;
-    planeEquation.w = -(shootPatch->normal.x * shootPatch->center.x + 
-        shootPatch->normal.y * shootPatch->center.y + 
-        shootPatch->normal.z * shootPatch->center.z);
-
     do 
     {
         vec.x = rand() % 10;
@@ -461,7 +453,7 @@ void LightmapBaker::Light::RadiosityManager::ComputeFormFactors(int shootPatchIn
         hemiCube->view->lookAt = lookAt[face];
         hemiCube->view->up = up[face];
 
-        BeginDrawHemiCube(planeEquation);
+        BeginDrawHemiCube();
         for (int i = 0; i < elements.size(); ++i)
         {
             DrawHemiCubeElement(elements[i], i);

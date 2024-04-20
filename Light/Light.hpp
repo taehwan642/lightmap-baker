@@ -2,7 +2,6 @@
 
 #include <memory>
 #include "GLM/vec3.hpp"
-#include "GLM/vec4.hpp"
 #include "../Renderer/Renderer.hpp"
 #include "../Renderer/RenderTarget.hpp"
 #include "../Renderer/Mesh.hpp"
@@ -150,7 +149,7 @@ namespace Light
         bool FindShootPatch(int& shootPatchIndex);
         void SumFormFactors(int resolutionX, int resolutionY, std::vector<UINT8>& buffer, std::vector<float>& deltaFactors, int startY);
 
-        void BeginDrawHemiCube(glm::vec4 planeEquation);
+        void BeginDrawHemiCube();
         void DrawHemiCubeElement(std::shared_ptr<Element> element, int index);
         void EndDrawHemiCube();
 

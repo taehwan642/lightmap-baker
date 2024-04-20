@@ -47,6 +47,7 @@ namespace Renderer
     public:
         void Initialize();
         void Update();
+        void BeforeRender();
         void Render();
         bool WindowShouldClose();
         void Exit();

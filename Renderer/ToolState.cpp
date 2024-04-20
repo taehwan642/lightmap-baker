@@ -137,9 +137,7 @@ void LightmapBaker::Renderer::ToolState::RenderHemicubeRenderedImage()
 {
 	ImVec2 resolution = ImVec2(Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.x, Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.y);
 	ImGui::Begin("OpenGL Texture Text");
-	ImGui::Text("pointer = %x", Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.renderTexture);
-	ImGui::Text("size = %d x %d", (int)resolution.x, (int)resolution.y);
-	ImGui::Image((void*)(intptr_t)Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.renderTexture, resolution);
+	ImGui::Image((ImTextureID)Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.renderTexture, resolution);
 	ImGui::End();
 }
 

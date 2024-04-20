@@ -34,8 +34,10 @@ int main()
     double lastTime = glfwGetTime();
     while (!renderer->WindowShouldClose()) 
     {
-        Light::RadiosityManager::GetInstance().Update();
+        
         renderer->Update();
+        renderer->BeforeRender();
+        Light::RadiosityManager::GetInstance().Update();
         renderer->Render();
         while (glfwGetTime() < lastTime + 1.0 / TARGET_FPS) {
             // Put the thread to sleep, yield, or simply do nothing
