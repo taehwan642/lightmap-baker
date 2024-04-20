@@ -162,9 +162,9 @@ void LightmapBaker::Light::RadiosityManager::SubDivideMesh(std::shared_ptr<Rende
     nv = modelData->patchLevel * modelData->elementLevel;
     du = 1.0 / (float)nu;
     dv = 1.0 / (float)nv;
-    for (i = 0, u = du / 2.0; i < nu; i++, u += du)
+    for (i = 0, u = du / 2.0f; i < nu; i++, u += du)
     {
-        for (j = 0, v = dv / 2.0; j < nv; j++, v += dv, elementIndex++)
+        for (j = 0, v = dv / 2.0f; j < nv; j++, v += dv, elementIndex++)
         {
             fi = i / (float)nu;
             fj = j / (float)nv;
@@ -196,15 +196,15 @@ void LightmapBaker::Light::RadiosityManager::SubDivideMesh(std::shared_ptr<Rende
     nv = modelData->patchLevel;
     du = 1.0f / (float)nu;
     dv = 1.0f / (float)nv;
-    for (i = 0, u = du / 2.0; i < nu; i++, u += du)
+    for (i = 0, u = du / 2.0f; i < nu; i++, u += du)
     {
-        for (j = 0, v = dv / 2.0; j < nv; j++, v += dv, patchesIndex++)
+        for (j = 0, v = dv / 2.0f; j < nv; j++, v += dv, patchesIndex++)
         {
             patches[patchesIndex]->center = ConvertUVtoPoint(quadVertices, u, v);
             patches[patchesIndex]->normal = modelData->normal;
             patches[patchesIndex]->reflectance = modelData->reflectance;
             patches[patchesIndex]->emission = modelData->emission;
-            patches[patchesIndex]->area = modelData->area / (nu * nv);
+            patches[patchesIndex]->area = modelData->area / (float)(nu * nv);
         }
     }
     vertexOffset += verticesCount;
@@ -234,16 +234,16 @@ std::vector<float> LightmapBaker::Light::RadiosityManager::MakeTopFactors(int ha
     for (j = 0; j < halfResolution; j++)
     {
         float dj = j;
-        ySq = (n - (dj + 0.5f)) / n;
+        ySq = (n - (dj + 0.5f)) / (float)n;
         ySq *= ySq;
         for (k = 0; k < halfResolution; k++)
         {
             float dk = k;
-            xSq = (n - (dk + 0.5f)) / n;
+            xSq = (n - (dk + 0.5f)) / (float)n;
             xSq *= xSq;
             xy1Sq = xSq + ySq + 1.0f;
             xy1Sq *= xy1Sq;
-            wp[index++] = 1.0f / (xy1Sq * PI * n * n);
+            wp[index++] = 1.0f / (float)(xy1Sq * PI * n * n);
         }
     }
 
@@ -262,16 +262,16 @@ std::vector<float> LightmapBaker::Light::RadiosityManager::MakeSideFactors(int h
     for (j = 0; j < halfResolution; j++)
     {
         float dj = j;
-        y = (n - (dj + 0.5f)) / n;
+        y = (n - (dj + 0.5f)) / (float)n;
         ySq = y * y;
         for (k = 0; k < halfResolution; k++)
         {
             float dk = k;
-            x = (n - (dk + 0.5f)) / n;
+            x = (n - (dk + 0.5f)) / (float)n;
             xSq = x * x;
             xy1 = xSq + ySq + 1.0f;
             xy1Sq = xy1 * xy1;
-            wp[index++] = y / (xy1Sq * PI * n * n);
+            wp[index++] = y / (float)(xy1Sq * PI * n * n);
         }
     }
 
@@ -353,7 +353,7 @@ void LightmapBaker::Light::RadiosityManager::BeginDrawHemiCube(glm::vec4 planeEq
 
 void LightmapBaker::Light::RadiosityManager::DrawHemiCubeElement(std::shared_ptr<Element> element, int index)
 {
-    element->mesh->color = glm::vec3((index / 65536) / 255, ((index % 65536) / 256) / 255, (index % 256) / 255);
+    element->mesh->color = glm::vec3((index / 65536.0f) / 255.0f, ((index % 65536) / 256.0f) / 255.0f, (index % 256) / 255.0f);
     element->mesh->Render();
 }
 
