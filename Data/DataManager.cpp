@@ -4,9 +4,13 @@
 #include <stack>
 #include "GLFW/glfw3.h"
 #include "GLUT/glut.h"
+#define STB_IMAGE_WRITE_IMPLEMENTATION
+#define __STDC_LIB_EXT1__
+#include "stb/stb_image_write.h"
 
-void LightmapBaker::Data::DataManager::Save(std::string path)
+void LightmapBaker::Data::DataManager::Save(std::string path, int width, int height, const void* data)
 {
+    stbi_write_png(path.c_str(), width, height, 3, data, 0);
     std::cout << "Save " << " " << path << std::endl;
 }
 
