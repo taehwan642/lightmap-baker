@@ -1,4 +1,6 @@
-#include <memory>
+﻿#include <memory>
+#include <cstdlib>
+#include <ctime>
 #include "GLEW/glew.h"
 #include "Data/DataManager.hpp"
 #include "Light/Light.hpp"
@@ -7,6 +9,8 @@
 int main()
 {
     using namespace LightmapBaker;
+    srand((unsigned int)time(NULL));
+
     std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
     auto meshList = dataManager->Load("Asset/tempModel.ttjj");
     std::cout << meshList.size() << std::endl;

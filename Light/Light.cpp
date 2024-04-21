@@ -341,14 +341,19 @@ void LightmapBaker::Light::RadiosityManager::BeginDrawHemiCube()
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
-    gluPerspective(hemiCube->view->fovX, hemiCube->view->fovX / hemiCube->view->fovY, hemiCube->view->viewNear, hemiCube->view->viewFar);
+    gluPerspective(hemiCube->view->fovX, hemiCube->view->fovY / hemiCube->view->fovX, hemiCube->view->viewNear, hemiCube->view->viewFar * 2);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
     gluLookAt(
-        hemiCube->view->lookAt.x, hemiCube->view->lookAt.y, hemiCube->view->lookAt.z,
         hemiCube->view->center.x, hemiCube->view->center.y, hemiCube->view->center.z,
+        hemiCube->view->lookAt.x, hemiCube->view->lookAt.y, hemiCube->view->lookAt.z,
         hemiCube->view->up.x, hemiCube->view->up.y, hemiCube->view->up.z);
+
+    glEnable(GL_CULL_FACE);
+    glEnable(GL_DEPTH_TEST);
+
+    glCullFace(GL_BACK);
 }
 
 void LightmapBaker::Light::RadiosityManager::DrawHemiCubeElement(std::shared_ptr<Element> element, int index)
@@ -359,6 +364,8 @@ void LightmapBaker::Light::RadiosityManager::DrawHemiCubeElement(std::shared_ptr
 
 void LightmapBaker::Light::RadiosityManager::EndDrawHemiCube()
 {
+    glDisable(GL_CULL_FACE);
+    glDisable(GL_DEPTH_TEST);
     glReadPixels(0, 0, hemiCube->view->resolutionX, hemiCube->view->resolutionY, GL_RGBA, GL_UNSIGNED_BYTE, readBuffer.data());
 
     //for (int i = 0; i < readBuffer.size(); ++i)
@@ -423,20 +430,20 @@ void LightmapBaker::Light::RadiosityManager::ComputeFormFactors(int shootPatchIn
         vec.y = rand() % 10;
         vec.z = rand() % 10;
         tangentU = glm::cross(normal, vec);
-        norm = tangentU.length();
-        tangentU /= tangentU.length();
+        norm = glm::length(tangentU);
+        tangentU /= norm;
     } while (norm == 0);
     tangentV = glm::cross(normal, tangentU);
 
     lookAt.push_back(center + normal);
-    up.push_back(tangentU);
     lookAt.push_back(center + tangentU);
-    up.push_back(normal);
     lookAt.push_back(center + tangentV);
-    up.push_back(normal);
     lookAt.push_back(center - tangentU);
-    up.push_back(normal);
     lookAt.push_back(center - tangentV);
+    up.push_back(tangentU);
+    up.push_back(normal);
+    up.push_back(normal);
+    up.push_back(normal);
     up.push_back(normal);
 
     normal *= radiosity->worldSize * 0.00001;
