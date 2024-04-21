@@ -17,7 +17,7 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
             60, 60,
             1, 550,
             200, 200,
-            std::vector<UINT8>()),
+            std::vector<int>()),
         100,
         250,
         50,
@@ -35,7 +35,7 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
             radiosity->worldSize,
             hemiCubeResolution,
             hemiCubeResolution,
-            std::vector<UINT8>(hemiCubeResolution * hemiCubeResolution * 4)),
+            std::vector<int>(hemiCubeResolution * hemiCubeResolution)),
         MakeTopFactors(hemiCubeResolution / 2),
         MakeSideFactors(hemiCubeResolution / 2)
     );
@@ -96,7 +96,7 @@ void LightmapBaker::Light::RadiosityManager::Update()
     hemiCubeRenderTarget.Bind();
     DoOneIteration();
     Renderer::RenderTarget::BindDefault();
-    glClearColor(1.0f, 1.0f, 1.0f, 1.0f);
+    glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
     for (int i = 0; i < elements.size(); ++i)
@@ -313,7 +313,7 @@ bool LightmapBaker::Light::RadiosityManager::FindShootPatch(int& shootPatchIndex
     return !(error < radiosity->threshold);
 }
 
-void LightmapBaker::Light::RadiosityManager::SumFormFactors(int resolutionX, int resolutionY, std::vector<UINT8>& buffer, std::vector<float>& deltaFactors, int startY)
+void LightmapBaker::Light::RadiosityManager::SumFormFactors(int resolutionX, int resolutionY, std::vector<int>& buffer, std::vector<float>& deltaFactors, int startY)
 {
     int i, j;
     int ii, jj;
@@ -353,13 +353,13 @@ void LightmapBaker::Light::RadiosityManager::BeginDrawHemiCube()
 
 void LightmapBaker::Light::RadiosityManager::DrawHemiCubeElement(std::shared_ptr<Element> element, int index)
 {
-    element->mesh->color = glm::vec3((index / 65536.0f) / 255.0f, ((index % 65536) / 256.0f) / 255.0f, (index % 256) / 255.0f);
+    element->mesh->color = glm::vec3((index / 65536) / 255.0f, ((index % 65536) / 256) / 255.0f, (index % 256) / 255.0f);
     element->mesh->Render();
 }
 
 void LightmapBaker::Light::RadiosityManager::EndDrawHemiCube()
 {
-    glReadPixels(0, 0, hemiCube->view->resolutionX,  hemiCube->view->resolutionY, GL_RGBA, GL_UNSIGNED_BYTE, readBuffer.data());
+    glReadPixels(0, 0, hemiCube->view->resolutionX, hemiCube->view->resolutionY, GL_RGBA, GL_UNSIGNED_BYTE, readBuffer.data());
 
     //for (int i = 0; i < readBuffer.size(); ++i)
     //{

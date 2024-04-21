@@ -23,8 +23,8 @@ namespace Light
         float viewFar;
         int resolutionX;
         int resolutionY;
-        std::vector<UINT8> buffer;
-        View(glm::vec3 center, glm::vec3 lookAt, glm::vec3 up, float fovX, float fovY, float viewNear, float viewFar, int resolutionX, int resolutionY, std::vector<UINT8> buffer) {
+        std::vector<int> buffer;
+        View(glm::vec3 center, glm::vec3 lookAt, glm::vec3 up, float fovX, float fovY, float viewNear, float viewFar, int resolutionX, int resolutionY, std::vector<int> buffer) {
             this->center = center;
             this->lookAt = lookAt;
             this->up = up;
@@ -147,7 +147,7 @@ namespace Light
 
         int DoOneIteration();
         bool FindShootPatch(int& shootPatchIndex);
-        void SumFormFactors(int resolutionX, int resolutionY, std::vector<UINT8>& buffer, std::vector<float>& deltaFactors, int startY);
+        void SumFormFactors(int resolutionX, int resolutionY, std::vector<int>& buffer, std::vector<float>& deltaFactors, int startY);
 
         void BeginDrawHemiCube();
         void DrawHemiCubeElement(std::shared_ptr<Element> element, int index);
