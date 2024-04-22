@@ -48,7 +48,7 @@ int main()
         lastTime += 1.0 / TARGET_FPS;
     }
     renderer->Exit();
-    std::vector<int> pngData;
+    std::vector<UINT8> pngData;
     pngData.resize(100 * 100 * 3); // R G B
     for (int i = 0; i < 100 * 100 * 3; ++i) pngData[i] = 255;
     dataManager->Save("lightmap.png", 100, 100, pngData.data());
