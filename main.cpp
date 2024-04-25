@@ -5,6 +5,7 @@
 #include "Data/DataManager.hpp"
 #include "Light/Light.hpp"
 #include "Renderer/Renderer.hpp"
+#include "thekla/thekla_atlas.h"
 
 int main()
 {
@@ -33,6 +34,11 @@ int main()
 
     Light::RadiosityManager::GetInstance().SetRenderer(renderer);
     Light::RadiosityManager::GetInstance().Initialize();
+
+    Thekla::Atlas_Input_Mesh input_mesh;
+
+    Thekla::Atlas_Error error = Thekla::Atlas_Error_Success;
+    Thekla::Atlas_Output_Mesh* output_mesh = atlas_generate(&input_mesh, NULL, &error);
 
     const int TARGET_FPS = 60;
     double lastTime = glfwGetTime();

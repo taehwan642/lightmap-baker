@@ -13,6 +13,21 @@
     <Filter Include="imgui">
       <UniqueIdentifier>{a1b44dfb-f337-4bfc-9790-877d5e2a4562}</UniqueIdentifier>
     </Filter>
+    <Filter Include="thekla">
+      <UniqueIdentifier>{a1e5630e-d2ed-4bec-94f5-badae96aad87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thekla\nvimage">
+      <UniqueIdentifier>{0f502302-9b5f-4f2e-82cb-610f262d4e17}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thekla\nvcore">
+      <UniqueIdentifier>{1612634a-a44f-4389-9429-1d43ea33a390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thekla\nvmath">
+      <UniqueIdentifier>{4365a943-bfb4-4b03-8b8b-419bbc3e4ea6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="thekla\nvmesh">
+      <UniqueIdentifier>{3bbe3e95-9574-492b-9aca-fe89d2df1558}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\DataManager.hpp">
@@ -63,6 +78,228 @@
     <ClInclude Include="Renderer\RenderTarget.hpp">
       <Filter>Renderer</Filter>
     </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\Array.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\BitArray.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\Debug.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\DefsGnucDarwin.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\DefsGnucLinux.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\DefsGnucWin32.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\DefsVcWin32.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\FileSystem.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\ForEach.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\Hash.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\HashMap.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\Memory.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\nvcore.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\Ptr.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\RadixSort.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\RefCounted.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\StdStream.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\Stream.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\StrLib.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\TextWriter.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\Utils.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvimage\BitMap.h">
+      <Filter>thekla\nvimage</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvimage\Image.h">
+      <Filter>thekla\nvimage</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvimage\nvimage.h">
+      <Filter>thekla\nvimage</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Basis.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Box.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Color.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\ConvexHull.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Fitting.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\ftoi.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\KahanSum.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Matrix.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Morton.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\nvmath.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Plane.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\ProximityGrid.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Quaternion.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Random.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Solver.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Sparse.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Sphere.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\TypeSerialization.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmath\Vector.h">
+      <Filter>thekla\nvmath</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Atlas.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\AtlasBuilder.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\AtlasPacker.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\BaseMesh.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\BoundaryMap.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Bounds.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\ClippedTriangle.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\ConformalMap.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Edge.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Face.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\LeastSquaresConformalMap.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Measurements.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Mesh.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\MeshBuilder.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\MeshExportOBJ.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\MeshTopology.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\nvmesh.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\OrthogonalProjectionMap.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\ParameterizationQuality.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\QuadTriMesh.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Raster.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\SingleFaceMap.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Snap.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\TriMesh.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Util.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Vertex.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\VertexWeld.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvmesh\Weld.h">
+      <Filter>thekla\nvmesh</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\thekla_atlas.h">
+      <Filter>thekla</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvconfig.h">
+      <Filter>thekla</Filter>
+    </ClInclude>
+    <ClInclude Include="Dependency\thekla\nvcore\posh.h">
+      <Filter>thekla\nvcore</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data\DataManager.cpp">
@@ -108,5 +345,28 @@
     <ClCompile Include="Renderer\RenderTarget.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
+    <ClCompile Include="Dependency\thekla\thekla_atlas.cpp">
+      <Filter>thekla</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Dependency\thekla\nvcore\Array.inl">
+      <Filter>thekla\nvcore</Filter>
+    </None>
+    <None Include="Dependency\thekla\nvcore\HashMap.inl">
+      <Filter>thekla\nvcore</Filter>
+    </None>
+    <None Include="Dependency\thekla\nvmath\Box.inl">
+      <Filter>thekla\nvmath</Filter>
+    </None>
+    <None Include="Dependency\thekla\nvmath\Matrix.inl">
+      <Filter>thekla\nvmath</Filter>
+    </None>
+    <None Include="Dependency\thekla\nvmath\Plane.inl">
+      <Filter>thekla\nvmath</Filter>
+    </None>
+    <None Include="Dependency\thekla\nvmath\Vector.inl">
+      <Filter>thekla\nvmath</Filter>
+    </None>
   </ItemGroup>
 </Project>
