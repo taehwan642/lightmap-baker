@@ -9,7 +9,7 @@
 void LightmapBaker::Renderer::ToolState::RenderBeforeRadiosityCalculationUI()
 {
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 155, ImGui::GetMainViewport()->Size.y - 33));
-	ImGui::Begin("Controller2", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("CalculateRadiosity", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::Button("Calculate Radiosity", ImVec2(141.0f, 19.0f)))
 	{
 		UpdateCurrentState(ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION);
@@ -27,13 +27,13 @@ void LightmapBaker::Renderer::ToolState::RenderBeforeLightmapBakeUI()
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.06f, 0.53f, 0.98f, 1.00f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 360, ImGui::GetMainViewport()->Size.y - 42));
-	ImGui::Begin("Controller4", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("LightMapQuality", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	std::string qualityString = "Lightmap Quality : ";
 	ImGui::Text((qualityString + std::to_string(lightMapQuality)).c_str());
 	ImGui::End();
 
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 190, ImGui::GetMainViewport()->Size.y - 55));
-	ImGui::Begin("Controller5", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("UpDownBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::ArrowButton("Up", ImGuiDir_Up))
 	{
 		++lightMapQuality;
@@ -55,7 +55,7 @@ void LightmapBaker::Renderer::ToolState::RenderBeforeLightmapBakeUI()
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
 
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 155, ImGui::GetMainViewport()->Size.y - 55));
-	ImGui::Begin("Controller1", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("CompareBakeBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::Button("Compare", ImVec2(141.0f, 19.0f)))
 	{
 	}
@@ -80,7 +80,7 @@ void LightmapBaker::Renderer::ToolState::RenderProgressLightmapBakeUI()
 void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
 {
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 156, ImGui::GetMainViewport()->Size.y - 80));
-	ImGui::Begin("Controller4", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("BasicRadiosityCombo", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	const char* items[] = { "Basic", "Radiosity" };
 	static const char* curItem = items[0];
 
@@ -104,7 +104,7 @@ void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
 
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 155, ImGui::GetMainViewport()->Size.y - 55));
-	ImGui::Begin("Controller1", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("CompareNewLoadBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::Button("Compare", ImVec2(141.0f, 19.0f)))
 	{
 	}
@@ -125,7 +125,10 @@ void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
 void LightmapBaker::Renderer::ToolState::RenderHemicubeRenderedImage()
 {
 	ImVec2 resolution = ImVec2(Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.x, Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.y);
-	ImGui::Begin("OpenGL Texture Text");
+	ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetMainViewport()->Size.y - resolution.y));
+	ImGui::SetNextWindowSize(resolution, ImGuiCond_Once);
+	ImGui::Begin("Texture", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+
 	ImGui::Image((ImTextureID)Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.renderTexture, resolution);
 	ImGui::End();
 }
@@ -133,7 +136,7 @@ void LightmapBaker::Renderer::ToolState::RenderHemicubeRenderedImage()
 void LightmapBaker::Renderer::ToolState::ProgressUI(const float& progress, const std::string& text)
 {
 	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - 55));
-	ImGui::Begin("Controller", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("Progress", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	ImGui::ProgressBar(progress);
 	ImGui::Text(text.c_str());
 	ImGui::End();
@@ -145,15 +148,17 @@ void LightmapBaker::Renderer::ToolState::CompareUI()
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.15f, 0.15f, 0.15f, 1.0f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
 
+
 	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 2.5f, -20.0f));
-	ImGui::Begin("Controller2", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::SetNextWindowSize(ImVec2(100, ImGui::GetMainViewport()->Size.y + 100));
+	ImGui::Begin("MiddleLine", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::Button("##", ImVec2(5.0f, 1180.0f)))
 	{
 	}
 	ImGui::End();
 
 	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 20, (ImGui::GetMainViewport()->Size.y / 2.0f) - 15));
-	ImGui::Begin("Controller3", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::Begin("MiddleLineHandler", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::ArrowButton("Left", ImGuiDir_Left))
 	{
 	}
@@ -213,7 +218,8 @@ void LightmapBaker::Renderer::ToolState::Update()
 void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 {
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 255, 33));
-	ImGui::Begin("Controller", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::SetNextWindowSize(ImVec2(200, 50), ImGuiCond_Once);
+	ImGui::Begin("Frames", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 
 	while (frames.size() > 100) frames.pop_front();
 
@@ -226,7 +232,6 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 	ImGui::PlotLines("Frames", framesVector.data(), framesVector.size());
 	ImGui::End();
 
-	RenderHemicubeRenderedImage();
 
 	switch (currentState)
 	{
@@ -234,7 +239,10 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 		RenderBeforeRadiosityCalculationUI();
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION:
+	{
 		RenderProgressRadiosityCalculationUI();
+		RenderHemicubeRenderedImage();
+	}
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_LIGHTMAP_BAKE:
 		RenderBeforeLightmapBakeUI();
