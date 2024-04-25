@@ -79,12 +79,13 @@ void LightmapBaker::Renderer::ToolState::RenderProgressLightmapBakeUI()
 
 void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
 {
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 156, ImGui::GetMainViewport()->Size.y - 80));
+	ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetMainViewport()->Size.y - 30));
+	ImGui::SetNextWindowSize(ImVec2(300, 100), ImGuiCond_Once);
 	ImGui::Begin("BasicRadiosityCombo", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	const char* items[] = { "Basic", "Radiosity" };
 	static const char* curItem = items[0];
 
-	if (ImGui::BeginCombo("##", curItem))
+	if (ImGui::BeginCombo("Compare with", curItem))
 	{
 		for (int i = 0; i < IM_ARRAYSIZE(items); i++)
 		{
