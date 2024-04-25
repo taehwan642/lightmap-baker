@@ -4,6 +4,7 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include <vector>
 #include "../Light/Light.hpp"
+#include "../Data/DataManager.hpp"
 
 void LightmapBaker::Renderer::ToolState::RenderBeforeRadiosityCalculationUI()
 {
@@ -12,18 +13,12 @@ void LightmapBaker::Renderer::ToolState::RenderBeforeRadiosityCalculationUI()
 	if (ImGui::Button("Calculate Radiosity", ImVec2(141.0f, 19.0f)))
 	{
 		UpdateCurrentState(ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION);
-		radiosityCalculationProgressValue = 0.0f;
 	}
 	ImGui::End();
 }
 
 void LightmapBaker::Renderer::ToolState::RenderProgressRadiosityCalculationUI()
 {
-	ProgressUI(radiosityCalculationProgressValue, "   Radiosity calculation in progress...");
-	if (radiosityCalculationProgressValue >= 1.0f)
-	{
-		UpdateCurrentState(ToolStateEnum::BEFORE_LIGHTMAP_BAKE);
-	}
 }
 
 void LightmapBaker::Renderer::ToolState::RenderBeforeLightmapBakeUI()
@@ -68,7 +63,6 @@ void LightmapBaker::Renderer::ToolState::RenderBeforeLightmapBakeUI()
 	if (ImGui::Button("Bake", ImVec2(141.0f, 19.0f)))
 	{
 		UpdateCurrentState(ToolStateEnum::PROGRESS_LIGHTMAP_BAKE);
-		lightmapBakeProgressValue = 0.0f;
 	}
 	ImGui::End();
 
@@ -81,11 +75,6 @@ void LightmapBaker::Renderer::ToolState::RenderBeforeLightmapBakeUI()
 
 void LightmapBaker::Renderer::ToolState::RenderProgressLightmapBakeUI()
 {
-	ProgressUI(lightmapBakeProgressValue, "          Baking in progress...");
-	if (lightmapBakeProgressValue >= 1.0f)
-	{
-		UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
-	}
 }
 
 void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
@@ -182,14 +171,42 @@ void LightmapBaker::Renderer::ToolState::UpdateCurrentState(const ToolStateEnum&
 
 void LightmapBaker::Renderer::ToolState::Update()
 {
-	if (currentState == ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION)
+	switch (currentState)
 	{
-		radiosityCalculationProgressValue += 0.01;
+	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_RADIOSITY_CALCULATION:
+	{
+		// Model Import
 	}
-
-	if (currentState == ToolStateEnum::PROGRESS_LIGHTMAP_BAKE)
+		break;
+	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION:
 	{
-		lightmapBakeProgressValue += 0.01;
+		// Calc Radiosity
+		if (!Light::RadiosityManager::GetInstance().Update())
+			UpdateCurrentState(ToolStateEnum::BEFORE_LIGHTMAP_BAKE);
+	}
+		break;
+	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_LIGHTMAP_BAKE:
+	{
+
+	}
+		break;
+	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_LIGHTMAP_BAKE:
+	{
+		std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
+		std::vector<UINT8> pngData;
+		pngData.resize(1000 * 1000 * 3); // R G B
+		for (int i = 0; i < 1000 * 1000 * 3; ++i) pngData[i] = std::rand() % 255; // calculate random pixel for test
+
+		if (!dataManager->Save("lightmap.png", 1000, 1000, pngData.data()))
+			std::cout << "Bake Error" << std::endl;
+
+		UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
+	}
+		break;
+	case LightmapBaker::Renderer::ToolStateEnum::AFTER_LIGHTMAP_BAKE:
+		break;
+	default:
+		break;
 	}
 }
 

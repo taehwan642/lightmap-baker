@@ -32,8 +32,6 @@ namespace Renderer
 		void RenderHemicubeRenderedImage();
 
 	private:
-		float radiosityCalculationProgressValue = 0.0f;
-		float lightmapBakeProgressValue = 0.0f;
 		int lightMapQuality = 1;
 
 		void ProgressUI(const float& progress, const std::string& text);

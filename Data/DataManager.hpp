@@ -13,7 +13,7 @@ namespace Data
     {
     private:
     public:
-        void Save(std::string path, int width, int height, const void* data);
+        bool Save(std::string path, int width, int height, const void* data);
         std::vector<std::shared_ptr<Renderer::Mesh>> Load(const std::string& path);
         // for debug
         std::vector<std::shared_ptr<Renderer::Mesh>> Load();

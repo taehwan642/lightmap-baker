@@ -91,10 +91,10 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
     }
 }
 
-void LightmapBaker::Light::RadiosityManager::Update()
+bool LightmapBaker::Light::RadiosityManager::Update()
 {
     hemiCubeRenderTarget.Bind();
-    DoOneIteration();
+    bool done = DoOneIteration();
     Renderer::RenderTarget::BindDefault();
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
     glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
@@ -103,6 +103,8 @@ void LightmapBaker::Light::RadiosityManager::Update()
     {
         elements[i]->mesh->color = elements[i]->radiosity * radiosity->intensityScale;
     }
+
+    return done;
 }
 
 float LightmapBaker::Light::RadiosityManager::InitRadiosityParameter()
@@ -278,17 +280,17 @@ std::vector<float> LightmapBaker::Light::RadiosityManager::MakeSideFactors(int h
     return wp;
 }
 
-int LightmapBaker::Light::RadiosityManager::DoOneIteration()
+bool LightmapBaker::Light::RadiosityManager::DoOneIteration()
 {
     int shootPatchIndex = 0;
     if (FindShootPatch(shootPatchIndex))
     {
         ComputeFormFactors(shootPatchIndex);
         DistributeRadiosity(shootPatchIndex);
-        return 0;
+        return true;
     }
 
-    return 1;
+    return false;
 }
 
 bool LightmapBaker::Light::RadiosityManager::FindShootPatch(int& shootPatchIndex)

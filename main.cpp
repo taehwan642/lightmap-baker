@@ -26,12 +26,6 @@ int main()
         exit(1);
     }
 
-    /*auto preparedMeshList = dataManager->Load();
-    for (int i = 0; i < preparedMeshList.size(); ++i)
-    {
-        renderer->AddRenderMesh(preparedMeshList[i]);
-    }*/
-
     Light::RadiosityManager::GetInstance().SetRenderer(renderer);
     Light::RadiosityManager::GetInstance().Initialize();
 
@@ -46,7 +40,6 @@ int main()
     {
         renderer->Update();
         renderer->BeforeRender();
-        Light::RadiosityManager::GetInstance().Update();
         renderer->Render();
         while (glfwGetTime() < lastTime + 1.0 / TARGET_FPS) {
             // Put the thread to sleep, yield, or simply do nothing
@@ -54,10 +47,6 @@ int main()
         lastTime += 1.0 / TARGET_FPS;
     }
     renderer->Exit();
-    std::vector<UINT8> pngData;
-    pngData.resize(100 * 100 * 3); // R G B
-    for (int i = 0; i < 100 * 100 * 3; ++i) pngData[i] = 255;
-    dataManager->Save("lightmap.png", 100, 100, pngData.data());
 
     return 0;
 }

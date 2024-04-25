@@ -145,7 +145,7 @@ namespace Light
         std::vector<float> MakeTopFactors(int halfResolution);
         std::vector<float> MakeSideFactors(int halfResolution);
 
-        int DoOneIteration();
+        bool DoOneIteration();
         bool FindShootPatch(int& shootPatchIndex);
         void SumFormFactors(int resolutionX, int resolutionY, std::vector<int>& buffer, std::vector<float>& deltaFactors, int startY);
 
@@ -157,7 +157,7 @@ namespace Light
         void DistributeRadiosity(int shootPatchIndex);
     public:
         void Initialize();
-        void Update();
+        bool Update();
         float InitRadiosityParameter();
         void SetRenderer(std::shared_ptr<Renderer::Renderer> renderer);
 
