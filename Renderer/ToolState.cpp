@@ -19,6 +19,7 @@ void LightmapBaker::Renderer::ToolState::RenderBeforeRadiosityCalculationUI()
 
 void LightmapBaker::Renderer::ToolState::RenderProgressRadiosityCalculationUI()
 {
+	ProgressUI("Radiosity calculation in progress");
 }
 
 void LightmapBaker::Renderer::ToolState::RenderBeforeLightmapBakeUI()
@@ -75,6 +76,7 @@ void LightmapBaker::Renderer::ToolState::RenderBeforeLightmapBakeUI()
 
 void LightmapBaker::Renderer::ToolState::RenderProgressLightmapBakeUI()
 {
+	ProgressUI("Lightmap baking in progress");
 }
 
 void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
@@ -112,6 +114,8 @@ void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
 
 	if (ImGui::Button("New Load", ImVec2(141.0f, 19.0f)))
 	{
+		Light::RadiosityManager::GetInstance().Destroy();
+		Light::RadiosityManager::GetInstance().Initialize();
 		UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION);
 	}
 	ImGui::End();
@@ -134,11 +138,10 @@ void LightmapBaker::Renderer::ToolState::RenderHemicubeRenderedImage()
 	ImGui::End();
 }
 
-void LightmapBaker::Renderer::ToolState::ProgressUI(const float& progress, const std::string& text)
+void LightmapBaker::Renderer::ToolState::ProgressUI(const std::string& text)
 {
 	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - 55));
 	ImGui::Begin("Progress", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	ImGui::ProgressBar(progress);
 	ImGui::Text(text.c_str());
 	ImGui::End();
 }

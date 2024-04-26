@@ -34,7 +34,7 @@ namespace Renderer
 	private:
 		int lightMapQuality = 1;
 
-		void ProgressUI(const float& progress, const std::string& text);
+		void ProgressUI(const std::string& text);
 		void CompareUI();
 
 	public:

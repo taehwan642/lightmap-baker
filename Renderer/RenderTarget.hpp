@@ -17,6 +17,7 @@ namespace LightmapBaker
             void Initialize(glm::vec2 resolution);
             static void BindDefault();
             void Bind();
+            void Destroy();
         };
     }
 }

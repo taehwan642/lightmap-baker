@@ -95,6 +95,21 @@ void LightmapBaker::Renderer::Renderer::AddRenderMesh(const std::shared_ptr<Mesh
     renderMeshList.push_back(mesh);
 }
 
+void LightmapBaker::Renderer::Renderer::RemoveRenderMesh(const std::shared_ptr<Mesh>& mesh)
+{
+    for (std::vector<std::shared_ptr<Mesh>>::iterator iter = renderMeshList.begin(); iter != renderMeshList.end();)
+    {
+        if (iter->get() == mesh.get())
+        {
+            iter = renderMeshList.erase(iter);
+        }
+        else
+        {
+            ++iter;
+        }
+    }
+}
+
 void LightmapBaker::Renderer::Renderer::GLFWInitialize()
 {
     glfwInit();

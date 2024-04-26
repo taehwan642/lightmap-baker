@@ -158,6 +158,7 @@ namespace Light
     public:
         void Initialize();
         bool Update();
+        void Destroy();
         float InitRadiosityParameter();
         void SetRenderer(std::shared_ptr<Renderer::Renderer> renderer);
 

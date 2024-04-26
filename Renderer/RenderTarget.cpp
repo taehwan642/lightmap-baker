@@ -46,3 +46,10 @@ void LightmapBaker::Renderer::RenderTarget::Bind()
     glViewport(0, 0, resolution.x, resolution.y);
 }
 
+void LightmapBaker::Renderer::RenderTarget::Destroy()
+{
+    glDeleteFramebuffers(1, &frameBuffer);
+    glDeleteTextures(1, &renderTexture);
+    glDeleteRenderbuffers(1, &depthBuffer);
+}
+

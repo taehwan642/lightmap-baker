@@ -52,6 +52,7 @@ namespace Renderer
         bool WindowShouldClose();
         void Exit();
         void AddRenderMesh(const std::shared_ptr<Mesh>& mesh);
+        void RemoveRenderMesh(const std::shared_ptr<Mesh>& mesh);
 
     public:
         static const int screenWidth = 640;

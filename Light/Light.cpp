@@ -107,6 +107,22 @@ bool LightmapBaker::Light::RadiosityManager::Update()
     return done;
 }
 
+void LightmapBaker::Light::RadiosityManager::Destroy()
+{
+    hemiCubeRenderTarget.Destroy();
+    for (int i = 0; i < elements.size(); ++i)
+    {
+        renderer->RemoveRenderMesh(elements[i]->mesh);
+    }
+
+    models.clear();
+    patches.clear();
+    elements.clear();
+    subDividedVertices.clear();
+    formFactors.clear();
+    readBuffer.clear();
+}
+
 float LightmapBaker::Light::RadiosityManager::InitRadiosityParameter()
 {
     for (int i = 0; i < patches.size(); ++i) {
