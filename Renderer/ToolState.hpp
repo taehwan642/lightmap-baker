@@ -33,6 +33,7 @@ namespace Renderer
 
 	private:
 		int lightMapQuality = 1;
+		float compareXPosition = 0.0f;
 
 		void ProgressUI(const std::string& text);
 		void CompareUI();

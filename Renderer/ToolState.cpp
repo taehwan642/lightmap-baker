@@ -148,22 +148,29 @@ void LightmapBaker::Renderer::ToolState::ProgressUI(const std::string& text)
 
 void LightmapBaker::Renderer::ToolState::CompareUI()
 {
+	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - 55));
+	ImGui::Begin("Compare Helper", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+	ImGui::Text("Move splitter by left / right arrow");
+	ImGui::End();
+
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.15f, 0.15f, 0.15f, 1.0f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.15f, 0.15f, 0.15f, 1.0f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
 
-
-	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 2.5f, -20.0f));
+	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_LeftArrow)))
+	{
+		compareXPosition -= ImGui::GetIO().DeltaTime * 1000.0f;
+		if (compareXPosition < 0.0f) compareXPosition = 0.0f;
+	}
+	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_RightArrow)))
+	{
+		compareXPosition += ImGui::GetIO().DeltaTime * 1000.0f;
+		if (ImGui::GetMainViewport()->Size.x - 25.0f < compareXPosition) compareXPosition = ImGui::GetMainViewport()->Size.x - 25.0f;
+	}
+	ImGui::SetNextWindowPos(ImVec2(compareXPosition, -20.0f));
 	ImGui::SetNextWindowSize(ImVec2(100, ImGui::GetMainViewport()->Size.y + 100));
 	ImGui::Begin("MiddleLine", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::Button("##", ImVec2(5.0f, 1180.0f)))
-	{
-	}
-	ImGui::End();
-
-	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 20, (ImGui::GetMainViewport()->Size.y / 2.0f) - 15));
-	ImGui::Begin("MiddleLineHandler", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	if (ImGui::ArrowButton("Left", ImGuiDir_Left))
 	{
 	}
 	ImGui::End();
@@ -191,7 +198,10 @@ void LightmapBaker::Renderer::ToolState::Update()
 	{
 		// Calc Radiosity
 		if (!Light::RadiosityManager::GetInstance().Update())
+		{
+			compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f) - 2.5f;
 			UpdateCurrentState(ToolStateEnum::BEFORE_LIGHTMAP_BAKE);
+		}
 	}
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_LIGHTMAP_BAKE:
@@ -209,6 +219,7 @@ void LightmapBaker::Renderer::ToolState::Update()
 		if (!dataManager->Save("lightmap.png", 1000, 1000, pngData.data()))
 			std::cout << "Bake Error" << std::endl;
 
+		compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f) - 2.5f;
 		UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
 	}
 		break;
