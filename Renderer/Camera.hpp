@@ -12,6 +12,7 @@ namespace LightmapBaker
             glm::vec3 position = glm::vec3(0, 0, 0);
             glm::vec2 angle = glm::vec2(0, 0);
             float distance = 500.0f;
+            float speed = 1.0f;
         };
     }
 }

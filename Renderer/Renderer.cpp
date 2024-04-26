@@ -14,27 +14,33 @@ void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scanc
         glfwSetWindowShouldClose(window, GLFW_TRUE);
     }
     
-    if (action == GLFW_REPEAT)
+    if (action == GLFW_PRESS || action == GLFW_REPEAT)
     {
         switch (key)
         {
         case GLFW_KEY_W:
-            Renderer::camera.position.z += 100.0f * Renderer::deltaTime;
+            Renderer::camera.position.z += 100.0f * Renderer::deltaTime * Renderer::camera.speed;
             break;
         case GLFW_KEY_A:
-            Renderer::camera.position.x += 100.0f * Renderer::deltaTime;
+            Renderer::camera.position.x += 100.0f * Renderer::deltaTime * Renderer::camera.speed;
             break;
         case GLFW_KEY_S:
-            Renderer::camera.position.z -= 100.0f * Renderer::deltaTime;
+            Renderer::camera.position.z -= 100.0f * Renderer::deltaTime * Renderer::camera.speed;
             break;
         case GLFW_KEY_D:
-            Renderer::camera.position.x -= 100.0f * Renderer::deltaTime;
+            Renderer::camera.position.x -= 100.0f * Renderer::deltaTime * Renderer::camera.speed;
             break;
         case GLFW_KEY_Q:
-            Renderer::camera.position.y += 100.0f * Renderer::deltaTime;
+            Renderer::camera.position.y += 100.0f * Renderer::deltaTime * Renderer::camera.speed;
             break;
         case GLFW_KEY_E:
-            Renderer::camera.position.y -= 100.0f * Renderer::deltaTime;
+            Renderer::camera.position.y -= 100.0f * Renderer::deltaTime * Renderer::camera.speed;
+            break;
+        case GLFW_KEY_Z:
+            Renderer::camera.speed += 50.0f * Renderer::deltaTime;
+            break;
+        case GLFW_KEY_X:
+            Renderer::camera.speed -= 50.0f * Renderer::deltaTime;
             break;
         default:
             break;
@@ -49,7 +55,7 @@ void LightmapBaker::Renderer::FramebufferSizeCallback(GLFWwindow* window, int wi
 
 void LightmapBaker::Renderer::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    LightmapBaker::Renderer::Renderer::camera.distance += yoffset;
+    LightmapBaker::Renderer::Renderer::camera.distance += yoffset * Renderer::camera.speed;
 }
 
 void LightmapBaker::Renderer::Renderer::Initialize()
@@ -165,7 +171,7 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glLoadIdentity();
 
     float aspectRatio = screenHeight / (float)screenWidth;
-    gluPerspective(80, aspectRatio, 0.01f, camera.distance * 2);
+    gluPerspective(80, aspectRatio, 0.01f, camera.distance * 2 + 100);
 
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
