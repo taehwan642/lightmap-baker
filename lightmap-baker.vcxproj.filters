@@ -300,6 +300,9 @@
     <ClInclude Include="Dependency\thekla\nvcore\posh.h">
       <Filter>thekla\nvcore</Filter>
     </ClInclude>
+    <ClInclude Include="Light\Lightmap.hpp">
+      <Filter>Light</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data\DataManager.cpp">
@@ -347,6 +350,9 @@
     </ClCompile>
     <ClCompile Include="Dependency\thekla\thekla_atlas.cpp">
       <Filter>thekla</Filter>
+    </ClCompile>
+    <ClCompile Include="Light\Lightmap.cpp">
+      <Filter>Light</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

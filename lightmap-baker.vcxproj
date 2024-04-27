@@ -159,6 +159,7 @@
     <ClCompile Include="Dependency\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Dependency\thekla\thekla_atlas.cpp" />
     <ClCompile Include="Light\Light.cpp" />
+    <ClCompile Include="Light\Lightmap.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="Renderer\Camera.cpp" />
     <ClCompile Include="Renderer\Mesh.cpp" />
@@ -252,6 +253,7 @@
     <ClInclude Include="Dependency\thekla\nvmesh\Weld.h" />
     <ClInclude Include="Dependency\thekla\thekla_atlas.h" />
     <ClInclude Include="Light\Light.hpp" />
+    <ClInclude Include="Light\Lightmap.hpp" />
     <ClInclude Include="Renderer\Camera.hpp" />
     <ClInclude Include="Renderer\Mesh.hpp" />
     <ClInclude Include="Renderer\Renderer.hpp" />
