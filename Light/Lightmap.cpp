@@ -86,16 +86,7 @@ void LightmapBaker::Light::Lightmap::Bake(const std::vector<std::shared_ptr<Rend
 
     Atlas_Input_Mesh inputMesh = Atlas_Input_Mesh();
     GetInputMesh(meshList, inputMesh);
-    for (int i = 0; i < inputMesh.face_count; ++i)
-    {
-        auto n = inputMesh.face_array[i];
-        n.material_index = 0;
-    }
-    for (int i = 0; i < inputMesh.vertex_count; ++i)
-    {
-        auto vtx = inputMesh.vertex_array[i];
-        vtx.uv[0] = 0;
-    }
+
     // Generate Atlas_Output_Mesh.
     Atlas_Options atlasOptions;
     atlas_set_default_options(&atlasOptions);
