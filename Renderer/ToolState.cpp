@@ -10,6 +10,7 @@
 void LightmapBaker::Renderer::ToolState::RenderBeforeRadiosityCalculationUI()
 {
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * ((float)curScreenWidth / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (19.0f * ((float)curScreenHeight / 480.0f) + 14.0f)));
+	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
 	ImGui::Begin("CalculateRadiosity", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::Button("Calculate Radiosity", ImVec2(141.0f * ((float)curScreenWidth / 640.0f), 19.0f * ((float)curScreenHeight / 480.0f))))
 	{
@@ -29,6 +30,7 @@ void LightmapBaker::Renderer::ToolState::RenderBeforeLightmapBakeUI()
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.06f, 0.53f, 0.98f, 1.00f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141 * ((float)curScreenWidth / 640.0f) + 205.0f), ImGui::GetMainViewport()->Size.y - (19.0f * ((float)curScreenHeight / 480.0f) + 23.0f)));
+	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
 	ImGui::Begin("LightMapQuality", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	std::string qualityString = "Lightmap Quality : ";
 	ImGui::Text((qualityString + std::to_string(lightMapQuality)).c_str());
@@ -57,6 +59,7 @@ void LightmapBaker::Renderer::ToolState::RenderBeforeLightmapBakeUI()
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
 
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * ((float)curScreenWidth / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (38.0f * ((float)curScreenHeight / 480.0f) + 17.0f)));
+	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
 	ImGui::Begin("CompareBakeBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::Button("Compare", ImVec2(141.0f * ((float)curScreenWidth / 640.0f), 19.0f * ((float)curScreenHeight / 480.0f))))
 	{
@@ -108,6 +111,7 @@ void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
 
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * ((float)curScreenWidth / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (38.0f * ((float)curScreenHeight / 480.0f) + 17.0f)));
+	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
 	ImGui::Begin("CompareNewLoadBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	if (ImGui::Button("Compare", ImVec2(141.0f * ((float)curScreenWidth / 640.0f), 19.0f * ((float)curScreenHeight / 480.0f))))
 	{
