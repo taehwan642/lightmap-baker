@@ -3,15 +3,15 @@
 
 LightmapBaker::Renderer::Mesh::Mesh()
 {
-	normal = glm::vec3(0, 0, 0);
 	patchLevel = 0;
 	elementLevel = 0;
 	area = 0.0f;
 	reflectance = glm::vec3(0, 0, 0);
 	emission = glm::vec3(0, 0, 0);
+	color = glm::vec3(0, 0, 0);
 }
 
-LightmapBaker::Renderer::Mesh::Mesh(const std::vector<glm::vec3>& vertices, const std::vector<GLuint>& indices, const glm::vec3& normal, const int& patchLevel, const int& elementLevel, const float& area, const glm::vec3& reflectance, const glm::vec3& emission)
+LightmapBaker::Renderer::Mesh::Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const glm::vec3& normal, const int& patchLevel, const int& elementLevel, const float& area, const glm::vec3& reflectance, const glm::vec3& emission)
 {
 	this->vertices = vertices;
 	this->indices = indices;
@@ -32,7 +32,7 @@ void LightmapBaker::Renderer::Mesh::Render()
 	glColor3f(color.r, color.g, color.b);
 	glEnableClientState(GL_VERTEX_ARRAY);
 
-	glVertexPointer(3, GL_FLOAT, 0, vertices.data());
+	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), vertices.data());
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
@@ -44,7 +44,7 @@ void LightmapBaker::Renderer::Mesh::Destroy()
 {
 }
 
-glm::vec3 LightmapBaker::Renderer::Mesh::GetVertexByIndex(int index)
+LightmapBaker::Renderer::Vertex LightmapBaker::Renderer::Mesh::GetVertexByIndex(int index)
 {
 	return vertices[index];
 }

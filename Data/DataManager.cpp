@@ -1,12 +1,65 @@
-#include "DataManager.hpp"
+﻿#include "DataManager.hpp"
 #include <iostream>
 #include <fstream>
 #include <stack>
 #include "GLFW/glfw3.h"
 #include "GLUT/glut.h"
+#include "GLM/vec2.hpp"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define __STDC_LIB_EXT1__
 #include "stb/stb_image_write.h"
+
+void LightmapBaker::Data::DataManager::RasterTriangle(Thekla::Atlas_Output_Vertex p1, Thekla::Atlas_Output_Vertex p2, Thekla::Atlas_Output_Vertex p3, glm::u8vec3 color, std::vector<glm::u8vec3>& data, int width)
+{
+    glm::vec2 t0 = { p1.uv[0], p1.uv[1] };
+    glm::vec2 t1 = { p2.uv[0], p2.uv[1] };
+    glm::vec2 t2 = { p3.uv[0], p3.uv[1] };
+    if (t0.y == t1.y && t0.y == t2.y) return; // I dont care about degenerate triangles 
+    // sort the vertices, t0, t1, t2 lower−to−upper (bubblesort yay!) 
+    if (t0.y > t1.y) std::swap(t0, t1);
+    if (t0.y > t2.y) std::swap(t0, t2);
+    if (t1.y > t2.y) std::swap(t1, t2);
+    int total_height = t2.y - t0.y;
+    for (int i = 0; i < total_height; i++) {
+        bool second_half = i > t1.y - t0.y || t1.y == t0.y;
+        int segment_height = second_half ? t2.y - t1.y : t1.y - t0.y;
+        float alpha = (float)i / total_height;
+        float beta = (float)(i - (second_half ? t1.y - t0.y : 0)) / segment_height; // be careful: with above conditions no division by zero here 
+        glm::vec2 A = t0 + (t2 - t0) * alpha;
+        glm::vec2 B = second_half ? t1 + (t2 - t1) * beta : t0 + (t1 - t0) * beta;
+        if (A.x > B.x) std::swap(A, B);
+        for (int j = A.x; j <= B.x; j++) {
+            int triX = j;
+            int triY = t0.y + i;
+            data[triX + triY * width] = color;
+        }
+    }
+}
+
+bool LightmapBaker::Data::DataManager::Save(const std::string& path, const std::shared_ptr<Light::Lightmap>& lightMap)
+{
+    int comp = 3; // R G B
+    Thekla::Atlas_Output_Mesh* mesh = lightMap->outputMesh;
+    std::vector<glm::u8vec3> data = std::vector<glm::u8vec3>(mesh->atlas_width * mesh->atlas_height);
+
+    for (int i = 0; i < mesh->index_count; i += 3)
+    {
+        Thekla::Atlas_Output_Vertex v1 = mesh->vertex_array[mesh->index_array[i]];
+        Thekla::Atlas_Output_Vertex v2 = mesh->vertex_array[mesh->index_array[i + 1]];
+        Thekla::Atlas_Output_Vertex v3 = mesh->vertex_array[mesh->index_array[i + 2]];
+
+        // get color from lightmap's result meshes texture
+        glm::u8vec3 c;
+        c.r = rand() % 256;
+        c.g = rand() % 256;
+        c.b = rand() % 256;
+        RasterTriangle(v1, v2, v3, c, data, mesh->atlas_width);
+    }
+
+    bool value = stbi_write_png(path.c_str(), mesh->atlas_width, mesh->atlas_height, comp, data.data(), 0);
+    std::cout << "Save " << " " << path << std::endl;
+    return value;
+}
 
 bool LightmapBaker::Data::DataManager::Save(std::string path, int width, int height, const void* data)
 {
@@ -71,7 +124,7 @@ std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Data:
                         float v = std::stof(temp.substr(start, i - start));
                         start = i + 1;
 
-                        mesh->normal[idx++] = v;
+                        // mesh->normal[idx++] = v;
                     }
                 }
             }
@@ -180,36 +233,36 @@ std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Data:
     return meshes;
 }
 
-std::vector<glm::vec3> LightmapBaker::Data::DataManager::GetVertices()
+std::vector<LightmapBaker::Renderer::Vertex> LightmapBaker::Data::DataManager::GetVertices()
 {
-    std::vector<glm::vec3> vertices;
-    vertices.push_back(glm::vec3(0, 0, 0));
-    vertices.push_back(glm::vec3(216, 0, 0));
-    vertices.push_back(glm::vec3(216, 0, 215));
-    vertices.push_back(glm::vec3(0, 0, 215));
-    vertices.push_back(glm::vec3(0, 221, 0));
-    vertices.push_back(glm::vec3(216, 221, 0));
-    vertices.push_back(glm::vec3(216, 221, 215));
-    vertices.push_back(glm::vec3(0, 221, 215));
-    vertices.push_back(glm::vec3(85.5, 220, 90));
-    vertices.push_back(glm::vec3(130.5, 220, 90));
-    vertices.push_back(glm::vec3(130.5, 220, 130));
-    vertices.push_back(glm::vec3(85.5, 220, 130));
-    vertices.push_back(glm::vec3(53.104, 0, 64.104));
-    vertices.push_back(glm::vec3(109.36, 0, 96.604));
-    vertices.push_back(glm::vec3(76.896, 0, 152.896));
-    vertices.push_back(glm::vec3(20.604, 0, 120.396));
-    vertices.push_back(glm::vec3(53.104, 65, 64.104));
-    vertices.push_back(glm::vec3(109.36, 65, 96.604));
-    vertices.push_back(glm::vec3(76.896, 65, 152.896));
-    vertices.push_back(glm::vec3(20.604, 65, 120.396));
-    vertices.push_back(glm::vec3(134.104, 0, 67.104));
-    vertices.push_back(glm::vec3(190.396, 0, 99.604));
-    vertices.push_back(glm::vec3(157.896, 0, 155.896));
-    vertices.push_back(glm::vec3(101.604, 0, 123.396));
-    vertices.push_back(glm::vec3(134.104, 130, 67.104));
-    vertices.push_back(glm::vec3(190.396, 130, 99.604));
-    vertices.push_back(glm::vec3(157.896, 130, 155.896));
-    vertices.push_back(glm::vec3(101.604, 130, 123.396));
+    std::vector<Renderer::Vertex> vertices;
+    vertices.push_back({ glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(216, 0, 0), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(216, 0, 215), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(0, 0, 215), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(0, 221, 0), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(216, 221, 0), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(216, 221, 215), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(0, 221, 215), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(85.5, 220, 90), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(130.5, 220, 90), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(130.5, 220, 130), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(85.5, 220, 130), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(53.104, 0, 64.104), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(109.36, 0, 96.604), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(76.896, 0, 152.896), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(20.604, 0, 120.396), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(53.104, 65, 64.104), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(109.36, 65, 96.604), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(76.896, 65, 152.896), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(20.604, 65, 120.396), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(134.104, 0, 67.104), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(190.396, 0, 99.604), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(157.896, 0, 155.896), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(101.604, 0, 123.396), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(134.104, 130, 67.104), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(190.396, 130, 99.604), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(157.896, 130, 155.896), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
+    vertices.push_back({ glm::vec3(101.604, 130, 123.396), glm::vec3(0, 0, 0), glm::vec2(0, 0) });
     return vertices;
 }

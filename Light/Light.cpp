@@ -81,7 +81,6 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
     {
         std::shared_ptr<Renderer::Mesh> mesh = std::make_shared<Renderer::Mesh>();
         mesh->vertices = subDividedVertices;
-        mesh->normal = elements[i]->normal;
         mesh->indices = elements[i]->indices;
         mesh->color = elements[i]->radiosity;
         mesh->CreateIndexBuffer();
@@ -93,6 +92,7 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
 
 bool LightmapBaker::Light::RadiosityManager::Update()
 {
+    static int i = 0;
     hemiCubeRenderTarget.Bind();
     bool done = DoOneIteration();
     Renderer::RenderTarget::BindDefault();
@@ -103,8 +103,8 @@ bool LightmapBaker::Light::RadiosityManager::Update()
     {
         elements[i]->mesh->color = elements[i]->radiosity * radiosity->intensityScale;
     }
-
-    return done;
+    ++i;
+    return i == 2;
 }
 
 void LightmapBaker::Light::RadiosityManager::Destroy()
@@ -147,9 +147,15 @@ void LightmapBaker::Light::RadiosityManager::SetRenderer(std::shared_ptr<Rendere
     this->renderer = renderer;
 }
 
+std::shared_ptr<LightmapBaker::Renderer::Renderer> LightmapBaker::Light::RadiosityManager::GetRenderer()
+{
+    return renderer;
+}
+
 void LightmapBaker::Light::RadiosityManager::SubDivideMesh(std::shared_ptr<Renderer::Mesh> modelData, int& vertexOffset, int& patchesIndex, int& elementIndex)
 {
     std::vector<glm::vec3> quadVertices;
+    std::vector<glm::vec2> quadUVs;
     int nu, nv;
     float du, dv;
     int i, j;
@@ -159,10 +165,15 @@ void LightmapBaker::Light::RadiosityManager::SubDivideMesh(std::shared_ptr<Rende
     int verticesCount = 0;
 
     // if 0 3 2 0 2 1 and cw, 0 3 2 1 will be quad vertices.
-    quadVertices.push_back(modelData->GetVertexByIndex(modelData->indices[0]));
-    quadVertices.push_back(modelData->GetVertexByIndex(modelData->indices[1]));
-    quadVertices.push_back(modelData->GetVertexByIndex(modelData->indices[2]));
-    quadVertices.push_back(modelData->GetVertexByIndex(modelData->indices[5]));
+    quadVertices.push_back(modelData->GetVertexByIndex(modelData->indices[0]).position);
+    quadVertices.push_back(modelData->GetVertexByIndex(modelData->indices[1]).position);
+    quadVertices.push_back(modelData->GetVertexByIndex(modelData->indices[2]).position);
+    quadVertices.push_back(modelData->GetVertexByIndex(modelData->indices[5]).position);
+
+    quadUVs.push_back(modelData->GetVertexByIndex(modelData->indices[0]).uv);
+    quadUVs.push_back(modelData->GetVertexByIndex(modelData->indices[1]).uv);
+    quadUVs.push_back(modelData->GetVertexByIndex(modelData->indices[2]).uv);
+    quadUVs.push_back(modelData->GetVertexByIndex(modelData->indices[5]).uv);
 
     nu = modelData->patchLevel * modelData->elementLevel + 1;
     nv = modelData->patchLevel * modelData->elementLevel + 1;
@@ -172,7 +183,7 @@ void LightmapBaker::Light::RadiosityManager::SubDivideMesh(std::shared_ptr<Rende
     {
         for (j = 0, v = 0; j < nv; j++, v += dv, verticesCount++)
         {
-            subDividedVertices.push_back(ConvertUVtoPoint(quadVertices, u, v));
+            subDividedVertices.push_back({ ConvertUVtoPoint(quadVertices, u, v), modelData->normal, ConvertUVtoPoint(quadUVs, u, v) });
         }
     }
 
@@ -232,11 +243,13 @@ void LightmapBaker::Light::RadiosityManager::SubDivideMesh(std::shared_ptr<Rende
 
 glm::vec3 LightmapBaker::Light::RadiosityManager::ConvertUVtoPoint(std::vector<glm::vec3> vertices, float u, float v)
 {
-    glm::vec3 point = glm::vec3(
-        vertices[0].x * (1 - u) * (1 - v) + vertices[1].x * (1 - u) * v + vertices[2].x * u * v + vertices[3].x * u * (1 - v),
-        vertices[0].y * (1 - u) * (1 - v) + vertices[1].y * (1 - u) * v + vertices[2].y * u * v + vertices[3].y * u * (1 - v),
-        vertices[0].z * (1 - u) * (1 - v) + vertices[1].z * (1 - u) * v + vertices[2].z * u * v + vertices[3].z * u * (1 - v)
-        );
+    glm::vec3 point = vertices[0] * (1.0f - u) * (1.0f - v) + vertices[1] * (1.0f - u) * v + vertices[2] * u * v + vertices[3] * u * (1.0f - v);
+    return point;
+}
+
+glm::vec2 LightmapBaker::Light::RadiosityManager::ConvertUVtoPoint(std::vector<glm::vec2> vertices, float u, float v)
+{
+    glm::vec2 point = vertices[0] * (1.0f - u) * (1.0f - v) + vertices[1] * (1.0f - u) * v + vertices[2] * u * v + vertices[3] * u * (1.0f - v);
     return point;
 }
 

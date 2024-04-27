@@ -5,6 +5,7 @@
 #include <vector>
 #include "../Light/Light.hpp"
 #include "../Data/DataManager.hpp"
+#include "../Light/Lightmap.hpp"
 
 void LightmapBaker::Renderer::ToolState::RenderBeforeRadiosityCalculationUI()
 {
@@ -211,13 +212,17 @@ void LightmapBaker::Renderer::ToolState::Update()
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_LIGHTMAP_BAKE:
 	{
+		std::shared_ptr<Light::Lightmap> lightMap = std::make_shared<Light::Lightmap>();
+		std::vector<std::shared_ptr<Mesh>> meshList;
+		for (int i = 0; i < Light::RadiosityManager::GetInstance().elements.size(); ++i)
+		{
+			meshList.push_back(Light::RadiosityManager::GetInstance().elements[i]->mesh);
+		}
+		lightMap->Bake(meshList);
 		std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
-		std::vector<UINT8> pngData;
-		pngData.resize(1000 * 1000 * 3); // R G B
-		for (int i = 0; i < 1000 * 1000 * 3; ++i) pngData[i] = std::rand() % 255; // calculate random pixel for test
-
-		if (!dataManager->Save("lightmap.png", 1000, 1000, pngData.data()))
+		if (!dataManager->Save("lightmap.png", lightMap))
 			std::cout << "Bake Error" << std::endl;
+		lightMap->Destroy();
 
 		compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f) - 2.5f;
 		UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
