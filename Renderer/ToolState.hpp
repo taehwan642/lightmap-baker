@@ -44,6 +44,10 @@ namespace Renderer
 		void RenderCurrentUI();
 		void SetFrame(double frame);
 		float GetCompareXPosition();
+
+	public:
+		int curScreenWidth = 640;
+		int curScreenHeight = 480;
 	};
 }
 }

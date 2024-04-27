@@ -164,6 +164,8 @@ void LightmapBaker::Renderer::Renderer::GLFWUpdate()
     }
     mousePositionX = xPos;
     mousePositionY = yPos;
+
+    glfwGetWindowSize(glfwWindow, &toolState.curScreenWidth, &toolState.curScreenHeight);
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWRender()
