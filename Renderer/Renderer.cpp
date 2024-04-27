@@ -80,7 +80,6 @@ void LightmapBaker::Renderer::Renderer::BeforeRender()
 void LightmapBaker::Renderer::Renderer::Render()
 {
     GLFWRender();
-    GLFWRenderBeforeBaked();
     ImGuiRender();
 
     glfwSwapBuffers(glfwWindow);
@@ -170,28 +169,6 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
 {
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
-    gluOrtho2D(0, framebufferWidth, framebufferHeight, 0);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-    glStencilMask(0xFF);
-    glDepthMask(GL_FALSE);
-    glClear(GL_STENCIL_BUFFER_BIT);
-
-    glColor3f(1, 0.3f, 0.3f);
-    glBegin(GL_QUADS);
-    glVertex2f(0, 0);
-    glVertex2f(toolState.GetCompareXPosition(), 0);
-    glVertex2f(toolState.GetCompareXPosition(), framebufferHeight);
-    glVertex2f(0, framebufferHeight);
-    glEnd();
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
 
     float aspectRatio = screenHeight / (float)screenWidth;
     gluPerspective(80, aspectRatio, 0.01f, camera.distance * 2 + 100);
@@ -205,80 +182,15 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     gluLookAt(camX, camY, camZ,
         camera.position.x, camera.position.y, camera.position.z,
         0.0, 1.0, 0.0);
-
-    glStencilFunc(GL_EQUAL, 1, 0xFF);
-    glStencilMask(0x00);
-    glDepthMask(GL_TRUE);
-
     glEnable(GL_CULL_FACE);
     glEnable(GL_DEPTH_TEST);
+
     glCullFace(GL_BACK);
     for (int i = 0; i < renderMeshList.size(); ++i)
     {
         renderMeshList[i]->Render();
     }
 
-    glDisable(GL_STENCIL_TEST);
-    glDisable(GL_CULL_FACE);
-    glDisable(GL_DEPTH_TEST);
-}
-
-void LightmapBaker::Renderer::Renderer::GLFWRenderBeforeBaked()
-{
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0, framebufferWidth, framebufferHeight, 0);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-    glStencilMask(0xFF);
-    glDepthMask(GL_FALSE);
-    glClear(GL_STENCIL_BUFFER_BIT);
-
-    glColor3f(0, 0.3f, 0.3f);
-    glBegin(GL_QUADS);
-    glVertex2f(toolState.GetCompareXPosition(), 0);
-    glVertex2f(framebufferWidth, 0);
-    glVertex2f(framebufferWidth, framebufferHeight);
-    glVertex2f(toolState.GetCompareXPosition(), framebufferHeight);
-    glEnd();
-
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-
-    float aspectRatio = screenHeight / (float)screenWidth;
-    gluPerspective(80, aspectRatio, 0.01f, camera.distance * 2 + 100);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    float camX = (camera.distance * -sinf(camera.angle.x * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.x;
-    float camY = (camera.distance * -sinf((camera.angle.y) * (M_PI / 180))) + camera.position.y;
-    float camZ = (-camera.distance * cosf((camera.angle.x) * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.z;
-    gluLookAt(camX, camY, camZ,
-        camera.position.x, camera.position.y, camera.position.z,
-        0.0, 1.0, 0.0);
-
-    glStencilFunc(GL_EQUAL, 1, 0xFF);
-    glStencilMask(0x00);
-    glDepthMask(GL_TRUE);
-
-    glEnable(GL_CULL_FACE);
-    glEnable(GL_DEPTH_TEST);
-    glCullFace(GL_BACK);
-
-    // Put here radiocity-before-calculated model.
-    glTranslatef(0, 100, 0);
-    for (int i = 0; i < renderMeshList.size(); ++i)
-    {
-        renderMeshList[i]->Render();
-    }
-
-    glDisable(GL_STENCIL_TEST);
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
 }

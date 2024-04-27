@@ -36,7 +36,6 @@ namespace Renderer
         void GLFWInitialize();
         void GLFWUpdate();
         void GLFWRender();
-        void GLFWRenderBeforeBaked();
         void GLFWExit();
 
     private:
