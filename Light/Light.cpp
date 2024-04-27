@@ -92,7 +92,6 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
 
 bool LightmapBaker::Light::RadiosityManager::Update()
 {
-    static int i = 0;
     hemiCubeRenderTarget.Bind();
     bool done = DoOneIteration();
     Renderer::RenderTarget::BindDefault();
@@ -103,8 +102,7 @@ bool LightmapBaker::Light::RadiosityManager::Update()
     {
         elements[i]->mesh->color = elements[i]->radiosity * radiosity->intensityScale;
     }
-    ++i;
-    return i == 2;
+    return done;
 }
 
 void LightmapBaker::Light::RadiosityManager::Destroy()
