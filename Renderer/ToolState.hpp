@@ -43,6 +43,7 @@ namespace Renderer
 		void Update();
 		void RenderCurrentUI();
 		void SetFrame(double frame);
+		float GetCompareXPosition();
 	};
 }
 }

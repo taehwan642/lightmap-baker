@@ -277,3 +277,8 @@ void LightmapBaker::Renderer::ToolState::SetFrame(double frame)
 {
 	frames.push_back(frame);
 }
+
+float LightmapBaker::Renderer::ToolState::GetCompareXPosition()
+{
+	return compareXPosition;
+}
