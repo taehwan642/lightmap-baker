@@ -143,6 +143,66 @@ void LightmapBaker::Renderer::ToolState::RenderHemicubeRenderedImage()
 	ImGui::End();
 }
 
+void LightmapBaker::Renderer::ToolState::RenderCompareModel()
+{
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	gluOrtho2D(0, Renderer::framebufferWidth, Renderer::framebufferHeight, 0);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	glEnable(GL_STENCIL_TEST);
+	glStencilFunc(GL_ALWAYS, 1, 0xFF);
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+	glStencilMask(0xFF);
+	glDepthMask(GL_FALSE);
+	glClear(GL_STENCIL_BUFFER_BIT);
+
+	glColor3f(0, 0.3f, 0.3f);
+	glBegin(GL_QUADS);
+	glVertex2f(compareXPosition, 0);
+	glVertex2f(Renderer::framebufferWidth, 0);
+	glVertex2f(Renderer::framebufferWidth, Renderer::framebufferHeight);
+	glVertex2f(compareXPosition, Renderer::framebufferHeight);
+	glEnd();
+
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+
+	float aspectRatio = Renderer::screenHeight / (float)Renderer::screenWidth;
+	Camera camera = Renderer::camera;
+	gluPerspective(80, aspectRatio, 0.01f, camera.distance * 2 + 100);
+
+	glMatrixMode(GL_MODELVIEW);
+	glLoadIdentity();
+
+	float camX = (camera.distance * -sinf(camera.angle.x * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.x;
+	float camY = (camera.distance * -sinf((camera.angle.y) * (M_PI / 180))) + camera.position.y;
+	float camZ = (-camera.distance * cosf((camera.angle.x) * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.z;
+	gluLookAt(camX, camY, camZ,
+		camera.position.x, camera.position.y, camera.position.z,
+		0.0, 1.0, 0.0);
+
+	glStencilFunc(GL_EQUAL, 1, 0xFF);
+	glStencilMask(0x00);
+	glDepthMask(GL_TRUE);
+
+	glEnable(GL_CULL_FACE);
+	glEnable(GL_DEPTH_TEST);
+	glCullFace(GL_BACK);
+
+	const auto& vec = Light::RadiosityManager::GetInstance().models;
+	for (int i = 0; i < vec.size(); ++i)
+	{
+		vec[i]->Render();
+	}
+
+	glDisable(GL_STENCIL_TEST);
+	glDisable(GL_CULL_FACE);
+	glDisable(GL_DEPTH_TEST);
+}
+
 void LightmapBaker::Renderer::ToolState::ProgressUI(const std::string& text)
 {
 	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - (36.0f * ((float)curScreenHeight / 480.0f) + 19.0f)));
@@ -158,10 +218,6 @@ void LightmapBaker::Renderer::ToolState::CompareUI()
 	ImGui::Text("Move splitter by left / right arrow");
 	ImGui::End();
 
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.15f, 0.15f, 0.15f, 1.0f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.15f, 0.15f, 0.15f, 1.0f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.2f, 0.2f, 0.2f, 1.0f));
-
 	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_LeftArrow)))
 	{
 		compareXPosition -= ImGui::GetIO().DeltaTime * 1000.0f;
@@ -170,19 +226,8 @@ void LightmapBaker::Renderer::ToolState::CompareUI()
 	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_RightArrow)))
 	{
 		compareXPosition += ImGui::GetIO().DeltaTime * 1000.0f;
-		if (ImGui::GetMainViewport()->Size.x - 25.0f < compareXPosition) compareXPosition = ImGui::GetMainViewport()->Size.x - 25.0f;
+		if (ImGui::GetMainViewport()->Size.x < compareXPosition) compareXPosition = ImGui::GetMainViewport()->Size.x;
 	}
-	ImGui::SetNextWindowPos(ImVec2(compareXPosition * ((float)curScreenWidth / 640.0f), -20.0f));
-	ImGui::SetNextWindowSize(ImVec2(100, ImGui::GetMainViewport()->Size.y + 100));
-	ImGui::Begin("MiddleLine", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	if (ImGui::Button("##", ImVec2(5.0f * ((float)curScreenWidth / 640.0f), 1180.0f)))
-	{
-	}
-	ImGui::End();
-
-	ImGui::PopStyleColor();
-	ImGui::PopStyleColor();
-	ImGui::PopStyleColor();
 }
 
 void LightmapBaker::Renderer::ToolState::UpdateCurrentState(const ToolStateEnum& state)
@@ -197,6 +242,7 @@ void LightmapBaker::Renderer::ToolState::Update()
 	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_RADIOSITY_CALCULATION:
 	{
 		// Model Import
+		compareXPosition = ImGui::GetMainViewport()->Size.x;
 	}
 	break;
 	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION:
@@ -204,7 +250,7 @@ void LightmapBaker::Renderer::ToolState::Update()
 		// Calc Radiosity
 		if (!Light::RadiosityManager::GetInstance().Update())
 		{
-			compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f) - 2.5f;
+			compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f);
 			UpdateCurrentState(ToolStateEnum::BEFORE_LIGHTMAP_BAKE);
 		}
 	}
@@ -228,7 +274,7 @@ void LightmapBaker::Renderer::ToolState::Update()
 			std::cout << "Bake Error" << std::endl;
 		lightMap->Destroy();
 
-		compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f) - 2.5f;
+		compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f);
 		UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
 	}
 	break;
@@ -241,6 +287,31 @@ void LightmapBaker::Renderer::ToolState::Update()
 
 void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 {
+	switch (currentState)
+	{
+	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_RADIOSITY_CALCULATION:
+		RenderBeforeRadiosityCalculationUI();
+		break;
+	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION:
+	{
+		RenderProgressRadiosityCalculationUI();
+		RenderHemicubeRenderedImage();
+	}
+	break;
+	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_LIGHTMAP_BAKE:
+		RenderCompareModel();
+		RenderBeforeLightmapBakeUI();
+		break;
+	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_LIGHTMAP_BAKE:
+		RenderProgressLightmapBakeUI();
+		break;
+	case LightmapBaker::Renderer::ToolStateEnum::AFTER_LIGHTMAP_BAKE:
+		RenderCompareModel();
+		RenderAfterLightmapBakeUI();
+		break;
+	default:
+		break;
+	}
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 255, 33));
 	ImGui::SetNextWindowSize(ImVec2(200, 50), ImGuiCond_Once);
 	ImGui::Begin("Frames", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
@@ -255,31 +326,6 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 
 	ImGui::PlotLines("Frames", framesVector.data(), framesVector.size());
 	ImGui::End();
-
-
-	switch (currentState)
-	{
-	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_RADIOSITY_CALCULATION:
-		RenderBeforeRadiosityCalculationUI();
-		break;
-	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION:
-	{
-		RenderProgressRadiosityCalculationUI();
-		RenderHemicubeRenderedImage();
-	}
-	break;
-	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_LIGHTMAP_BAKE:
-		RenderBeforeLightmapBakeUI();
-		break;
-	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_LIGHTMAP_BAKE:
-		RenderProgressLightmapBakeUI();
-		break;
-	case LightmapBaker::Renderer::ToolStateEnum::AFTER_LIGHTMAP_BAKE:
-		RenderAfterLightmapBakeUI();
-		break;
-	default:
-		break;
-	}
 }
 
 void LightmapBaker::Renderer::ToolState::SetFrame(double frame)

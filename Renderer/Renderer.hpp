@@ -18,8 +18,6 @@ namespace Renderer
     class Renderer
     {
     private:
-        int framebufferWidth;
-        int framebufferHeight;
         GLFWwindow* glfwWindow = nullptr;
 
         const char* glslVersion = "#version 130";
@@ -36,7 +34,6 @@ namespace Renderer
         void GLFWInitialize();
         void GLFWUpdate();
         void GLFWRender();
-        void GLFWRenderBeforeBaked();
         void GLFWExit();
 
     private:
@@ -58,6 +55,8 @@ namespace Renderer
     public:
         static const int screenWidth = 640;
         static const int screenHeight = 480;
+        static int framebufferWidth;
+        static int framebufferHeight;
         ToolState toolState;
 
     public:

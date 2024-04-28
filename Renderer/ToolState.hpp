@@ -30,6 +30,7 @@ namespace Renderer
 
 	private:
 		void RenderHemicubeRenderedImage();
+		void RenderCompareModel();
 
 	private:
 		int lightMapQuality = 1;

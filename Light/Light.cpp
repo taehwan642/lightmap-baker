@@ -45,6 +45,11 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
 
     std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
     models = dataManager->Load();
+    for (int i = 0; i < models.size(); ++i)
+    {
+        models[i]->color = models[i]->reflectance;
+        models[i]->CreateIndexBuffer();
+    }
     int patchTotalCount = 0;
     for (int i = 0; i < models.size(); ++i)
     {
