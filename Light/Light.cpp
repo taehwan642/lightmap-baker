@@ -77,6 +77,8 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
     hemiCubeRenderTarget.Initialize(renderTargetSize);
     Renderer::RenderTarget::BindDefault();
 
+    subDividedConvertVertices = subDividedVertices;
+
     for (int i = 0; i < elements.size(); ++i)
     {
         std::shared_ptr<Renderer::Mesh> mesh = std::make_shared<Renderer::Mesh>();
@@ -117,6 +119,7 @@ void LightmapBaker::Light::RadiosityManager::Destroy()
     patches.clear();
     elements.clear();
     subDividedVertices.clear();
+    subDividedConvertVertices.clear();
     formFactors.clear();
     readBuffer.clear();
 }

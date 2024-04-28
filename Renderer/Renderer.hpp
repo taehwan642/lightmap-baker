@@ -31,13 +31,14 @@ namespace Renderer
         double mousePositionX = 0;
         double mousePositionY = 0;
 
-        std::vector<std::shared_ptr<Mesh>> renderMeshList;
-
         void GLFWInitialize();
         void GLFWUpdate();
         void GLFWRender();
         void GLFWRenderBeforeBaked();
         void GLFWExit();
+
+    public:
+        std::vector<std::shared_ptr<Mesh>> renderMeshList;
 
     private:
         void ImGuiInitialize();
