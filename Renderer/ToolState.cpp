@@ -6,6 +6,8 @@
 #include "../Light/Light.hpp"
 #include "../Data/DataManager.hpp"
 #include "../Light/Lightmap.hpp"
+#define STB_IMAGE_IMPLEMENTATION
+#include "stb/stb_image.h"
 
 void LightmapBaker::Renderer::ToolState::RenderBeforeRadiosityCalculationUI()
 {
@@ -274,11 +276,29 @@ void LightmapBaker::Renderer::ToolState::Update()
 			std::cout << "Bake Error" << std::endl;
 		lightMap->Destroy();
 
+		glGenTextures(1, &Light::RadiosityManager::GetInstance().texture);
+		glBindTexture(GL_TEXTURE_2D, Light::RadiosityManager::GetInstance().texture);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+		int width, height, nrChannels;
+		unsigned char* data = stbi_load("lightmap.png", &width, &height, &nrChannels, 0);
+		if (data)
+			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		else
+			std::cout << "texture load failed" << std::endl;
+
+		stbi_image_free(data);
+
 		compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f);
 		UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
 	}
 	break;
 	case LightmapBaker::Renderer::ToolStateEnum::AFTER_LIGHTMAP_BAKE:
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, Light::RadiosityManager::GetInstance().texture);
 		break;
 	default:
 		break;

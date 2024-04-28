@@ -124,14 +124,15 @@ namespace Light
         ~RadiosityManager() {}
 
     private:
-        std::shared_ptr<Renderer::Renderer> renderer;
     public:
+        std::shared_ptr<Renderer::Renderer> renderer;
         std::vector<std::shared_ptr<Renderer::Mesh>> models;
         std::vector<std::shared_ptr<Patch>> patches;
         std::vector<std::shared_ptr<Element>> elements;
         std::shared_ptr<Radiosity> radiosity;
         std::shared_ptr<HemiCube> hemiCube;
         std::vector<Renderer::Vertex> subDividedVertices;
+        std::vector<Renderer::Vertex> subDividedConvertVertices;
         std::vector<float> formFactors;
         float totalEnergy;
 
@@ -139,6 +140,8 @@ namespace Light
         std::shared_ptr<Renderer::Camera> hemiCubeCamera;
 
         std::vector<UINT8> readBuffer;
+
+        unsigned int texture;
     public:
         void SubDivideMesh(std::shared_ptr<Renderer::Mesh> modelData, int& vertexOffset, int& patchesIndex, int& elementIndex);
         glm::vec3 ConvertUVtoPoint(std::vector<glm::vec3> vertices, float u, float v);
