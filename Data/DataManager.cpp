@@ -230,25 +230,29 @@ std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Data:
     const glm::vec3 lightGrey = glm::vec3(0.9, 0.9, 0.9);
     const glm::vec3 black = glm::vec3(0.0, 0.0, 0.0);
     const glm::vec3 lightGreen = glm::vec3(0.63, 0.85, 0.58);
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{4, 5, 6, 4, 6, 7}, glm::vec3(0, -1, 0), 2, 8, (216 * 215), lightGrey, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{0, 3, 2, 0, 2, 1}, glm::vec3(0, 1, 0), 3, 8, (216 * 215), lightGrey, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{0, 4, 7, 0, 7, 3}, glm::vec3(1, 0, 0), 2, 8, (221 * 215), red, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{0, 1, 5, 0, 5, 4}, glm::vec3(0, 0, 1), 2, 8, (221 * 216), lightGrey, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{2, 6, 5, 2, 5, 1}, glm::vec3(-1, 0, 0), 2, 8, (221 * 215), blue, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{2, 3, 7, 2, 7, 6}, glm::vec3(0, 0, -1), 2, 8, (221 * 216), lightGrey, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{8, 9, 10, 8, 10, 11}, glm::vec3(0, -1, 0), 2, 1, (40 * 45), black, white));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{16, 19, 18, 16, 18, 17}, glm::vec3(0, 1, 0), 1, 5, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{12, 13, 14, 12, 14, 15}, glm::vec3(0, -1, 0), 1, 1, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{12, 15, 19, 12, 19, 16}, glm::vec3(-0.866, 0, -0.5), 1, 5, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{12, 16, 17, 12, 17, 13}, glm::vec3(0.5, 0, -0.866), 1, 5, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{14, 13, 17, 14, 17, 18}, glm::vec3(0.866, 0, 0.5), 1, 5, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{14, 18, 19, 14, 19, 15}, glm::vec3(-0.5, 0, 0.866), 1, 5, (65 * 65), yellow, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{24, 27, 26, 24, 26, 25}, glm::vec3(0, 1, 0), 1, 5, (65 * 65), lightGreen, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{20, 21, 22, 20, 22, 23}, glm::vec3(0, -1, 0), 1, 1, (65 * 65), lightGreen, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{20, 23, 27, 20, 27, 24}, glm::vec3(-0.866, 0, -0.5), 1, 6, (65 * 130), lightGreen, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{20, 24, 25, 20, 25, 21}, glm::vec3(0.5, 0, -0.866), 1, 6, (65 * 130), lightGreen, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{22, 21, 25, 22, 25, 26}, glm::vec3(0.866, 0, 0.5), 1, 6, (65 * 130), lightGreen, black));
-    meshes.push_back(std::make_shared<Renderer::Mesh>(GetVertices(), std::vector<GLuint>{22, 26, 27, 22, 27, 23}, glm::vec3(-0.5, 0, 0.866), 1, 6, (65 * 130), lightGreen, black));
+    std::vector<GLuint> indices = std::vector<GLuint>{ 0, 1, 2, 0, 2, 3 };
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetRoomCubeVertices(CubeSide::TOP), indices, glm::vec3(0, -1, 0), 2, 8, (216 * 215), lightGrey, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetRoomCubeVertices(CubeSide::BOTTOM), indices, glm::vec3(0, 1, 0), 3, 8, (216 * 215), lightGrey, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetRoomCubeVertices(CubeSide::LEFT), indices, glm::vec3(1, 0, 0), 2, 8, (221 * 215), red, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetRoomCubeVertices(CubeSide::FRONT), indices, glm::vec3(0, 0, 1), 2, 8, (221 * 216), lightGrey, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetRoomCubeVertices(CubeSide::RIGHT), indices, glm::vec3(-1, 0, 0), 2, 8, (221 * 215), blue, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetRoomCubeVertices(CubeSide::BACK), indices, glm::vec3(0, 0, -1), 2, 8, (221 * 216), lightGrey, black));
+
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetLightPlaneVertices(), indices, glm::vec3(0, -1, 0), 2, 1, (40 * 45), black, white));
+
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetYellowCubeVertices(CubeSide::TOP), indices, glm::vec3(0, 1, 0), 1, 5, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetYellowCubeVertices(CubeSide::BOTTOM), indices, glm::vec3(0, -1, 0), 1, 1, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetYellowCubeVertices(CubeSide::LEFT), indices, glm::vec3(-0.866, 0, -0.5), 1, 5, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetYellowCubeVertices(CubeSide::FRONT), indices, glm::vec3(0.5, 0, -0.866), 1, 5, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetYellowCubeVertices(CubeSide::RIGHT), indices, glm::vec3(0.866, 0, 0.5), 1, 5, (65 * 65), yellow, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetYellowCubeVertices(CubeSide::BACK), indices, glm::vec3(-0.5, 0, 0.866), 1, 5, (65 * 65), yellow, black));
+
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetGreenCubeVertices(CubeSide::TOP), indices, glm::vec3(0, 1, 0), 1, 5, (65 * 65), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetGreenCubeVertices(CubeSide::BOTTOM), indices, glm::vec3(0, -1, 0), 1, 1, (65 * 65), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetGreenCubeVertices(CubeSide::LEFT), indices, glm::vec3(-0.866, 0, -0.5), 1, 6, (65 * 130), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetGreenCubeVertices(CubeSide::FRONT), indices, glm::vec3(0.5, 0, -0.866), 1, 6, (65 * 130), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetGreenCubeVertices(CubeSide::RIGHT), indices, glm::vec3(0.866, 0, 0.5), 1, 6, (65 * 130), lightGreen, black));
+    meshes.push_back(std::make_shared<Renderer::Mesh>(GetGreenCubeVertices(CubeSide::BACK), indices, glm::vec3(-0.5, 0, 0.866), 1, 6, (65 * 130), lightGreen, black));
     return meshes;
 }
 
@@ -263,10 +267,12 @@ std::vector<LightmapBaker::Renderer::Vertex> LightmapBaker::Data::DataManager::G
     vertices.push_back({ glm::vec3(216, 221, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.5) });
     vertices.push_back({ glm::vec3(216, 221, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.5) });
     vertices.push_back({ glm::vec3(0, 221, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.625) });
+
     vertices.push_back({ glm::vec3(85.5, 220, 90), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.75) });
     vertices.push_back({ glm::vec3(130.5, 220, 90), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.75) });
     vertices.push_back({ glm::vec3(130.5, 220, 130), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.625) });
     vertices.push_back({ glm::vec3(85.5, 220, 130), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.625) });
+
     vertices.push_back({ glm::vec3(53.104, 0, 64.104), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.75) });
     vertices.push_back({ glm::vec3(109.36, 0, 96.604), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.375) });
     vertices.push_back({ glm::vec3(76.896, 0, 152.896), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.375) });
@@ -275,6 +281,7 @@ std::vector<LightmapBaker::Renderer::Vertex> LightmapBaker::Data::DataManager::G
     vertices.push_back({ glm::vec3(109.36, 65, 96.604), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.5) });
     vertices.push_back({ glm::vec3(76.896, 65, 152.896), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.5) });
     vertices.push_back({ glm::vec3(20.604, 65, 120.396), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.625) });
+
     vertices.push_back({ glm::vec3(134.104, 0, 67.104), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.5) });
     vertices.push_back({ glm::vec3(190.396, 0, 99.604), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.125) });
     vertices.push_back({ glm::vec3(157.896, 0, 155.896), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.125) });
@@ -283,5 +290,156 @@ std::vector<LightmapBaker::Renderer::Vertex> LightmapBaker::Data::DataManager::G
     vertices.push_back({ glm::vec3(190.396, 130, 99.604), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.25) });
     vertices.push_back({ glm::vec3(157.896, 130, 155.896), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.25) });
     vertices.push_back({ glm::vec3(101.604, 130, 123.396), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.375) });
+    return vertices;
+}
+
+std::vector<LightmapBaker::Renderer::Vertex> LightmapBaker::Data::DataManager::GetGreenCubeVertices(CubeSide side)
+{
+    std::vector<Renderer::Vertex> vertices;
+    switch (side)
+    {
+    case LightmapBaker::Data::CubeSide::FRONT:
+        vertices.push_back({ glm::vec3(134.104, 0, 67.104), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.5) });
+        vertices.push_back({ glm::vec3(134.104, 130, 67.104), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.375) });
+        vertices.push_back({ glm::vec3(190.396, 130, 99.604), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.25) });
+        vertices.push_back({ glm::vec3(190.396, 0, 99.604), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.125) });
+        break;
+    case LightmapBaker::Data::CubeSide::BACK:
+        vertices.push_back({ glm::vec3(157.896, 0, 155.896), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.125) });
+        vertices.push_back({ glm::vec3(157.896, 130, 155.896), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.25) });
+        vertices.push_back({ glm::vec3(101.604, 130, 123.396), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.375) });
+        vertices.push_back({ glm::vec3(101.604, 0, 123.396), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.5) });
+        break;
+    case LightmapBaker::Data::CubeSide::RIGHT:
+        vertices.push_back({ glm::vec3(157.896, 0, 155.896), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.125) });
+        vertices.push_back({ glm::vec3(190.396, 0, 99.604), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.125) });
+        vertices.push_back({ glm::vec3(190.396, 130, 99.604), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.25) });
+        vertices.push_back({ glm::vec3(157.896, 130, 155.896), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.25) });
+        break;
+    case LightmapBaker::Data::CubeSide::LEFT:
+        vertices.push_back({ glm::vec3(134.104, 0, 67.104), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.5) });
+        vertices.push_back({ glm::vec3(101.604, 0, 123.396), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.5) });
+        vertices.push_back({ glm::vec3(101.604, 130, 123.396), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.375) });
+        vertices.push_back({ glm::vec3(134.104, 130, 67.104), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.375) });
+        break;
+    case LightmapBaker::Data::CubeSide::TOP:
+        vertices.push_back({ glm::vec3(134.104, 130, 67.104), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.375) });
+        vertices.push_back({ glm::vec3(101.604, 130, 123.396), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.375) });
+        vertices.push_back({ glm::vec3(157.896, 130, 155.896), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.25) });
+        vertices.push_back({ glm::vec3(190.396, 130, 99.604), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.25) });
+        break;
+    case LightmapBaker::Data::CubeSide::BOTTOM:
+        vertices.push_back({ glm::vec3(134.104, 0, 67.104), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.5) });
+        vertices.push_back({ glm::vec3(190.396, 0, 99.604), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.125) });
+        vertices.push_back({ glm::vec3(157.896, 0, 155.896), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.125) });
+        vertices.push_back({ glm::vec3(101.604, 0, 123.396), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.5) });
+        break;
+    default:
+        break;
+    }
+    return vertices;
+}
+
+std::vector<LightmapBaker::Renderer::Vertex> LightmapBaker::Data::DataManager::GetYellowCubeVertices(CubeSide side)
+{
+    std::vector<Renderer::Vertex> vertices;
+    switch (side)
+    {
+    case LightmapBaker::Data::CubeSide::FRONT:
+        vertices.push_back({ glm::vec3(53.104, 0, 64.104), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.75) });
+        vertices.push_back({ glm::vec3(53.104, 65, 64.104), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.625) });
+        vertices.push_back({ glm::vec3(109.36, 65, 96.604), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.5) });
+        vertices.push_back({ glm::vec3(109.36, 0, 96.604), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.375) });
+        break;
+    case LightmapBaker::Data::CubeSide::BACK:
+        vertices.push_back({ glm::vec3(76.896, 0, 152.896), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.375) });
+        vertices.push_back({ glm::vec3(76.896, 65, 152.896), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.5) });
+        vertices.push_back({ glm::vec3(20.604, 65, 120.396), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.625) });
+        vertices.push_back({ glm::vec3(20.604, 0, 120.396), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.75) });
+        break;
+    case LightmapBaker::Data::CubeSide::RIGHT:
+        vertices.push_back({ glm::vec3(76.896, 0, 152.896), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.375) });
+        vertices.push_back({ glm::vec3(109.36, 0, 96.604), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.375) });
+        vertices.push_back({ glm::vec3(109.36, 65, 96.604), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.5) });
+        vertices.push_back({ glm::vec3(76.896, 65, 152.896), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.5) });
+        break;
+    case LightmapBaker::Data::CubeSide::LEFT:
+        vertices.push_back({ glm::vec3(53.104, 0, 64.104), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.75) });
+        vertices.push_back({ glm::vec3(20.604, 0, 120.396), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.75) });
+        vertices.push_back({ glm::vec3(20.604, 65, 120.396), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.625) });
+        vertices.push_back({ glm::vec3(53.104, 65, 64.104), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.625) });
+        break;
+    case LightmapBaker::Data::CubeSide::TOP:
+        vertices.push_back({ glm::vec3(53.104, 65, 64.104), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.625) });
+        vertices.push_back({ glm::vec3(20.604, 65, 120.396), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.625) });
+        vertices.push_back({ glm::vec3(76.896, 65, 152.896), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.5) });
+        vertices.push_back({ glm::vec3(109.36, 65, 96.604), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.5) });
+        break;
+    case LightmapBaker::Data::CubeSide::BOTTOM:
+        vertices.push_back({ glm::vec3(53.104, 0, 64.104), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.75) });
+        vertices.push_back({ glm::vec3(109.36, 0, 96.604), glm::vec3(0, 0, 0), glm::vec2(0.625, 0.375) });
+        vertices.push_back({ glm::vec3(76.896, 0, 152.896), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.375) });
+        vertices.push_back({ glm::vec3(20.604, 0, 120.396), glm::vec3(0, 0, 0), glm::vec2(0.75, 0.75) });
+        break;
+    default:
+        break;
+    }
+    return vertices;
+}
+
+std::vector<LightmapBaker::Renderer::Vertex> LightmapBaker::Data::DataManager::GetLightPlaneVertices()
+{
+    std::vector<Renderer::Vertex> vertices;
+    vertices.push_back({ glm::vec3(85.5, 220, 90), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.75) });
+    vertices.push_back({ glm::vec3(130.5, 220, 90), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.75) });
+    vertices.push_back({ glm::vec3(130.5, 220, 130), glm::vec3(0, 0, 0), glm::vec2(0.5625, 0.625) });
+    vertices.push_back({ glm::vec3(85.5, 220, 130), glm::vec3(0, 0, 0), glm::vec2(0.4375, 0.625) });
+    return vertices;
+}
+
+std::vector<LightmapBaker::Renderer::Vertex> LightmapBaker::Data::DataManager::GetRoomCubeVertices(CubeSide side)
+{
+    std::vector<Renderer::Vertex> vertices;
+    switch (side)
+    {
+    case LightmapBaker::Data::CubeSide::FRONT:
+        vertices.push_back({ glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.75) });
+        vertices.push_back({ glm::vec3(216, 0, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.375) });
+        vertices.push_back({ glm::vec3(216, 221, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.5) });
+        vertices.push_back({ glm::vec3(0, 221, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.625) });
+        break;
+    case LightmapBaker::Data::CubeSide::BACK:
+        vertices.push_back({ glm::vec3(216, 0, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.375) });
+        vertices.push_back({ glm::vec3(0, 0, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.75) });
+        vertices.push_back({ glm::vec3(0, 221, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.625) });
+        vertices.push_back({ glm::vec3(216, 221, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.5) });
+        break;
+    case LightmapBaker::Data::CubeSide::RIGHT:
+        vertices.push_back({ glm::vec3(216, 0, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.375) });
+        vertices.push_back({ glm::vec3(216, 221, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.5) });
+        vertices.push_back({ glm::vec3(216, 221, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.5) });
+        vertices.push_back({ glm::vec3(216, 0, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.375) });
+        break;
+    case LightmapBaker::Data::CubeSide::LEFT:
+        vertices.push_back({ glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.75) });
+        vertices.push_back({ glm::vec3(0, 221, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.625) });
+        vertices.push_back({ glm::vec3(0, 221, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.625) });
+        vertices.push_back({ glm::vec3(0, 0, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.75) });
+        break;
+    case LightmapBaker::Data::CubeSide::TOP:
+        vertices.push_back({ glm::vec3(0, 221, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.625) });
+        vertices.push_back({ glm::vec3(216, 221, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.5) });
+        vertices.push_back({ glm::vec3(216, 221, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.5) });
+        vertices.push_back({ glm::vec3(0, 221, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.625) });
+        break;
+    case LightmapBaker::Data::CubeSide::BOTTOM:
+        vertices.push_back({ glm::vec3(0, 0, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.75) });
+        vertices.push_back({ glm::vec3(0, 0, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.75) });
+        vertices.push_back({ glm::vec3(216, 0, 215), glm::vec3(0, 0, 0), glm::vec2(0.25, 0.375) });
+        vertices.push_back({ glm::vec3(216, 0, 0), glm::vec3(0, 0, 0), glm::vec2(0.125, 0.375) });
+        break;
+    default:
+        break;
+    }
     return vertices;
 }

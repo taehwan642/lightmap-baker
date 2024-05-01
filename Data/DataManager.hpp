@@ -10,6 +10,16 @@ namespace LightmapBaker
 {
 namespace Data
 {
+    enum class CubeSide
+    {
+        FRONT,
+        BACK,
+        RIGHT,
+        LEFT,
+        TOP,
+        BOTTOM
+    };
+
     class DataManager
     {
     private:
@@ -21,6 +31,10 @@ namespace Data
         // for debug
         std::vector<std::shared_ptr<Renderer::Mesh>> Load();
         std::vector<Renderer::Vertex> GetVertices();
+        std::vector<Renderer::Vertex> GetGreenCubeVertices(CubeSide side);
+        std::vector<Renderer::Vertex> GetYellowCubeVertices(CubeSide side);
+        std::vector<Renderer::Vertex> GetLightPlaneVertices();
+        std::vector<Renderer::Vertex> GetRoomCubeVertices(CubeSide side);
     };
 }
 }
