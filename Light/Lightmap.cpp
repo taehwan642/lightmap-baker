@@ -9,52 +9,61 @@ void LightmapBaker::Light::Lightmap::GetInputMesh(const std::vector<std::shared_
     for (int n = 0; n < meshList.size(); ++n)
     {
         auto mesh = meshList[n];
-        // if mesh has different vertices, then we need to +=, but right now we share all same vertices.
-        inputMesh.vertex_count = mesh->vertices.size();
+        inputMesh.vertex_count += mesh->vertices.size();
         inputMesh.face_count += mesh->indices.size() / 3;
     }
     inputMesh.vertex_array = new Atlas_Input_Vertex[inputMesh.vertex_count];
-    auto mesh = meshList[0];
-    for (int i = 0; i < inputMesh.vertex_count; ++i)
+    vertexColors.resize(inputMesh.vertex_count);
+    int f = 0;
+    int meshColorIndex = 0;
+    for (int n = 0; n < meshList.size(); ++n)
     {
-        inputMesh.vertex_array[i].position[0] = mesh->vertices[i].position.x;
-        inputMesh.vertex_array[i].position[1] = mesh->vertices[i].position.y;
-        inputMesh.vertex_array[i].position[2] = mesh->vertices[i].position.z;
-
-        inputMesh.vertex_array[i].normal[0] = mesh->vertices[i].normal.x;
-        inputMesh.vertex_array[i].normal[1] = mesh->vertices[i].normal.y;
-        inputMesh.vertex_array[i].normal[2] = mesh->vertices[i].normal.z;
-
-        // how to set uv?
-        inputMesh.vertex_array[i].uv[0] = mesh->vertices[i].uv.x;
-        inputMesh.vertex_array[i].uv[1] = mesh->vertices[i].uv.y;
-
-        inputMesh.vertex_array[i].first_colocal = i;
-        for (int vv = 0; vv < i; vv++)
+        auto mesh = meshList[n];
+        for (int i = 0; i < mesh->vertices.size(); ++i)
         {
-            if (inputMesh.vertex_array[i].position[0] == inputMesh.vertex_array[vv].position[0] &&
-                inputMesh.vertex_array[i].position[1] == inputMesh.vertex_array[vv].position[1] &&
-                inputMesh.vertex_array[i].position[2] == inputMesh.vertex_array[vv].position[2])
+            inputMesh.vertex_array[f + i].position[0] = mesh->vertices[i].position.x;
+            inputMesh.vertex_array[f + i].position[1] = mesh->vertices[i].position.y;
+            inputMesh.vertex_array[f + i].position[2] = mesh->vertices[i].position.z;
+
+            inputMesh.vertex_array[f + i].normal[0] = mesh->vertices[i].normal.x;
+            inputMesh.vertex_array[f + i].normal[1] = mesh->vertices[i].normal.y;
+            inputMesh.vertex_array[f + i].normal[2] = mesh->vertices[i].normal.z;
+
+            inputMesh.vertex_array[f + i].uv[0] = mesh->vertices[i].uv.x;
+            inputMesh.vertex_array[f + i].uv[1] = mesh->vertices[i].uv.y;
+
+            vertexColors[f + i] = mesh->reflectance;
+
+            inputMesh.vertex_array[f + i].first_colocal = f + i;
+            for (int vv = 0; vv < i; vv++)
             {
-                inputMesh.vertex_array[i].first_colocal = vv;
+                if (inputMesh.vertex_array[f + i].position[0] == inputMesh.vertex_array[f + vv].position[0] &&
+                    inputMesh.vertex_array[f + i].position[1] == inputMesh.vertex_array[f + vv].position[1] &&
+                    inputMesh.vertex_array[f + i].position[2] == inputMesh.vertex_array[f + vv].position[2])
+                {
+                    inputMesh.vertex_array[f + i].first_colocal = f + vv;
+                }
             }
         }
+         f += mesh->vertices.size();
     }
 
     inputMesh.face_array = new Atlas_Input_Face[inputMesh.face_count];
-    int f = 0;
+    f = 0;
+    int vn = 0;
     for (int n = 0; n < meshList.size(); ++n)
     {
         auto mesh = meshList[n];
         for (int i = 0; i < mesh->indices.size() / 3; ++i)
         {
             inputMesh.face_array[f + i].material_index = 0;
-            inputMesh.face_array[f + i].vertex_index[0] = mesh->indices[i * 3 + 0];
-            inputMesh.face_array[f + i].vertex_index[1] = mesh->indices[i * 3 + 1];
-            inputMesh.face_array[f + i].vertex_index[2] = mesh->indices[i * 3 + 2];
+            inputMesh.face_array[f + i].vertex_index[0] = mesh->indices[i * 3 + 0] + vn;
+            inputMesh.face_array[f + i].vertex_index[1] = mesh->indices[i * 3 + 1] + vn;
+            inputMesh.face_array[f + i].vertex_index[2] = mesh->indices[i * 3 + 2] + vn;
         }
 
         f += mesh->indices.size() / 3;
+        vn += mesh->vertices.size();
     }
 }
 
@@ -104,4 +113,5 @@ void LightmapBaker::Light::Lightmap::Bake(const std::vector<std::shared_ptr<Rend
 void LightmapBaker::Light::Lightmap::Destroy()
 {
     atlas_free(outputMesh);
+    vertexColors.clear();
 }
