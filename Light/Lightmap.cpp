@@ -32,7 +32,7 @@ void LightmapBaker::Light::Lightmap::GetInputMesh(const std::vector<std::shared_
             inputMesh.vertex_array[f + i].uv[0] = mesh->vertices[i].uv.x;
             inputMesh.vertex_array[f + i].uv[1] = mesh->vertices[i].uv.y;
 
-            vertexColors[f + i] = mesh->reflectance;
+            vertexColors[f + i] = mesh->color;
 
             inputMesh.vertex_array[f + i].first_colocal = f + i;
             for (int vv = 0; vv < i; vv++)
@@ -44,6 +44,8 @@ void LightmapBaker::Light::Lightmap::GetInputMesh(const std::vector<std::shared_
                     inputMesh.vertex_array[f + i].first_colocal = f + vv;
                 }
             }
+
+            meshVertices.push_back(&mesh->vertices[i]);
         }
          f += mesh->vertices.size();
     }
@@ -114,4 +116,5 @@ void LightmapBaker::Light::Lightmap::Destroy()
 {
     atlas_free(outputMesh);
     vertexColors.clear();
+    meshVertices.clear();
 }

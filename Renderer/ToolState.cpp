@@ -293,6 +293,20 @@ void LightmapBaker::Renderer::ToolState::Update()
 		stbi_image_free(data);
 
 		compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f);
+
+		for (int i = 0; i < lightMap->outputMesh->vertex_count; ++i)
+		{
+			auto& vertex = lightMap->outputMesh->vertex_array[i];
+			int ref = vertex.xref;
+			lightMap->meshVertices[ref]->uv.x = vertex.uv[0] / (float)lightMap->outputMesh->atlas_width;
+			lightMap->meshVertices[ref]->uv.y = vertex.uv[1] / (float)lightMap->outputMesh->atlas_height;
+		}
+
+		for (auto& mesh : meshList)
+		{
+			mesh->color = glm::vec3(1.0f, 1.0f, 1.0f);
+		}
+
 		UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
 	}
 	break;
@@ -326,6 +340,8 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 		RenderProgressLightmapBakeUI();
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::AFTER_LIGHTMAP_BAKE:
+		glDisable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		RenderCompareModel();
 		RenderAfterLightmapBakeUI();
 		break;

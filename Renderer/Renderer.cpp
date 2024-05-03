@@ -180,6 +180,8 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glMatrixMode(GL_MODELVIEW);
     glLoadIdentity();
 
+    glDisable(GL_TEXTURE_2D);
+
     glEnable(GL_STENCIL_TEST);
     glStencilFunc(GL_ALWAYS, 1, 0xFF);
     glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
@@ -194,6 +196,7 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glVertex2f(toolState.GetCompareXPosition(), framebufferHeight);
     glVertex2f(0, framebufferHeight);
     glEnd();
+    glEnable(GL_TEXTURE_2D);
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
