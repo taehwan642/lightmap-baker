@@ -274,7 +274,6 @@ void LightmapBaker::Renderer::ToolState::Update()
 		std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
 		if (!dataManager->Save("lightmap.png", lightMap))
 			std::cout << "Bake Error" << std::endl;
-		lightMap->Destroy();
 
 		glGenTextures(1, &Light::RadiosityManager::GetInstance().texture);
 		glBindTexture(GL_TEXTURE_2D, Light::RadiosityManager::GetInstance().texture);
@@ -301,6 +300,7 @@ void LightmapBaker::Renderer::ToolState::Update()
 			lightMap->meshVertices[ref]->uv.x = vertex.uv[0] / (float)lightMap->outputMesh->atlas_width;
 			lightMap->meshVertices[ref]->uv.y = vertex.uv[1] / (float)lightMap->outputMesh->atlas_height;
 		}
+		lightMap->Destroy();
 
 		for (auto& mesh : meshList)
 		{

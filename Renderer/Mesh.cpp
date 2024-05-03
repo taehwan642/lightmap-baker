@@ -31,13 +31,16 @@ void LightmapBaker::Renderer::Mesh::Render()
 {
 	glColor3f(color.r, color.g, color.b);
 	glEnableClientState(GL_VERTEX_ARRAY);
+	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
 
-	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), vertices.data());
+	glVertexPointer(3, GL_FLOAT, sizeof(Vertex), &vertices[0].position);
+	glTexCoordPointer(2, GL_FLOAT, sizeof(Vertex), &vertices[0].uv);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
 	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
 	glDisableClientState(GL_VERTEX_ARRAY);
+	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }
 
 void LightmapBaker::Renderer::Mesh::Destroy()
