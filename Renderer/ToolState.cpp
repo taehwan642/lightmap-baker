@@ -99,9 +99,14 @@ void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
 		{
 			bool is_selected = (curItem == items[i]);
 			if (ImGui::Selectable(items[i], is_selected, ImGuiSelectableFlags_None))
+			{
 				curItem = items[i];
+				compareIndex = i;
+			}
 			if (is_selected)
+			{
 				ImGui::SetItemDefaultFocus();
+			}
 		}
 		ImGui::EndCombo();
 	}
@@ -194,10 +199,28 @@ void LightmapBaker::Renderer::ToolState::RenderCompareModel()
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
 
-	const auto& vec = Light::RadiosityManager::GetInstance().models;
-	for (int i = 0; i < vec.size(); ++i)
+	switch (compareIndex)
 	{
-		vec[i]->Render();
+	case 0: // basic
+	{
+		const auto& vec = Light::RadiosityManager::GetInstance().models;
+		for (int i = 0; i < vec.size(); ++i)
+		{
+			vec[i]->Render();
+		}
+	}
+		break;
+	case 1: // radiosity
+	{
+		const auto& vec = Light::RadiosityManager::GetInstance().elements;
+		for (int i = 0; i < vec.size(); ++i)
+		{
+			vec[i]->mesh->Render();
+		}
+	}
+		break;
+	default:
+		break;
 	}
 
 	glDisable(GL_STENCIL_TEST);
@@ -293,19 +316,16 @@ void LightmapBaker::Renderer::ToolState::Update()
 
 		compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f);
 
-		for (int i = 0; i < lightMap->outputMesh->vertex_count; ++i)
-		{
-			auto& vertex = lightMap->outputMesh->vertex_array[i];
-			int ref = vertex.xref;
-			lightMap->meshVertices[ref]->uv.x = vertex.uv[0] / (float)lightMap->outputMesh->atlas_width;
-			lightMap->meshVertices[ref]->uv.y = vertex.uv[1] / (float)lightMap->outputMesh->atlas_height;
-		}
-		lightMap->Destroy();
+		auto renderer = Light::RadiosityManager::GetInstance().GetRenderer();
+		renderer->renderMeshList.clear();
 
-		for (auto& mesh : meshList)
+		std::vector<std::shared_ptr<Mesh>> copiedMeshList = lightMap->GetAtlasUVMesh();
+		for (auto& mesh : copiedMeshList)
 		{
-			mesh->color = glm::vec3(1.0f, 1.0f, 1.0f);
+			renderer->AddRenderMesh(mesh);
 		}
+
+		lightMap->Destroy();
 
 		UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
 	}
