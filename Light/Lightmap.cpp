@@ -6,6 +6,8 @@ void LightmapBaker::Light::Lightmap::GetInputMesh(const std::vector<std::shared_
 {
     using namespace Thekla;
 
+    bakedMeshList = meshList;
+
     for (int n = 0; n < meshList.size(); ++n)
     {
         auto mesh = meshList[n];
@@ -45,7 +47,7 @@ void LightmapBaker::Light::Lightmap::GetInputMesh(const std::vector<std::shared_
                 }
             }
 
-            meshVertices.push_back(&mesh->vertices[i]);
+            meshVertices.push_back(mesh->vertices[i]);
         }
          f += mesh->vertices.size();
     }
@@ -110,6 +112,33 @@ void LightmapBaker::Light::Lightmap::Bake(const std::vector<std::shared_ptr<Rend
 
     std::cout << "Atlas mesh has " << outputMesh->vertex_count << " verts\n";
     std::cout << "Atlas mesh has " << outputMesh->index_count / 3 << " triangles\n";
+}
+
+std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Light::Lightmap::GetAtlasUVMesh()
+{
+    std::vector<std::shared_ptr<Renderer::Mesh>> meshList;
+    for (int i = 0; i < outputMesh->vertex_count; ++i)
+    {
+        auto& vertex = outputMesh->vertex_array[i];
+        int ref = vertex.xref;
+        meshVertices[ref].uv.x = vertex.uv[0] / (float)outputMesh->atlas_width;
+        meshVertices[ref].uv.y = vertex.uv[1] / (float)outputMesh->atlas_height;
+    }
+
+    int meshVerticesIndex = 0;
+    for (auto& iter : bakedMeshList)
+    {
+        std::shared_ptr<Renderer::Mesh> mesh = std::make_shared<Renderer::Mesh>(*iter.get());
+        mesh->color = glm::vec3(1.0f, 1.0f, 1.0f);
+        mesh->CreateIndexBuffer();
+        for (int i = 0; i < mesh->vertices.size(); ++i)
+        {
+            mesh->vertices[i] = meshVertices[meshVerticesIndex++];
+        }
+
+        meshList.push_back(mesh);
+    }
+    return meshList;
 }
 
 void LightmapBaker::Light::Lightmap::Destroy()
