@@ -87,8 +87,13 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
     for (int i = 0; i < elements.size(); ++i)
     {
         std::shared_ptr<Renderer::Mesh> mesh = std::make_shared<Renderer::Mesh>();
-        mesh->vertices = subDividedVertices;
-        mesh->indices = elements[i]->indices;
+        // 0 3 2 0 1 3
+        mesh->vertices = std::vector<Renderer::Vertex>{
+            subDividedVertices[elements[i]->indices[0]],
+            subDividedVertices[elements[i]->indices[4]],
+            subDividedVertices[elements[i]->indices[2]],
+            subDividedVertices[elements[i]->indices[1]] };
+        mesh->indices = std::vector<GLuint>{0, 1, 2, 1, 3, 2};
         mesh->color = elements[i]->radiosity;
         mesh->CreateIndexBuffer();
 
