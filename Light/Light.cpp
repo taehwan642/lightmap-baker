@@ -112,7 +112,10 @@ bool LightmapBaker::Light::RadiosityManager::Update()
 
     for (int i = 0; i < elements.size(); ++i)
     {
-        elements[i]->mesh->color = elements[i]->radiosity * radiosity->intensityScale;
+        elements[i]->mesh->color = glm::vec3(
+            std::min(elements[i]->radiosity.x * radiosity->intensityScale, 1.0f),
+            std::min(elements[i]->radiosity.y * radiosity->intensityScale, 1.0f),
+            std::min(elements[i]->radiosity.z * radiosity->intensityScale, 1.0f));
     }
     return done;
 }
