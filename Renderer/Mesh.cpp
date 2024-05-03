@@ -23,6 +23,19 @@ LightmapBaker::Renderer::Mesh::Mesh(const std::vector<Vertex>& vertices, const s
 	this->emission = emission;
 }
 
+LightmapBaker::Renderer::Mesh::Mesh(const Mesh& mesh)
+{
+	vertices = mesh.vertices;
+	indices = mesh.indices;
+	normal = mesh.normal;
+	patchLevel = mesh.patchLevel;
+	elementLevel = mesh.elementLevel;
+	area = mesh.area;
+	reflectance = mesh.reflectance;
+	emission = mesh.emission;
+	color = mesh.color;
+}
+
 void LightmapBaker::Renderer::Mesh::Initialize()
 {
 }
