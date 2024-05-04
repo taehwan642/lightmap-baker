@@ -2,6 +2,9 @@
 #include "GLUT/glut.h"
 #include <string>
 #include <list>
+#include <vector>
+#include <memory>
+#include "UI.hpp"
 
 namespace LightmapBaker
 {
@@ -21,35 +24,17 @@ namespace Renderer
 	private:
 		ToolStateEnum currentState = ToolStateEnum::BEFORE_RADIOSITY_CALCULATION;
 		std::list<double> frames;
+		std::vector<std::shared_ptr<UI>> uis;
+		std::shared_ptr<UI> renderingUI;
 
-		void RenderBeforeRadiosityCalculationUI();
-		void RenderProgressRadiosityCalculationUI();
-		void RenderBeforeLightmapBakeUI();
-		void RenderProgressLightmapBakeUI();
-		void RenderAfterLightmapBakeUI();
-
-	private:
-		void RenderHemicubeRenderedImage();
-		void RenderCompareModel();
-
-	private:
-		int lightMapQuality = 1;
-		float compareXPosition = 0.0f;
-		int compareIndex = 0;
-
-		void ProgressUI(const std::string& text);
-		void CompareUI();
-
+		void RenderCompareModel(std::shared_ptr<CompareUI> compareUI);
 	public:
+		void Initialize();
 		void UpdateCurrentState(const ToolStateEnum& state);
 		void Update();
 		void RenderCurrentUI();
 		void SetFrame(double frame);
 		float GetCompareXPosition();
-
-	public:
-		int curScreenWidth = 640;
-		int curScreenHeight = 480;
 	};
 }
 }

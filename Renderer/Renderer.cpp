@@ -167,8 +167,6 @@ void LightmapBaker::Renderer::Renderer::GLFWUpdate()
     }
     mousePositionX = xPos;
     mousePositionY = yPos;
-
-    glfwGetWindowSize(glfwWindow, &toolState.curScreenWidth, &toolState.curScreenHeight);
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWRender()
@@ -255,6 +253,7 @@ void LightmapBaker::Renderer::Renderer::ImGuiInitialize()
     ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
     ImGui_ImplOpenGL3_Init(glslVersion);
 
+    toolState.Initialize();
     toolState.UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION);
 }
 

@@ -166,6 +166,7 @@
     <ClCompile Include="Renderer\Renderer.cpp" />
     <ClCompile Include="Renderer\RenderTarget.cpp" />
     <ClCompile Include="Renderer\ToolState.cpp" />
+    <ClCompile Include="Renderer\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\DataManager.hpp" />
@@ -259,6 +260,7 @@
     <ClInclude Include="Renderer\Renderer.hpp" />
     <ClInclude Include="Renderer\RenderTarget.hpp" />
     <ClInclude Include="Renderer\ToolState.hpp" />
+    <ClInclude Include="Renderer\UI.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependency\thekla\nvcore\Array.inl" />

@@ -9,148 +9,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-void LightmapBaker::Renderer::ToolState::RenderBeforeRadiosityCalculationUI()
-{
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * ((float)curScreenWidth / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (19.0f * ((float)curScreenHeight / 480.0f) + 14.0f)));
-	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
-	ImGui::Begin("CalculateRadiosity", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	if (ImGui::Button("Calculate Radiosity", ImVec2(141.0f * ((float)curScreenWidth / 640.0f), 19.0f * ((float)curScreenHeight / 480.0f))))
-	{
-		UpdateCurrentState(ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION);
-	}
-	ImGui::End();
-}
-
-void LightmapBaker::Renderer::ToolState::RenderProgressRadiosityCalculationUI()
-{
-	ProgressUI("Radiosity calculation in progress");
-}
-
-void LightmapBaker::Renderer::ToolState::RenderBeforeLightmapBakeUI()
-{
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.26f, 0.59f, 0.98f, 0.40f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.06f, 0.53f, 0.98f, 1.00f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141 * ((float)curScreenWidth / 640.0f) + 205.0f), ImGui::GetMainViewport()->Size.y - (19.0f * ((float)curScreenHeight / 480.0f) + 23.0f)));
-	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
-	ImGui::Begin("LightMapQuality", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	std::string qualityString = "Lightmap Quality : ";
-	ImGui::Text((qualityString + std::to_string(lightMapQuality)).c_str());
-	ImGui::End();
-
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * ((float)curScreenWidth / 640.0f) + 49.0f), ImGui::GetMainViewport()->Size.y - (19.0f * ((float)curScreenHeight / 480.0f) + 36.0f)));
-	ImGui::Begin("UpDownBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	if (ImGui::ArrowButton("Up", ImGuiDir_Up))
-	{
-		++lightMapQuality;
-	}
-
-	if (ImGui::ArrowButton("Down", ImGuiDir_Down))
-	{
-		--lightMapQuality;
-		if (lightMapQuality < 0) lightMapQuality = 0;
-	}
-	ImGui::End();
-
-	ImGui::PopStyleColor();
-	ImGui::PopStyleColor();
-	ImGui::PopStyleColor();
-
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.26f, 0.59f, 0.98f, 0.40f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.06f, 0.53f, 0.98f, 1.00f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
-
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * ((float)curScreenWidth / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (38.0f * ((float)curScreenHeight / 480.0f) + 17.0f)));
-	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
-	ImGui::Begin("CompareBakeBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	if (ImGui::Button("Compare", ImVec2(141.0f * ((float)curScreenWidth / 640.0f), 19.0f * ((float)curScreenHeight / 480.0f))))
-	{
-	}
-
-	if (ImGui::Button("Bake", ImVec2(141.0f * ((float)curScreenWidth / 640.0f), 19.0f * ((float)curScreenHeight / 480.0f))))
-	{
-		UpdateCurrentState(ToolStateEnum::PROGRESS_LIGHTMAP_BAKE);
-	}
-	ImGui::End();
-
-	ImGui::PopStyleColor();
-	ImGui::PopStyleColor();
-	ImGui::PopStyleColor();
-
-	CompareUI();
-}
-
-void LightmapBaker::Renderer::ToolState::RenderProgressLightmapBakeUI()
-{
-	ProgressUI("Lightmap baking in progress");
-}
-
-void LightmapBaker::Renderer::ToolState::RenderAfterLightmapBakeUI()
-{
-	ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetMainViewport()->Size.y - (5.0f * ((float)curScreenHeight / 480.0f) + 25.0f)));
-	ImGui::SetNextWindowSize(ImVec2(300, 100), ImGuiCond_Once);
-	ImGui::Begin("BasicRadiosityCombo", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	const char* items[] = { "Basic", "Radiosity" };
-	static const char* curItem = items[0];
-
-	if (ImGui::BeginCombo("Compare with", curItem))
-	{
-		for (int i = 0; i < IM_ARRAYSIZE(items); i++)
-		{
-			bool is_selected = (curItem == items[i]);
-			if (ImGui::Selectable(items[i], is_selected, ImGuiSelectableFlags_None))
-			{
-				curItem = items[i];
-				compareIndex = i;
-			}
-			if (is_selected)
-			{
-				ImGui::SetItemDefaultFocus();
-			}
-		}
-		ImGui::EndCombo();
-	}
-
-	ImGui::End();
-
-	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.26f, 0.59f, 0.98f, 0.40f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.06f, 0.53f, 0.98f, 1.00f));
-	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
-
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * ((float)curScreenWidth / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (38.0f * ((float)curScreenHeight / 480.0f) + 17.0f)));
-	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
-	ImGui::Begin("CompareNewLoadBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	if (ImGui::Button("Compare", ImVec2(141.0f * ((float)curScreenWidth / 640.0f), 19.0f * ((float)curScreenHeight / 480.0f))))
-	{
-	}
-
-	if (ImGui::Button("New Load", ImVec2(141.0f * ((float)curScreenWidth / 640.0f), 19.0f * ((float)curScreenHeight / 480.0f))))
-	{
-		Light::RadiosityManager::GetInstance().Destroy();
-		Light::RadiosityManager::GetInstance().Initialize();
-		UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION);
-	}
-	ImGui::End();
-
-	ImGui::PopStyleColor();
-	ImGui::PopStyleColor();
-	ImGui::PopStyleColor();
-
-	CompareUI();
-}
-
-void LightmapBaker::Renderer::ToolState::RenderHemicubeRenderedImage()
-{
-	ImVec2 resolution = ImVec2(Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.x, Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.y);
-	ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetMainViewport()->Size.y - resolution.y));
-	ImGui::SetNextWindowSize(resolution, ImGuiCond_Once);
-	ImGui::Begin("Texture", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-
-	ImGui::Image((ImTextureID)Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.renderTexture, resolution);
-	ImGui::End();
-}
-
-void LightmapBaker::Renderer::ToolState::RenderCompareModel()
+void LightmapBaker::Renderer::ToolState::RenderCompareModel(std::shared_ptr<CompareUI> compareUI)
 {
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
@@ -168,10 +27,10 @@ void LightmapBaker::Renderer::ToolState::RenderCompareModel()
 
 	glColor3f(0, 0.3f, 0.3f);
 	glBegin(GL_QUADS);
-	glVertex2f(compareXPosition, 0);
+	glVertex2f(compareUI->floatData, 0);
 	glVertex2f(Renderer::framebufferWidth, 0);
 	glVertex2f(Renderer::framebufferWidth, Renderer::framebufferHeight);
-	glVertex2f(compareXPosition, Renderer::framebufferHeight);
+	glVertex2f(compareUI->floatData, Renderer::framebufferHeight);
 	glEnd();
 
 	glMatrixMode(GL_PROJECTION);
@@ -198,6 +57,18 @@ void LightmapBaker::Renderer::ToolState::RenderCompareModel()
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_DEPTH_TEST);
 	glCullFace(GL_BACK);
+
+	// TODO: optimize every frame dynamic pointer casting
+	auto castedPointer = std::dynamic_pointer_cast<AfterLightmapBakeUI>(renderingUI);
+	int compareIndex = 0;
+	if (castedPointer == nullptr)
+	{
+		compareIndex = 0;
+	}
+	else
+	{
+		compareIndex = castedPointer->integerData;
+	}
 
 	switch (compareIndex)
 	{
@@ -228,36 +99,27 @@ void LightmapBaker::Renderer::ToolState::RenderCompareModel()
 	glDisable(GL_DEPTH_TEST);
 }
 
-void LightmapBaker::Renderer::ToolState::ProgressUI(const std::string& text)
+void LightmapBaker::Renderer::ToolState::Initialize()
 {
-	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - (36.0f * ((float)curScreenHeight / 480.0f) + 19.0f)));
-	ImGui::Begin("Progress", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	ImGui::Text(text.c_str());
-	ImGui::End();
-}
+	uis.push_back(std::make_shared<BeforeRadiosityCalculationUI>());
+	uis.push_back(std::make_shared<ProgressRadiosityCalculationUI>());
+	uis.push_back(std::make_shared<BeforeLightmapBakeUI>());
+	uis.push_back(std::make_shared<ProgressLightmapBakeUI>());
+	uis.push_back(std::make_shared<AfterLightmapBakeUI>());
 
-void LightmapBaker::Renderer::ToolState::CompareUI()
-{
-	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - (19.0f * ((float)curScreenHeight / 480.0f) + 36.0f)));
-	ImGui::Begin("Compare Helper", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	ImGui::Text("Move splitter by left / right arrow");
-	ImGui::End();
-
-	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_LeftArrow)))
-	{
-		compareXPosition -= ImGui::GetIO().DeltaTime * 1000.0f;
-		if (compareXPosition < 0.0f) compareXPosition = 0.0f;
-	}
-	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_RightArrow)))
-	{
-		compareXPosition += ImGui::GetIO().DeltaTime * 1000.0f;
-		if (ImGui::GetMainViewport()->Size.x < compareXPosition) compareXPosition = ImGui::GetMainViewport()->Size.x;
-	}
+	uis[(int)ToolStateEnum::BEFORE_RADIOSITY_CALCULATION]->callbacks.emplace("CalculateRadiosityButton", [&] { UpdateCurrentState(ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION); });
+	uis[(int)ToolStateEnum::BEFORE_LIGHTMAP_BAKE]->callbacks.emplace("BakeLightmapButton", [&] { UpdateCurrentState(ToolStateEnum::PROGRESS_LIGHTMAP_BAKE); } );
+	uis[(int)ToolStateEnum::AFTER_LIGHTMAP_BAKE]->callbacks.emplace("NewLoadButton", [&] {
+		Light::RadiosityManager::GetInstance().Destroy();
+		Light::RadiosityManager::GetInstance().Initialize();
+		UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION); 
+	});
 }
 
 void LightmapBaker::Renderer::ToolState::UpdateCurrentState(const ToolStateEnum& state)
 {
 	currentState = state;
+	renderingUI = uis[(int)state];
 }
 
 void LightmapBaker::Renderer::ToolState::Update()
@@ -266,8 +128,6 @@ void LightmapBaker::Renderer::ToolState::Update()
 	{
 	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_RADIOSITY_CALCULATION:
 	{
-		// Model Import
-		compareXPosition = ImGui::GetMainViewport()->Size.x;
 	}
 	break;
 	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION:
@@ -275,7 +135,6 @@ void LightmapBaker::Renderer::ToolState::Update()
 		// Calc Radiosity
 		if (!Light::RadiosityManager::GetInstance().Update())
 		{
-			compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f);
 			UpdateCurrentState(ToolStateEnum::BEFORE_LIGHTMAP_BAKE);
 		}
 	}
@@ -314,8 +173,6 @@ void LightmapBaker::Renderer::ToolState::Update()
 
 		stbi_image_free(data);
 
-		compareXPosition = (ImGui::GetMainViewport()->Size.x / 2.0f);
-
 		auto renderer = Light::RadiosityManager::GetInstance().GetRenderer();
 		renderer->renderMeshList.clear();
 
@@ -341,29 +198,22 @@ void LightmapBaker::Renderer::ToolState::Update()
 
 void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 {
+	renderingUI->RenderUI();
 	switch (currentState)
 	{
 	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_RADIOSITY_CALCULATION:
-		RenderBeforeRadiosityCalculationUI();
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION:
-	{
-		RenderProgressRadiosityCalculationUI();
-		RenderHemicubeRenderedImage();
-	}
-	break;
+		break;
 	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_LIGHTMAP_BAKE:
-		RenderCompareModel();
-		RenderBeforeLightmapBakeUI();
+		RenderCompareModel(std::dynamic_pointer_cast<CompareUI>(renderingUI));
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_LIGHTMAP_BAKE:
-		RenderProgressLightmapBakeUI();
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::AFTER_LIGHTMAP_BAKE:
 		glDisable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		RenderCompareModel();
-		RenderAfterLightmapBakeUI();
+		RenderCompareModel(std::dynamic_pointer_cast<CompareUI>(renderingUI));
 		break;
 	default:
 		break;
@@ -392,5 +242,6 @@ void LightmapBaker::Renderer::ToolState::SetFrame(double frame)
 
 float LightmapBaker::Renderer::ToolState::GetCompareXPosition()
 {
-	return compareXPosition;
+	auto castedPointer = std::dynamic_pointer_cast<CompareUI>(renderingUI);
+	return castedPointer == nullptr ? ImGui::GetMainViewport()->Size.x : castedPointer->floatData;
 }

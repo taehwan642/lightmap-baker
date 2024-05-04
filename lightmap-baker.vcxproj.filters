@@ -303,6 +303,9 @@
     <ClInclude Include="Light\Lightmap.hpp">
       <Filter>Light</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\UI.hpp">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data\DataManager.cpp">
@@ -353,6 +356,9 @@
     </ClCompile>
     <ClCompile Include="Light\Lightmap.cpp">
       <Filter>Light</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\UI.cpp">
+      <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
