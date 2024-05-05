@@ -3,10 +3,10 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include <vector>
+#include <thread>
 #include "../Light/Light.hpp"
 #include "../Data/DataManager.hpp"
 #include "../Renderer/Renderer.hpp"
-#include "../Light/Lightmap.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
@@ -155,45 +155,64 @@ void LightmapBaker::Renderer::ToolState::Update()
 	break;
 	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_LIGHTMAP_BAKE:
 	{
-		std::shared_ptr<Light::Lightmap> lightMap = std::make_shared<Light::Lightmap>();
-		std::vector<std::shared_ptr<Mesh>> meshList;
-		for (int i = 0; i < Light::RadiosityManager::GetInstance().elements.size(); ++i)
+		if (threadState == ThreadState::RUNNING)
+			break;
+
+		if (threadLightmap == nullptr)
+			threadLightmap = std::make_shared<Light::Lightmap>();
+
+		if (threadState == ThreadState::DONE)
 		{
-			meshList.push_back(Light::RadiosityManager::GetInstance().elements[i]->mesh);
+			glGenTextures(1, &Light::RadiosityManager::GetInstance().texture);
+			glBindTexture(GL_TEXTURE_2D, Light::RadiosityManager::GetInstance().texture);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+
+			int width, height, nrChannels;
+			unsigned char* data = stbi_load("lightmap.png", &width, &height, &nrChannels, 0);
+			if (data)
+				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+			else
+				std::cout << "texture load failed" << std::endl;
+
+			stbi_image_free(data);
+
+			Renderer& renderer = Renderer::GetInstance();
+			renderer.renderMeshList.clear();
+
+			std::vector<std::shared_ptr<Mesh>> copiedMeshList = threadLightmap->GetAtlasUVMesh();
+			for (auto& mesh : copiedMeshList)
+			{
+				renderer.AddRenderMesh(mesh);
+			}
+
+			threadLightmap->Destroy();
+			threadLightmap = nullptr;
+
+			UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
+			break;
 		}
-		lightMap->Bake(meshList);
-		std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
-		if (!dataManager->Save("lightmap.png", lightMap))
-			std::cout << "Bake Error" << std::endl;
 
-		glGenTextures(1, &Light::RadiosityManager::GetInstance().texture);
-		glBindTexture(GL_TEXTURE_2D, Light::RadiosityManager::GetInstance().texture);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		std::thread bakingThread([&]
+			{
+				std::vector<std::shared_ptr<Mesh>> meshList;
+				for (int i = 0; i < Light::RadiosityManager::GetInstance().elements.size(); ++i)
+				{
+					meshList.push_back(Light::RadiosityManager::GetInstance().elements[i]->mesh);
+				}
 
-		int width, height, nrChannels;
-		unsigned char* data = stbi_load("lightmap.png", &width, &height, &nrChannels, 0);
-		if (data)
-			glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-		else
-			std::cout << "texture load failed" << std::endl;
+				threadLightmap->Bake(meshList);
+				std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
+				if (!dataManager->Save("lightmap.png", threadLightmap))
+					std::cout << "Bake Error" << std::endl;
 
-		stbi_image_free(data);
+				threadState = ThreadState::DONE;
+			});
 
-		Renderer& renderer = Renderer::GetInstance();
-		renderer.renderMeshList.clear();
-
-		std::vector<std::shared_ptr<Mesh>> copiedMeshList = lightMap->GetAtlasUVMesh();
-		for (auto& mesh : copiedMeshList)
-		{
-			renderer.AddRenderMesh(mesh);
-		}
-
-		lightMap->Destroy();
-
-		UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);
+		bakingThread.detach();
+		threadState = ThreadState::RUNNING;
 	}
 	break;
 	case LightmapBaker::Renderer::ToolStateEnum::AFTER_LIGHTMAP_BAKE:
