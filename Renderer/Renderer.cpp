@@ -2,6 +2,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include "UI.hpp"
 
 LightmapBaker::Renderer::Camera LightmapBaker::Renderer::Renderer::camera = LightmapBaker::Renderer::Camera();
 double LightmapBaker::Renderer::Renderer::deltaTime = 0.0;
@@ -167,6 +168,8 @@ void LightmapBaker::Renderer::Renderer::GLFWUpdate()
     }
     mousePositionX = xPos;
     mousePositionY = yPos;
+
+    glfwGetWindowSize(glfwWindow, &UI::screenWidth, &UI::screenHeight);
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWRender()

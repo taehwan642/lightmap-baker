@@ -107,7 +107,13 @@ void LightmapBaker::Renderer::ToolState::Initialize()
 	uis.push_back(std::make_shared<ProgressLightmapBakeUI>());
 	uis.push_back(std::make_shared<AfterLightmapBakeUI>());
 
-	uis[(int)ToolStateEnum::BEFORE_RADIOSITY_CALCULATION]->callbacks.emplace("CalculateRadiosityButton", [&] { UpdateCurrentState(ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION); });
+	uis[(int)ToolStateEnum::BEFORE_RADIOSITY_CALCULATION]->callbacks.emplace("CalculateRadiosityButton", [&] {
+		UpdateCurrentState(ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION);
+		auto castedPointer = std::dynamic_pointer_cast<ProgressRadiosityCalculationUI>(renderingUI);
+		castedPointer->resolutionX = Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.x;
+		castedPointer->resolutionY = Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.y;
+		castedPointer->renderTexture = Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.renderTexture;
+	});
 	uis[(int)ToolStateEnum::BEFORE_LIGHTMAP_BAKE]->callbacks.emplace("BakeLightmapButton", [&] { UpdateCurrentState(ToolStateEnum::PROGRESS_LIGHTMAP_BAKE); } );
 	uis[(int)ToolStateEnum::AFTER_LIGHTMAP_BAKE]->callbacks.emplace("NewLoadButton", [&] {
 		Light::RadiosityManager::GetInstance().Destroy();
@@ -198,7 +204,6 @@ void LightmapBaker::Renderer::ToolState::Update()
 
 void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 {
-	renderingUI->RenderUI();
 	switch (currentState)
 	{
 	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_RADIOSITY_CALCULATION:
@@ -218,6 +223,7 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 	default:
 		break;
 	}
+	renderingUI->RenderUI();
 	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 255, 33));
 	ImGui::SetNextWindowSize(ImVec2(200, 50), ImGuiCond_Once);
 	ImGui::Begin("Frames", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);

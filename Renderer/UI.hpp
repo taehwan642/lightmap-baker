@@ -12,6 +12,8 @@ namespace Renderer
 	class UI abstract
 	{
 	public:
+		static int screenWidth;
+		static int screenHeight;
 		std::map<std::string, std::function<void(void)>> callbacks;
 		virtual void RenderUI() = 0;
 	};

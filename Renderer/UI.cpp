@@ -3,9 +3,12 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 
+int LightmapBaker::Renderer::UI::screenWidth = 0;
+int LightmapBaker::Renderer::UI::screenHeight = 0;
+
 void LightmapBaker::Renderer::ProgressUI::RenderUI()
 {
-	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - (36.0f * (ImGui::GetWindowHeight() / 480.0f) + 19.0f)));
+	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - (36.0f * ((float)screenHeight / 480.0f) + 19.0f)));
 	ImGui::Begin("Progress", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	ImGui::Text(text.c_str());
 	ImGui::End();
@@ -13,7 +16,7 @@ void LightmapBaker::Renderer::ProgressUI::RenderUI()
 
 void LightmapBaker::Renderer::CompareUI::RenderUI()
 {
-	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - (19.0f * (ImGui::GetWindowHeight() / 480.0f) + 36.0f)));
+	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - (19.0f * ((float)screenHeight / 480.0f) + 36.0f)));
 	ImGui::Begin("Compare Helper", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	ImGui::Text("Move splitter by left / right arrow");
 	ImGui::End();
@@ -32,10 +35,10 @@ void LightmapBaker::Renderer::CompareUI::RenderUI()
 
 void LightmapBaker::Renderer::BeforeRadiosityCalculationUI::RenderUI()
 {
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * (ImGui::GetWindowWidth() / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (19.0f * (ImGui::GetWindowHeight() / 480.0f) + 14.0f)));
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * ((float)screenWidth / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (19.0f * ((float)screenHeight / 480.0f) + 14.0f)));
 	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
 	ImGui::Begin("CalculateRadiosity", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	if (ImGui::Button("Calculate Radiosity", ImVec2(141.0f * (ImGui::GetWindowWidth() / 640.0f), 19.0f * (ImGui::GetWindowHeight() / 480.0f))))
+	if (ImGui::Button("Calculate Radiosity", ImVec2(141.0f * ((float)screenWidth / 640.0f), 19.0f * ((float)screenHeight / 480.0f))))
 	{
 		callbacks["CalculateRadiosityButton"]();
 	}
@@ -61,7 +64,7 @@ void LightmapBaker::Renderer::BeforeLightmapBakeUI::RenderUI()
 	ImGui::PushStyleColor(ImGuiCol_Button, ImVec4(0.26f, 0.59f, 0.98f, 0.40f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.06f, 0.53f, 0.98f, 1.00f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141 * (ImGui::GetWindowWidth() / 640.0f) + 205.0f), ImGui::GetMainViewport()->Size.y - (19.0f * (ImGui::GetWindowHeight() / 480.0f) + 23.0f)));
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141 * ((float)screenWidth / 640.0f) + 205.0f), ImGui::GetMainViewport()->Size.y - (19.0f * ((float)screenHeight / 480.0f) + 23.0f)));
 	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
 
 	ImGui::PopStyleColor();
@@ -72,11 +75,11 @@ void LightmapBaker::Renderer::BeforeLightmapBakeUI::RenderUI()
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.06f, 0.53f, 0.98f, 1.00f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
 
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * (ImGui::GetWindowWidth() / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (38.0f * (ImGui::GetWindowHeight() / 480.0f) + 17.0f)));
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * ((float)screenWidth / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (38.0f * ((float)screenHeight / 480.0f) + 17.0f)));
 	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
 	ImGui::Begin("BakeBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 
-	if (ImGui::Button("Bake", ImVec2(141.0f * (ImGui::GetWindowWidth() / 640.0f), 19.0f * (ImGui::GetWindowHeight() / 480.0f))))
+	if (ImGui::Button("Bake", ImVec2(141.0f * ((float)screenWidth / 640.0f), 19.0f * ((float)screenHeight / 480.0f))))
 	{
 		callbacks["BakeLightmapButton"]();
 	}
@@ -97,7 +100,7 @@ void LightmapBaker::Renderer::ProgressLightmapBakeUI::RenderUI()
 
 void LightmapBaker::Renderer::AfterLightmapBakeUI::RenderUI()
 {
-	ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetMainViewport()->Size.y - (5.0f * (ImGui::GetWindowHeight() / 480.0f) + 25.0f)));
+	ImGui::SetNextWindowPos(ImVec2(0, ImGui::GetMainViewport()->Size.y - (5.0f * ((float)screenHeight / 480.0f) + 25.0f)));
 	ImGui::SetNextWindowSize(ImVec2(300, 100), ImGuiCond_Once);
 	ImGui::Begin("BasicRadiosityCombo", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	const char* items[] = { "Basic", "Radiosity" };
@@ -127,10 +130,10 @@ void LightmapBaker::Renderer::AfterLightmapBakeUI::RenderUI()
 	ImGui::PushStyleColor(ImGuiCol_ButtonActive, ImVec4(0.06f, 0.53f, 0.98f, 1.00f));
 	ImGui::PushStyleColor(ImGuiCol_ButtonHovered, ImVec4(0.26f, 0.59f, 0.98f, 1.0f));
 
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * (ImGui::GetWindowWidth() / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (38.0f * (ImGui::GetWindowHeight() / 480.0f) + 17.0f)));
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - (141.0f * ((float)screenWidth / 640.0f) + 14.0f), ImGui::GetMainViewport()->Size.y - (38.0f * ((float)screenHeight / 480.0f) + 17.0f)));
 	ImGui::SetNextWindowSize(ImVec2(500, 100), ImGuiCond_Once);
 	ImGui::Begin("NewLoadBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-	if (ImGui::Button("New Load", ImVec2(141.0f * (ImGui::GetWindowWidth() / 640.0f), 19.0f * (ImGui::GetWindowHeight() / 480.0f))))
+	if (ImGui::Button("New Load", ImVec2(141.0f * ((float)screenWidth / 640.0f), 19.0f * ((float)screenHeight / 480.0f))))
 	{
 		callbacks["NewLoadButton"]();
 	}
