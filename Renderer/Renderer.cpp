@@ -4,11 +4,6 @@
 #include "imgui/imgui_impl_opengl3.h"
 #include "UI.hpp"
 
-LightmapBaker::Renderer::Camera LightmapBaker::Renderer::Renderer::camera = LightmapBaker::Renderer::Camera();
-double LightmapBaker::Renderer::Renderer::deltaTime = 0.0;
-int LightmapBaker::Renderer::Renderer::framebufferWidth = 0;
-int LightmapBaker::Renderer::Renderer::framebufferHeight = 0;
-
 void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
     using namespace LightmapBaker::Renderer;
@@ -19,31 +14,32 @@ void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scanc
     
     if (action == GLFW_PRESS || action == GLFW_REPEAT)
     {
+        Renderer& renderer = Renderer::Renderer::GetInstance();
         switch (key)
         {
         case GLFW_KEY_W:
-            Renderer::camera.position.z += 100.0f * Renderer::deltaTime * Renderer::camera.speed;
+            renderer.camera.position.z += 100.0f * renderer.deltaTime * renderer.camera.speed;
             break;
         case GLFW_KEY_A:
-            Renderer::camera.position.x += 100.0f * Renderer::deltaTime * Renderer::camera.speed;
+            renderer.camera.position.x += 100.0f * renderer.deltaTime * renderer.camera.speed;
             break;
         case GLFW_KEY_S:
-            Renderer::camera.position.z -= 100.0f * Renderer::deltaTime * Renderer::camera.speed;
+            renderer.camera.position.z -= 100.0f * renderer.deltaTime * renderer.camera.speed;
             break;
         case GLFW_KEY_D:
-            Renderer::camera.position.x -= 100.0f * Renderer::deltaTime * Renderer::camera.speed;
+            renderer.camera.position.x -= 100.0f * renderer.deltaTime * renderer.camera.speed;
             break;
         case GLFW_KEY_Q:
-            Renderer::camera.position.y += 100.0f * Renderer::deltaTime * Renderer::camera.speed;
+            renderer.camera.position.y += 100.0f * renderer.deltaTime * renderer.camera.speed;
             break;
         case GLFW_KEY_E:
-            Renderer::camera.position.y -= 100.0f * Renderer::deltaTime * Renderer::camera.speed;
+            renderer.camera.position.y -= 100.0f * renderer.deltaTime * renderer.camera.speed;
             break;
         case GLFW_KEY_Z:
-            Renderer::camera.speed += 50.0f * Renderer::deltaTime;
+            renderer.camera.speed += 50.0f * renderer.deltaTime;
             break;
         case GLFW_KEY_X:
-            Renderer::camera.speed -= 50.0f * Renderer::deltaTime;
+            renderer.camera.speed -= 50.0f * renderer.deltaTime;
             break;
         default:
             break;
@@ -54,13 +50,15 @@ void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scanc
 void LightmapBaker::Renderer::FramebufferSizeCallback(GLFWwindow* window, int width, int height)
 {
     glViewport(0, 0, width, height);
-    Renderer::framebufferWidth = width;
-    Renderer::framebufferHeight = height;
+    Renderer& renderer = Renderer::Renderer::GetInstance();
+    renderer.framebufferWidth = width;
+    renderer.framebufferHeight = height;
 }
 
 void LightmapBaker::Renderer::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    LightmapBaker::Renderer::Renderer::camera.distance += yoffset * Renderer::camera.speed;
+    Renderer& renderer = Renderer::Renderer::GetInstance();
+    renderer.camera.distance += yoffset * renderer.camera.speed;
 }
 
 void LightmapBaker::Renderer::Renderer::Initialize()

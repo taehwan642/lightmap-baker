@@ -2,10 +2,10 @@
 
 #include <memory>
 #include "GLM/vec3.hpp"
-#include "../Renderer/Renderer.hpp"
 #include "../Renderer/RenderTarget.hpp"
 #include "../Renderer/Mesh.hpp"
 #include "../Renderer/Camera.hpp"
+#include "../Utility/Singleton.hpp"
 #include "GLUT/glut.h"
 
 namespace LightmapBaker
@@ -115,17 +115,14 @@ namespace Light
         }
     };
 
-    class RadiosityManager
+    class RadiosityManager : public Utility::Singleton<RadiosityManager>
     {
     private:
-        RadiosityManager() {}
-        RadiosityManager(const RadiosityManager&) {}
-        RadiosityManager& operator=(const RadiosityManager&) {}
-        ~RadiosityManager() {}
+        RadiosityManager() = default;
+        ~RadiosityManager() = default;
+        friend class Utility::Singleton<RadiosityManager>;
 
-    private:
     public:
-        std::shared_ptr<Renderer::Renderer> renderer;
         std::vector<std::shared_ptr<Renderer::Mesh>> models;
         std::vector<std::shared_ptr<Patch>> patches;
         std::vector<std::shared_ptr<Element>> elements;
@@ -164,14 +161,6 @@ namespace Light
         bool Update();
         void Destroy();
         float InitRadiosityParameter();
-        void SetRenderer(std::shared_ptr<Renderer::Renderer> renderer);
-        std::shared_ptr<Renderer::Renderer> GetRenderer();
-
-    public:
-        static RadiosityManager& GetInstance() {
-            static RadiosityManager s;
-            return s;
-        }
     };
 }
 }

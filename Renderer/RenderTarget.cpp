@@ -36,8 +36,9 @@ void LightmapBaker::Renderer::RenderTarget::Initialize(glm::vec2 resolution)
 
 void LightmapBaker::Renderer::RenderTarget::BindDefault()
 {
+    Renderer& renderer = Renderer::GetInstance();
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glViewport(0, 0, Renderer::framebufferWidth, Renderer::framebufferHeight);
+    glViewport(0, 0, renderer.framebufferWidth, renderer.framebufferHeight);
 }
 
 void LightmapBaker::Renderer::RenderTarget::Bind()

@@ -2,6 +2,7 @@
 #include "Light.hpp"
 #include <cmath>
 #include "../Data/DataManager.hpp"
+#include "../Renderer/Renderer.hpp"
 #include "GLFW/glfw3.h"
 #include "GLM/vec2.hpp"
 #include "GLM/geometric.hpp"
@@ -98,7 +99,7 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
         mesh->CreateIndexBuffer();
 
         elements[i]->mesh = mesh;
-        renderer->AddRenderMesh(elements[i]->mesh);
+        Renderer::Renderer::GetInstance().AddRenderMesh(elements[i]->mesh);
     }
 }
 
@@ -125,7 +126,7 @@ void LightmapBaker::Light::RadiosityManager::Destroy()
     hemiCubeRenderTarget.Destroy();
     for (int i = 0; i < elements.size(); ++i)
     {
-        renderer->RemoveRenderMesh(elements[i]->mesh);
+        Renderer::Renderer::GetInstance().RemoveRenderMesh(elements[i]->mesh);
     }
 
     models.clear();
@@ -154,16 +155,6 @@ float LightmapBaker::Light::RadiosityManager::InitRadiosityParameter()
         totalEnergy += patches[i]->emission.b * patches[i]->area;
     }
     return totalEnergy;
-}
-
-void LightmapBaker::Light::RadiosityManager::SetRenderer(std::shared_ptr<Renderer::Renderer> renderer)
-{
-    this->renderer = renderer;
-}
-
-std::shared_ptr<LightmapBaker::Renderer::Renderer> LightmapBaker::Light::RadiosityManager::GetRenderer()
-{
-    return renderer;
 }
 
 void LightmapBaker::Light::RadiosityManager::SubDivideMesh(std::shared_ptr<Renderer::Mesh> modelData, int& vertexOffset, int& patchesIndex, int& elementIndex)

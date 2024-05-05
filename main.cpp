@@ -15,8 +15,8 @@ int main()
     auto meshList = dataManager->Load("Asset/tempModel.ttjj");
     std::cout << meshList.size() << std::endl;
 
-    std::shared_ptr<Renderer::Renderer> renderer = std::make_shared<Renderer::Renderer>();
-    renderer->Initialize();
+    Renderer::Renderer& renderer = Renderer::Renderer::GetInstance();
+    renderer.Initialize();
 
     GLenum err = glewInit();
     if (err != GLEW_OK) {
@@ -25,22 +25,21 @@ int main()
         exit(1);
     }
 
-    Light::RadiosityManager::GetInstance().SetRenderer(renderer);
     Light::RadiosityManager::GetInstance().Initialize();
 
     const int TARGET_FPS = 60;
     double lastTime = glfwGetTime();
-    while (!renderer->WindowShouldClose()) 
+    while (!renderer.WindowShouldClose()) 
     {
-        renderer->Update();
-        renderer->BeforeRender();
-        renderer->Render();
+        renderer.Update();
+        renderer.BeforeRender();
+        renderer.Render();
         while (glfwGetTime() < lastTime + 1.0 / TARGET_FPS) {
             // Put the thread to sleep, yield, or simply do nothing
         }
         lastTime += 1.0 / TARGET_FPS;
     }
-    renderer->Exit();
+    renderer.Exit();
 
     return 0;
 }

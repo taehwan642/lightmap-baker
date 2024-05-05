@@ -261,6 +261,7 @@
     <ClInclude Include="Renderer\RenderTarget.hpp" />
     <ClInclude Include="Renderer\ToolState.hpp" />
     <ClInclude Include="Renderer\UI.hpp" />
+    <ClInclude Include="Utility\Singleton.hpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Dependency\thekla\nvcore\Array.inl" />

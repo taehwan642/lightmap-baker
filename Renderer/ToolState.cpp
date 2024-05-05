@@ -5,15 +5,18 @@
 #include <vector>
 #include "../Light/Light.hpp"
 #include "../Data/DataManager.hpp"
+#include "../Renderer/Renderer.hpp"
 #include "../Light/Lightmap.hpp"
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
 void LightmapBaker::Renderer::ToolState::RenderCompareModel(std::shared_ptr<CompareUI> compareUI)
 {
+	Renderer& renderer = Renderer::GetInstance();
+
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
-	gluOrtho2D(0, Renderer::framebufferWidth, Renderer::framebufferHeight, 0);
+	gluOrtho2D(0, renderer.framebufferWidth, renderer.framebufferHeight, 0);
 
 	glMatrixMode(GL_MODELVIEW);
 	glLoadIdentity();
@@ -28,16 +31,16 @@ void LightmapBaker::Renderer::ToolState::RenderCompareModel(std::shared_ptr<Comp
 	glColor3f(0, 0.3f, 0.3f);
 	glBegin(GL_QUADS);
 	glVertex2f(compareUI->floatData, 0);
-	glVertex2f(Renderer::framebufferWidth, 0);
-	glVertex2f(Renderer::framebufferWidth, Renderer::framebufferHeight);
-	glVertex2f(compareUI->floatData, Renderer::framebufferHeight);
+	glVertex2f(renderer.framebufferWidth, 0);
+	glVertex2f(renderer.framebufferWidth, renderer.framebufferHeight);
+	glVertex2f(compareUI->floatData, renderer.framebufferHeight);
 	glEnd();
 
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 
-	float aspectRatio = Renderer::screenHeight / (float)Renderer::screenWidth;
-	Camera camera = Renderer::camera;
+	float aspectRatio = renderer.screenHeight / (float)renderer.screenWidth;
+	Camera camera = renderer.camera;
 	gluPerspective(80, aspectRatio, 0.01f, camera.distance * 2 + 100);
 
 	glMatrixMode(GL_MODELVIEW);
@@ -179,13 +182,13 @@ void LightmapBaker::Renderer::ToolState::Update()
 
 		stbi_image_free(data);
 
-		auto renderer = Light::RadiosityManager::GetInstance().GetRenderer();
-		renderer->renderMeshList.clear();
+		Renderer& renderer = Renderer::GetInstance();
+		renderer.renderMeshList.clear();
 
 		std::vector<std::shared_ptr<Mesh>> copiedMeshList = lightMap->GetAtlasUVMesh();
 		for (auto& mesh : copiedMeshList)
 		{
-			renderer->AddRenderMesh(mesh);
+			renderer.AddRenderMesh(mesh);
 		}
 
 		lightMap->Destroy();

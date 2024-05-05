@@ -28,6 +28,9 @@
     <Filter Include="thekla\nvmesh">
       <UniqueIdentifier>{3bbe3e95-9574-492b-9aca-fe89d2df1558}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Utility">
+      <UniqueIdentifier>{8b0fe72a-d4ec-4009-a756-0ea967166324}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\DataManager.hpp">
@@ -305,6 +308,9 @@
     </ClInclude>
     <ClInclude Include="Renderer\UI.hpp">
       <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Utility\Singleton.hpp">
+      <Filter>Utility</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
