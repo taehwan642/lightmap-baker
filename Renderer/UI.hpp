@@ -15,6 +15,7 @@ namespace Renderer
 		static int screenWidth;
 		static int screenHeight;
 		std::map<std::string, std::function<void(void)>> callbacks;
+		virtual void InitializeUI() = 0;
 		virtual void RenderUI() = 0;
 	};
 
@@ -23,19 +24,22 @@ namespace Renderer
 	protected:
 		std::string text = "";
 	public:
+		virtual void InitializeUI() override;
 		virtual void RenderUI() override;
 	};
 
 	class CompareUI : public UI
 	{
 	public:
-		float floatData = 0.0f;
+		float comparePositionX = 0.0f;
+		virtual void InitializeUI() override;
 		virtual void RenderUI() override;
 	};
 
 	class BeforeRadiosityCalculationUI : public UI
 	{
 	public:
+		virtual void InitializeUI() override;
 		virtual void RenderUI() override;
 	};
 	
@@ -45,25 +49,29 @@ namespace Renderer
 		int resolutionX = 0;
 		int resolutionY = 0;
 		GLuint renderTexture;
+		virtual void InitializeUI() override;
 		virtual void RenderUI() override;
 	};
 
 	class BeforeLightmapBakeUI : public CompareUI
 	{
 	public:
+		virtual void InitializeUI() override;
 		virtual void RenderUI() override;
 	};
 
 	class ProgressLightmapBakeUI : public ProgressUI
 	{
 	public:
+		virtual void InitializeUI() override;
 		virtual void RenderUI() override;
 	};
 
 	class AfterLightmapBakeUI : public CompareUI
 	{
 	public:
-		int integerData = 0;
+		int compareIndex = 0;
+		virtual void InitializeUI() override;
 		virtual void RenderUI() override;
 	};
 }

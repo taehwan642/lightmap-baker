@@ -6,12 +6,22 @@
 int LightmapBaker::Renderer::UI::screenWidth = 0;
 int LightmapBaker::Renderer::UI::screenHeight = 0;
 
+void LightmapBaker::Renderer::ProgressUI::InitializeUI()
+{
+
+}
+
 void LightmapBaker::Renderer::ProgressUI::RenderUI()
 {
 	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - (36.0f * ((float)screenHeight / 480.0f) + 19.0f)));
 	ImGui::Begin("Progress", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	ImGui::Text(text.c_str());
 	ImGui::End();
+}
+
+void LightmapBaker::Renderer::CompareUI::InitializeUI()
+{
+	comparePositionX = (ImGui::GetMainViewport()->Size.x / 2.0f);
 }
 
 void LightmapBaker::Renderer::CompareUI::RenderUI()
@@ -23,14 +33,18 @@ void LightmapBaker::Renderer::CompareUI::RenderUI()
 
 	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_LeftArrow)))
 	{
-		floatData -= ImGui::GetIO().DeltaTime * 1000.0f;
-		if (floatData < 0.0f) floatData = 0.0f;
+		comparePositionX -= ImGui::GetIO().DeltaTime * 1000.0f;
+		if (comparePositionX < 0.0f) comparePositionX = 0.0f;
 	}
 	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_RightArrow)))
 	{
-		floatData += ImGui::GetIO().DeltaTime * 1000.0f;
-		if (ImGui::GetMainViewport()->Size.x < floatData) floatData = ImGui::GetMainViewport()->Size.x;
+		comparePositionX += ImGui::GetIO().DeltaTime * 1000.0f;
+		if (ImGui::GetMainViewport()->Size.x < comparePositionX) comparePositionX = ImGui::GetMainViewport()->Size.x;
 	}
+}
+
+void LightmapBaker::Renderer::BeforeRadiosityCalculationUI::InitializeUI()
+{
 }
 
 void LightmapBaker::Renderer::BeforeRadiosityCalculationUI::RenderUI()
@@ -45,9 +59,14 @@ void LightmapBaker::Renderer::BeforeRadiosityCalculationUI::RenderUI()
 	ImGui::End();
 }
 
+void LightmapBaker::Renderer::ProgressRadiosityCalculationUI::InitializeUI()
+{
+	ProgressUI::InitializeUI();
+	text = "Radiosity calculation in progress";
+}
+
 void LightmapBaker::Renderer::ProgressRadiosityCalculationUI::RenderUI()
 {
-	text = "Radiosity calculation in progress";
 	ProgressUI::RenderUI();
 
 	ImVec2 resolution = ImVec2(resolutionX, resolutionY);
@@ -57,6 +76,11 @@ void LightmapBaker::Renderer::ProgressRadiosityCalculationUI::RenderUI()
 
 	ImGui::Image((ImTextureID)renderTexture, resolution);
 	ImGui::End();
+}
+
+void LightmapBaker::Renderer::BeforeLightmapBakeUI::InitializeUI()
+{
+	CompareUI::InitializeUI();
 }
 
 void LightmapBaker::Renderer::BeforeLightmapBakeUI::RenderUI()
@@ -92,10 +116,20 @@ void LightmapBaker::Renderer::BeforeLightmapBakeUI::RenderUI()
 	CompareUI::RenderUI();
 }
 
+void LightmapBaker::Renderer::ProgressLightmapBakeUI::InitializeUI()
+{
+	ProgressUI::InitializeUI();
+	text = "Lightmap baking in progress";
+}
+
 void LightmapBaker::Renderer::ProgressLightmapBakeUI::RenderUI()
 {
-	text = "Lightmap baking in progress";
 	ProgressUI::RenderUI();
+}
+
+void LightmapBaker::Renderer::AfterLightmapBakeUI::InitializeUI()
+{
+	CompareUI::InitializeUI();
 }
 
 void LightmapBaker::Renderer::AfterLightmapBakeUI::RenderUI()
@@ -114,7 +148,7 @@ void LightmapBaker::Renderer::AfterLightmapBakeUI::RenderUI()
 			if (ImGui::Selectable(items[i], is_selected, ImGuiSelectableFlags_None))
 			{
 				curItem = items[i];
-				integerData = i;
+				compareIndex = i;
 			}
 			if (is_selected)
 			{

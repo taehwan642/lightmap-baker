@@ -30,10 +30,10 @@ void LightmapBaker::Renderer::ToolState::RenderCompareModel(std::shared_ptr<Comp
 
 	glColor3f(0, 0.3f, 0.3f);
 	glBegin(GL_QUADS);
-	glVertex2f(compareUI->floatData, 0);
+	glVertex2f(compareUI->comparePositionX, 0);
 	glVertex2f(renderer.framebufferWidth, 0);
 	glVertex2f(renderer.framebufferWidth, renderer.framebufferHeight);
-	glVertex2f(compareUI->floatData, renderer.framebufferHeight);
+	glVertex2f(compareUI->comparePositionX, renderer.framebufferHeight);
 	glEnd();
 
 	glMatrixMode(GL_PROJECTION);
@@ -70,7 +70,7 @@ void LightmapBaker::Renderer::ToolState::RenderCompareModel(std::shared_ptr<Comp
 	}
 	else
 	{
-		compareIndex = castedPointer->integerData;
+		compareIndex = castedPointer->compareIndex;
 	}
 
 	switch (compareIndex)
@@ -129,6 +129,7 @@ void LightmapBaker::Renderer::ToolState::UpdateCurrentState(const ToolStateEnum&
 {
 	currentState = state;
 	renderingUI = uis[(int)state];
+	renderingUI->InitializeUI();
 }
 
 void LightmapBaker::Renderer::ToolState::Update()
@@ -271,5 +272,5 @@ void LightmapBaker::Renderer::ToolState::SetFrame(double frame)
 float LightmapBaker::Renderer::ToolState::GetCompareXPosition()
 {
 	auto castedPointer = std::dynamic_pointer_cast<CompareUI>(renderingUI);
-	return castedPointer == nullptr ? ImGui::GetMainViewport()->Size.x : castedPointer->floatData;
+	return castedPointer == nullptr ? ImGui::GetMainViewport()->Size.x : castedPointer->comparePositionX;
 }
