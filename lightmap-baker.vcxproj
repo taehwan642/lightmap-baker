@@ -88,10 +88,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependency\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>freeglut.lib;glfw3.lib;glm.lib;opengl32.lib;glew32d.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvmesh.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -102,12 +104,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependency\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>freeglut.lib;glfw3.lib;glm.lib;opengl32.lib;glew32d.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvmesh.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -116,10 +120,13 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependency\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependency\GLUT\;$(SolutionDir)Dependency\GLFW\;$(SolutionDir)Dependency\GLM\;$(SolutionDir)Dependency\GLEW\;$(SolutionDir)Dependency\thekla\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeglut.lib;glfw3.lib;glm.lib;opengl32.lib;glew32d.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvmesh.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
@@ -130,24 +137,139 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>$(SolutionDir)Dependency\</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>$(SolutionDir)Dependency\GLUT\;$(SolutionDir)Dependency\GLFW\;$(SolutionDir)Dependency\GLM\;$(SolutionDir)Dependency\GLEW\;$(SolutionDir)Dependency\thekla\</AdditionalLibraryDirectories>
+      <AdditionalDependencies>freeglut.lib;glfw3.lib;glm.lib;opengl32.lib;glew32d.lib;nvcore.lib;nvimage.lib;nvmath.lib;nvmesh.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="Data\DataManager.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_demo.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_draw.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_impl_glfw.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_impl_opengl3.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_tables.cpp" />
+    <ClCompile Include="Dependency\imgui\imgui_widgets.cpp" />
+    <ClCompile Include="Dependency\thekla\thekla_atlas.cpp" />
     <ClCompile Include="Light\Light.cpp" />
+    <ClCompile Include="Light\Lightmap.cpp" />
     <ClCompile Include="main.cpp" />
+    <ClCompile Include="Renderer\Camera.cpp" />
+    <ClCompile Include="Renderer\Mesh.cpp" />
     <ClCompile Include="Renderer\Renderer.cpp" />
+    <ClCompile Include="Renderer\RenderTarget.cpp" />
+    <ClCompile Include="Renderer\ToolState.cpp" />
+    <ClCompile Include="Renderer\UI.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Data\DataManager.hpp" />
+    <ClInclude Include="Dependency\imgui\imconfig.h" />
+    <ClInclude Include="Dependency\imgui\imgui.h" />
+    <ClInclude Include="Dependency\imgui\imgui_impl_glfw.h" />
+    <ClInclude Include="Dependency\imgui\imgui_impl_opengl3.h" />
+    <ClInclude Include="Dependency\imgui\imgui_impl_opengl3_loader.h" />
+    <ClInclude Include="Dependency\imgui\imgui_internal.h" />
+    <ClInclude Include="Dependency\imgui\imstb_rectpack.h" />
+    <ClInclude Include="Dependency\imgui\imstb_textedit.h" />
+    <ClInclude Include="Dependency\imgui\imstb_truetype.h" />
+    <ClInclude Include="Dependency\thekla\nvconfig.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\Array.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\BitArray.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\Debug.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\DefsGnucDarwin.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\DefsGnucLinux.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\DefsGnucWin32.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\DefsVcWin32.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\FileSystem.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\ForEach.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\Hash.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\HashMap.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\Memory.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\nvcore.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\posh.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\Ptr.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\RadixSort.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\RefCounted.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\StdStream.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\Stream.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\StrLib.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\TextWriter.h" />
+    <ClInclude Include="Dependency\thekla\nvcore\Utils.h" />
+    <ClInclude Include="Dependency\thekla\nvimage\BitMap.h" />
+    <ClInclude Include="Dependency\thekla\nvimage\Image.h" />
+    <ClInclude Include="Dependency\thekla\nvimage\nvimage.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Basis.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Box.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Color.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\ConvexHull.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Fitting.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\ftoi.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\KahanSum.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Matrix.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Morton.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\nvmath.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Plane.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\ProximityGrid.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Quaternion.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Random.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Solver.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Sparse.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Sphere.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\TypeSerialization.h" />
+    <ClInclude Include="Dependency\thekla\nvmath\Vector.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Atlas.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\AtlasBuilder.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\AtlasPacker.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\BaseMesh.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\BoundaryMap.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Bounds.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\ClippedTriangle.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\ConformalMap.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Edge.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Face.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\LeastSquaresConformalMap.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Measurements.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Mesh.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\MeshBuilder.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\MeshExportOBJ.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\MeshTopology.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\nvmesh.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\OrthogonalProjectionMap.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\ParameterizationQuality.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\QuadTriMesh.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Raster.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\SingleFaceMap.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Snap.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\TriMesh.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Util.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Vertex.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\VertexWeld.h" />
+    <ClInclude Include="Dependency\thekla\nvmesh\Weld.h" />
+    <ClInclude Include="Dependency\thekla\thekla_atlas.h" />
     <ClInclude Include="Light\Light.hpp" />
+    <ClInclude Include="Light\Lightmap.hpp" />
+    <ClInclude Include="Renderer\Camera.hpp" />
+    <ClInclude Include="Renderer\Mesh.hpp" />
     <ClInclude Include="Renderer\Renderer.hpp" />
+    <ClInclude Include="Renderer\RenderTarget.hpp" />
+    <ClInclude Include="Renderer\ToolState.hpp" />
+    <ClInclude Include="Renderer\UI.hpp" />
+    <ClInclude Include="Utility\Singleton.hpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Dependency\thekla\nvcore\Array.inl" />
+    <None Include="Dependency\thekla\nvcore\HashMap.inl" />
+    <None Include="Dependency\thekla\nvmath\Box.inl" />
+    <None Include="Dependency\thekla\nvmath\Matrix.inl" />
+    <None Include="Dependency\thekla\nvmath\Plane.inl" />
+    <None Include="Dependency\thekla\nvmath\Vector.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
