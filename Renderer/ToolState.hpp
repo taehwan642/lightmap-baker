@@ -45,6 +45,7 @@ namespace Renderer
 		void RenderCurrentUI();
 		void SetFrame(double frame);
 		float GetCompareXPosition();
+		bool GetIsDrawMeshLine();
 	};
 }
 }

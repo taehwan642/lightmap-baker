@@ -222,7 +222,7 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glCullFace(GL_BACK);
     for (int i = 0; i < renderMeshList.size(); ++i)
     {
-        renderMeshList[i]->Render();
+        renderMeshList[i]->Render({ toolState.GetIsDrawMeshLine() == true ? (GLenum)GL_LINES : (GLenum)GL_TRIANGLES });
     }
 
     glDisable(GL_STENCIL_TEST);

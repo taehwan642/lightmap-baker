@@ -40,7 +40,7 @@ void LightmapBaker::Renderer::Mesh::Initialize()
 {
 }
 
-void LightmapBaker::Renderer::Mesh::Render()
+void LightmapBaker::Renderer::Mesh::Render(RenderOption option)
 {
 	glColor3f(color.r, color.g, color.b);
 	glEnableClientState(GL_VERTEX_ARRAY);
@@ -51,7 +51,7 @@ void LightmapBaker::Renderer::Mesh::Render()
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
 
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, nullptr);
+	glDrawElements(option.drawMode, indices.size(), GL_UNSIGNED_INT, nullptr);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
 }

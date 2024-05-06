@@ -32,6 +32,7 @@ namespace Renderer
 	{
 	public:
 		float comparePositionX = 0.0f;
+		bool isDrawMeshLine = false;
 		virtual void InitializeUI() override;
 		virtual void RenderUI() override;
 	};

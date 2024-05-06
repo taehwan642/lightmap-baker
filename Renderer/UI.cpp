@@ -29,6 +29,7 @@ void LightmapBaker::Renderer::CompareUI::RenderUI()
 	ImGui::SetNextWindowPos(ImVec2((ImGui::GetMainViewport()->Size.x / 2.0f) - 145, ImGui::GetMainViewport()->Size.y - (19.0f * ((float)screenHeight / 480.0f) + 36.0f)));
 	ImGui::Begin("Compare Helper", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 	ImGui::Text("Move splitter by left / right arrow");
+	ImGui::Checkbox("Draw mesh line", &isDrawMeshLine);
 	ImGui::End();
 
 	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_LeftArrow)))

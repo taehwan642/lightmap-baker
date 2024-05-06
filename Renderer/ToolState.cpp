@@ -80,7 +80,7 @@ void LightmapBaker::Renderer::ToolState::RenderCompareModel(std::shared_ptr<Comp
 		const auto& vec = Light::RadiosityManager::GetInstance().models;
 		for (int i = 0; i < vec.size(); ++i)
 		{
-			vec[i]->Render();
+			vec[i]->Render({ GetIsDrawMeshLine() == true ? (GLenum)GL_LINES : (GLenum)GL_TRIANGLES });
 		}
 	}
 		break;
@@ -89,7 +89,7 @@ void LightmapBaker::Renderer::ToolState::RenderCompareModel(std::shared_ptr<Comp
 		const auto& vec = Light::RadiosityManager::GetInstance().elements;
 		for (int i = 0; i < vec.size(); ++i)
 		{
-			vec[i]->mesh->Render();
+			vec[i]->mesh->Render({ GetIsDrawMeshLine() == true ? (GLenum)GL_LINES : (GLenum)GL_TRIANGLES });
 		}
 	}
 		break;
@@ -273,4 +273,10 @@ float LightmapBaker::Renderer::ToolState::GetCompareXPosition()
 {
 	auto castedPointer = std::dynamic_pointer_cast<CompareUI>(renderingUI);
 	return castedPointer == nullptr ? ImGui::GetMainViewport()->Size.x : castedPointer->comparePositionX;
+}
+
+bool LightmapBaker::Renderer::ToolState::GetIsDrawMeshLine()
+{
+	auto castedPointer = std::dynamic_pointer_cast<CompareUI>(renderingUI);
+	return castedPointer == nullptr ? false : castedPointer->isDrawMeshLine;
 }

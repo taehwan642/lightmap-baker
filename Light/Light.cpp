@@ -395,7 +395,7 @@ void LightmapBaker::Light::RadiosityManager::BeginDrawHemiCube()
 void LightmapBaker::Light::RadiosityManager::DrawHemiCubeElement(std::shared_ptr<Element> element, int index)
 {
     element->mesh->color = glm::vec3((index / 65536) / 255.0f, ((index % 65536) / 256) / 255.0f, (index % 256) / 255.0f);
-    element->mesh->Render();
+    element->mesh->Render({ (GLenum)GL_TRIANGLES });
 }
 
 void LightmapBaker::Light::RadiosityManager::EndDrawHemiCube()
