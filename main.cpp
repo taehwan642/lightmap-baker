@@ -8,6 +8,7 @@
 
 int main()
 {
+    ShowWindow(GetConsoleWindow(), SW_HIDE);
     using namespace LightmapBaker;
     srand((unsigned int)time(NULL));
 
