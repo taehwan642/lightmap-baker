@@ -263,8 +263,6 @@ void LightmapBaker::Renderer::Renderer::ImGuiUpdate()
     ImGui_ImplOpenGL3_NewFrame();
     ImGui_ImplGlfw_NewFrame();
     ImGui::NewFrame();
-
-    toolState.SetFrame(1.0 / deltaTime);
 }
 
 void LightmapBaker::Renderer::Renderer::ImGuiRender()

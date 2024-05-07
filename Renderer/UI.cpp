@@ -2,6 +2,7 @@
 #include "imgui/imgui.h"
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
+#include <vector>
 
 int LightmapBaker::Renderer::UI::screenWidth = 0;
 int LightmapBaker::Renderer::UI::screenHeight = 0;
@@ -180,3 +181,32 @@ void LightmapBaker::Renderer::AfterLightmapBakeUI::RenderUI()
 
 	CompareUI::RenderUI();
 }
+
+void LightmapBaker::Renderer::FrameUI::AddFPS(double fps)
+{
+	fpsList.push_back(fps);
+}
+
+void LightmapBaker::Renderer::FrameUI::InitializeUI()
+{
+	fpsList.clear();
+}
+
+void LightmapBaker::Renderer::FrameUI::RenderUI()
+{
+	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 255, 33));
+	ImGui::SetNextWindowSize(ImVec2(200, 50), ImGuiCond_Once);
+	ImGui::Begin("Frames", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+
+	while (fpsList.size() > 100) fpsList.pop_front();
+
+	std::vector<float> framesVector;
+	for (const auto& value : fpsList)
+	{
+		framesVector.push_back((float)value);
+	}
+
+	ImGui::PlotLines("Frames", framesVector.data(), framesVector.size());
+	ImGui::End();
+}
+

@@ -1,7 +1,6 @@
 #pragma once
 #include "GLUT/glut.h"
 #include <string>
-#include <list>
 #include <vector>
 #include <memory>
 #include "UI.hpp"
@@ -31,9 +30,9 @@ namespace Renderer
 	{
 	private:
 		ToolStateEnum currentState = ToolStateEnum::BEFORE_RADIOSITY_CALCULATION;
-		std::list<double> frames;
 		std::vector<std::shared_ptr<UI>> uis;
 		std::shared_ptr<UI> renderingUI;
+		std::shared_ptr<FrameUI> frameUI;
 		ThreadState threadState = ThreadState::IDLE;
 		std::shared_ptr<Light::Lightmap> threadLightmap;
 
@@ -43,7 +42,6 @@ namespace Renderer
 		void UpdateCurrentState(const ToolStateEnum& state);
 		void Update();
 		void RenderCurrentUI();
-		void SetFrame(double frame);
 		float GetCompareXPosition();
 		bool GetIsDrawMeshLine();
 	};

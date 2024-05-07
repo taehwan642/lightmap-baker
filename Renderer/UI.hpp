@@ -75,5 +75,15 @@ namespace Renderer
 		virtual void InitializeUI() override;
 		virtual void RenderUI() override;
 	};
+
+	class FrameUI : public UI
+	{
+	public:
+		std::list<double> fpsList;
+		void AddFPS(double fps);
+		virtual void InitializeUI() override;
+		virtual void RenderUI() override;
+	};
+
 }
 }

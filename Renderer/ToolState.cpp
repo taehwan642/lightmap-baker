@@ -123,6 +123,9 @@ void LightmapBaker::Renderer::ToolState::Initialize()
 		Light::RadiosityManager::GetInstance().Initialize();
 		UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION); 
 	});
+
+	frameUI = std::make_shared<FrameUI>();
+	frameUI->InitializeUI();
 }
 
 void LightmapBaker::Renderer::ToolState::UpdateCurrentState(const ToolStateEnum& state)
@@ -223,6 +226,7 @@ void LightmapBaker::Renderer::ToolState::Update()
 	default:
 		break;
 	}
+	frameUI->AddFPS(1.0 / Renderer::GetInstance().deltaTime);
 }
 
 void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
@@ -247,27 +251,8 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 		break;
 	}
 	renderingUI->RenderUI();
-	ImGui::SetNextWindowPos(ImVec2(ImGui::GetMainViewport()->Size.x - 255, 33));
-	ImGui::SetNextWindowSize(ImVec2(200, 50), ImGuiCond_Once);
-	ImGui::Begin("Frames", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-
-	while (frames.size() > 100) frames.pop_front();
-
-	std::vector<float> framesVector;
-	for (const auto& value : frames)
-	{
-		framesVector.push_back((float)value);
-	}
-
-	ImGui::PlotLines("Frames", framesVector.data(), framesVector.size());
-	ImGui::End();
+	frameUI->RenderUI();
 }
-
-void LightmapBaker::Renderer::ToolState::SetFrame(double frame)
-{
-	frames.push_back(frame);
-}
-
 
 float LightmapBaker::Renderer::ToolState::GetCompareXPosition()
 {
