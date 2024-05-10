@@ -223,8 +223,8 @@ void LightmapBaker::Renderer::LoggerUI::InitializeUI()
 
 void LightmapBaker::Renderer::LoggerUI::RenderUI()
 {
-	ImGui::SetNextWindowPos(ImVec2(100, 33));
-	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_Once);
+	ImGui::SetNextWindowPos(ImVec2(70, 0));
+	ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiCond_Once);
 	ImGui::Begin("Logger", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 
 	if (isEnabled == true)
@@ -235,20 +235,29 @@ void LightmapBaker::Renderer::LoggerUI::RenderUI()
 			ImGui::Text(iter.c_str());
 		}
 		ImGui::EndChild();
+	}
 
-		if (ImGui::Button("Close", ImVec2(200.0f * ((float)screenWidth / 640.0f), 200.0f * ((float)screenHeight / 480.0f))))
+	ImGui::End();
+
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
+	ImGui::SetNextWindowSize(ImVec2(70, 180), ImGuiCond_Once);
+	ImGui::Begin("CloseBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+
+	if (isEnabled == true)
+	{
+		if (ImGui::Button("Close", ImVec2(50.0f * ((float)screenWidth / 640.0f), 25.0f * ((float)screenHeight / 480.0f))))
 		{
 			isEnabled = false;
 		}
 
-		if (ImGui::Button("Clear", ImVec2(400.0f * ((float)screenWidth / 640.0f), 200.0f * ((float)screenHeight / 480.0f))))
+		if (ImGui::Button("Clear", ImVec2(50.0f * ((float)screenWidth / 640.0f), 25.0f * ((float)screenHeight / 480.0f))))
 		{
 			logs.clear();
 		}
 	}
 	else
 	{
-		if (ImGui::Button("Enable", ImVec2(400.0f * ((float)screenWidth / 640.0f), 200.0f * ((float)screenHeight / 480.0f))))
+		if (ImGui::Button("Enable", ImVec2(50.0f * ((float)screenWidth / 640.0f), 25.0f * ((float)screenHeight / 480.0f))))
 		{
 			isEnabled = true;
 		}
