@@ -5,10 +5,11 @@
 #include "GLFW/glfw3.h"
 #include "GLUT/glut.h"
 #include "GLM/vec2.hpp"
+#include "../Light/Light.hpp"
+#include "../Renderer/UI.hpp"
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #define __STDC_LIB_EXT1__
 #include "stb/stb_image_write.h"
-#include "../Light/Light.hpp"
 
 void LightmapBaker::Data::DataManager::RasterTriangle(Thekla::Atlas_Output_Vertex p1, Thekla::Atlas_Output_Vertex p2, Thekla::Atlas_Output_Vertex p3, glm::u8vec3 color, std::vector<glm::u8vec3>& data, int width)
 {
@@ -58,22 +59,22 @@ bool LightmapBaker::Data::DataManager::Save(const std::string& path, const std::
     }
 
     bool value = stbi_write_png(path.c_str(), mesh->atlas_width, mesh->atlas_height, comp, data.data(), 0);
-    std::cout << "Save " << " " << path << std::endl;
-    
+    Renderer::LoggerUI::AddLog("Save " + path);
+
     return value;
 }
 
 bool LightmapBaker::Data::DataManager::Save(std::string path, int width, int height, const void* data)
 {
     bool value = stbi_write_png(path.c_str(), width, height, 3, data, 0);
-    std::cout << "Save " << " " << path << std::endl;
+    Renderer::LoggerUI::AddLog("Save " + path);
 
     return value;
 }
 
 std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Data::DataManager::Load(const std::string& path)
 {
-    std::cout << "Load " << " " << path << std::endl;
+    Renderer::LoggerUI::AddLog("Load " + path);
 
     std::ifstream fout(path, std::ios::in | std::ios::binary);
     std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> resultList;
@@ -196,7 +197,7 @@ std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Data:
     }
     else
     {
-        std::cout << "FILE LOAD FAIL: " << path << std::endl;
+        Renderer::LoggerUI::AddLog("FILE LOAD FAIL: " + path);
     }
 
     return resultList;

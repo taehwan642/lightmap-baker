@@ -210,3 +210,49 @@ void LightmapBaker::Renderer::FrameUI::RenderUI()
 	ImGui::End();
 }
 
+std::list<std::string> LightmapBaker::Renderer::LoggerUI::logs = std::list<std::string>();
+
+void LightmapBaker::Renderer::LoggerUI::AddLog(const std::string& log)
+{
+	logs.push_back(log);
+}
+
+void LightmapBaker::Renderer::LoggerUI::InitializeUI()
+{
+}
+
+void LightmapBaker::Renderer::LoggerUI::RenderUI()
+{
+	ImGui::SetNextWindowPos(ImVec2(100, 33));
+	ImGui::SetNextWindowSize(ImVec2(200, 100), ImGuiCond_Once);
+	ImGui::Begin("Logger", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
+
+	if (isEnabled == true)
+	{
+		ImGui::BeginChild("LogScroll");
+		for (auto& iter : logs)
+		{
+			ImGui::Text(iter.c_str());
+		}
+		ImGui::EndChild();
+
+		if (ImGui::Button("Close", ImVec2(200.0f * ((float)screenWidth / 640.0f), 200.0f * ((float)screenHeight / 480.0f))))
+		{
+			isEnabled = false;
+		}
+
+		if (ImGui::Button("Clear", ImVec2(400.0f * ((float)screenWidth / 640.0f), 200.0f * ((float)screenHeight / 480.0f))))
+		{
+			logs.clear();
+		}
+	}
+	else
+	{
+		if (ImGui::Button("Enable", ImVec2(400.0f * ((float)screenWidth / 640.0f), 200.0f * ((float)screenHeight / 480.0f))))
+		{
+			isEnabled = true;
+		}
+	}
+
+	ImGui::End();
+}

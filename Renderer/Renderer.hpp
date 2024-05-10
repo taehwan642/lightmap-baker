@@ -1,7 +1,6 @@
 #pragma once
 #define _USE_MATH_DEFINES
 #include <math.h>
-#include <iostream>
 #include <vector>
 
 #include "GLFW/glfw3.h"

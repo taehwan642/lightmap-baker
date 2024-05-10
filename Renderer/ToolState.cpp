@@ -126,6 +126,8 @@ void LightmapBaker::Renderer::ToolState::Initialize()
 
 	frameUI = std::make_shared<FrameUI>();
 	frameUI->InitializeUI();
+	loggerUI = std::make_shared<LoggerUI>();
+	loggerUI->InitializeUI();
 }
 
 void LightmapBaker::Renderer::ToolState::UpdateCurrentState(const ToolStateEnum& state)
@@ -179,7 +181,7 @@ void LightmapBaker::Renderer::ToolState::Update()
 			if (data)
 				glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			else
-				std::cout << "texture load failed" << std::endl;
+				LoggerUI::AddLog("texture load failed");
 
 			stbi_image_free(data);
 
@@ -210,7 +212,7 @@ void LightmapBaker::Renderer::ToolState::Update()
 				threadLightmap->Bake(meshList);
 				std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
 				if (!dataManager->Save("lightmap.png", threadLightmap))
-					std::cout << "Bake Error" << std::endl;
+					LoggerUI::AddLog("Bake Error");
 
 				threadState = ThreadState::DONE;
 			});
@@ -252,6 +254,7 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 	}
 	renderingUI->RenderUI();
 	frameUI->RenderUI();
+	loggerUI->RenderUI();
 }
 
 float LightmapBaker::Renderer::ToolState::GetCompareXPosition()

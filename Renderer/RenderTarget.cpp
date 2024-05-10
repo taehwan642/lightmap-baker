@@ -2,7 +2,7 @@
 #include "GLFW/glfw3.h"
 #include "RenderTarget.hpp"
 #include "Renderer.hpp"
-#include <iostream>
+#include "UI.hpp"
 
 void LightmapBaker::Renderer::RenderTarget::Initialize(glm::vec2 resolution)
 {
@@ -26,7 +26,7 @@ void LightmapBaker::Renderer::RenderTarget::Initialize(glm::vec2 resolution)
     GLenum status = glCheckFramebufferStatus(GL_FRAMEBUFFER);
     if (status != GL_FRAMEBUFFER_COMPLETE)
     {
-        std::cout << "FRAMEBUFFER INITIALIZE ISSUE" << std::endl;
+        LoggerUI::AddLog("FRAMEBUFFER INITIALIZE ISSUE");
     }
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);

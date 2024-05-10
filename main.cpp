@@ -5,6 +5,7 @@
 #include "Data/DataManager.hpp"
 #include "Light/Light.hpp"
 #include "Renderer/Renderer.hpp"
+#include "Renderer/UI.hpp"
 
 int main()
 {
@@ -14,7 +15,7 @@ int main()
 
     std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
     auto meshList = dataManager->Load("Asset/tempModel.ttjj");
-    std::cout << meshList.size() << std::endl;
+    Renderer::LoggerUI::AddLog(std::to_string(meshList.size()));
 
     Renderer::Renderer& renderer = Renderer::Renderer::GetInstance();
     renderer.Initialize();
@@ -22,7 +23,6 @@ int main()
     GLenum err = glewInit();
     if (err != GLEW_OK) {
         // Problem: glewInit failed, something is seriously wrong.
-        std::cout << "glewInit failed: " << glewGetErrorString(err) << std::endl;
         exit(1);
     }
 

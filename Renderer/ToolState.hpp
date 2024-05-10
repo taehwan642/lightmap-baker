@@ -33,6 +33,7 @@ namespace Renderer
 		std::vector<std::shared_ptr<UI>> uis;
 		std::shared_ptr<UI> renderingUI;
 		std::shared_ptr<FrameUI> frameUI;
+		std::shared_ptr<LoggerUI> loggerUI;
 		ThreadState threadState = ThreadState::IDLE;
 		std::shared_ptr<Light::Lightmap> threadLightmap;
 

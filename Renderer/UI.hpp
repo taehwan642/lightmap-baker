@@ -78,9 +78,21 @@ namespace Renderer
 
 	class FrameUI : public UI
 	{
-	public:
+	private:
 		std::list<double> fpsList;
+	public:
 		void AddFPS(double fps);
+		virtual void InitializeUI() override;
+		virtual void RenderUI() override;
+	};
+
+	class LoggerUI : public UI
+	{
+	private:
+		bool isEnabled = true;
+		static std::list<std::string> logs;
+	public:
+		static void AddLog(const std::string& log);
 		virtual void InitializeUI() override;
 		virtual void RenderUI() override;
 	};

@@ -1,6 +1,6 @@
 #include "Lightmap.hpp"
 #include <assert.h>
-#include <iostream>
+#include "../Renderer/UI.hpp"
 
 void LightmapBaker::Light::Lightmap::GetInputMesh(const std::vector<std::shared_ptr<Renderer::Mesh>>& meshList, Thekla::Atlas_Input_Mesh& inputMesh)
 {
@@ -89,8 +89,9 @@ void LightmapBaker::Light::Lightmap::Bake(const std::shared_ptr<Renderer::Mesh>&
     Atlas_Error error = Atlas_Error_Success;
     outputMesh = atlas_generate(&inputMesh, &atlasOptions, &error);
 
-    std::cout << "Atlas mesh has " << outputMesh->vertex_count << " verts\n";
-    std::cout << "Atlas mesh has " << outputMesh->index_count / 3 << " triangles\n";
+    
+    Renderer::LoggerUI::AddLog("Atlas mesh has " + std::to_string(outputMesh->vertex_count) + " verts");
+    Renderer::LoggerUI::AddLog("Atlas mesh has " + std::to_string(outputMesh->index_count / 3) + " triangles");
 }
 
 void LightmapBaker::Light::Lightmap::Bake(const std::vector<std::shared_ptr<Renderer::Mesh>>& meshList)
@@ -110,8 +111,8 @@ void LightmapBaker::Light::Lightmap::Bake(const std::vector<std::shared_ptr<Rend
     Atlas_Error error = Atlas_Error_Success;
     outputMesh = atlas_generate(&inputMesh, &atlasOptions, &error);
 
-    std::cout << "Atlas mesh has " << outputMesh->vertex_count << " verts\n";
-    std::cout << "Atlas mesh has " << outputMesh->index_count / 3 << " triangles\n";
+    Renderer::LoggerUI::AddLog("Atlas mesh has " + std::to_string(outputMesh->vertex_count) + " verts");
+    Renderer::LoggerUI::AddLog("Atlas mesh has " + std::to_string(outputMesh->index_count / 3) + " triangles");
 }
 
 std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Light::Lightmap::GetAtlasUVMesh()
