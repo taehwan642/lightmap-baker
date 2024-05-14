@@ -223,21 +223,21 @@ void LightmapBaker::Renderer::LoggerUI::InitializeUI()
 
 void LightmapBaker::Renderer::LoggerUI::RenderUI()
 {
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiCond_Once);
-	ImGui::Begin("Logger", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
-
 	if (isEnabled == true)
 	{
+		ImGui::SetNextWindowPos(ImVec2(0, 0));
+		ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiCond_Once);
+		ImGui::Begin("Logger", nullptr, ImGuiWindowFlags_NoDecoration);
+
 		ImGui::BeginChild("LogScroll");
 		for (auto& iter : logs)
 		{
 			ImGui::Text(iter.c_str());
 		}
 		ImGui::EndChild();
+		ImGui::End();
 	}
 
-	ImGui::End();
 
 	ImGui::SetNextWindowPos(ImVec2(220, 0));
 	ImGui::SetNextWindowSize(ImVec2(200, 180), ImGuiCond_Once);
