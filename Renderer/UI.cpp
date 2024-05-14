@@ -223,7 +223,7 @@ void LightmapBaker::Renderer::LoggerUI::InitializeUI()
 
 void LightmapBaker::Renderer::LoggerUI::RenderUI()
 {
-	ImGui::SetNextWindowPos(ImVec2(70, 0));
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(200, 200), ImGuiCond_Once);
 	ImGui::Begin("Logger", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 
@@ -239,8 +239,8 @@ void LightmapBaker::Renderer::LoggerUI::RenderUI()
 
 	ImGui::End();
 
-	ImGui::SetNextWindowPos(ImVec2(0, 0));
-	ImGui::SetNextWindowSize(ImVec2(70, 180), ImGuiCond_Once);
+	ImGui::SetNextWindowPos(ImVec2(220, 0));
+	ImGui::SetNextWindowSize(ImVec2(200, 180), ImGuiCond_Once);
 	ImGui::Begin("CloseBtn", nullptr, ImGuiWindowFlags_NoBackground | ImGuiWindowFlags_NoDecoration);
 
 	if (isEnabled == true)
