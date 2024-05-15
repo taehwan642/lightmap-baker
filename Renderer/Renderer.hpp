@@ -6,9 +6,8 @@
 #include "GLFW/glfw3.h"
 #include "GLUT/glut.h"
 
-#include "ToolState.hpp"
 #include "Mesh.hpp"
-#include "Camera.hpp"
+#include "Splitter.hpp"
 
 #include "../Utility/Singleton.hpp"
 
@@ -35,19 +34,24 @@ namespace Renderer
         double mousePositionX = 0;
         double mousePositionY = 0;
 
+    private:
+        std::vector<std::shared_ptr<Mesh>> renderMeshList;
+        std::shared_ptr<Splitter> leftSplitter;
+        std::shared_ptr<Splitter> rightSplitter;
+
+    private:
         void GLFWInitialize();
         void GLFWUpdate();
         void GLFWRender();
         void GLFWExit();
-
-    public:
-        std::vector<std::shared_ptr<Mesh>> renderMeshList;
 
     private:
         void ImGuiInitialize();
         void ImGuiUpdate();
         void ImGuiRender();
         void ImGuiExit();
+        void AddRenderMesh(const std::shared_ptr<Mesh>& mesh);
+        void RemoveRenderMesh(const std::shared_ptr<Mesh>& mesh);
 
     public:
         void Initialize();
@@ -56,19 +60,20 @@ namespace Renderer
         void Render();
         bool WindowShouldClose();
         void Exit();
-        void AddRenderMesh(const std::shared_ptr<Mesh>& mesh);
-        void RemoveRenderMesh(const std::shared_ptr<Mesh>& mesh);
+        void AddRenderMesh(SplitterType type, const std::shared_ptr<Mesh>& mesh);
+        void RemoveRenderMesh(SplitterType type, const std::shared_ptr<Mesh>& mesh);
+        void ClearRenderMesh(SplitterType type);
+        void SetFramebufferSize(int width, int height);
+        void SetSplitterRenderIndex(SplitterType type, int index);
 
     public:
         const int screenWidth = 640;
         const int screenHeight = 480;
         int framebufferWidth;
         int framebufferHeight;
-        ToolState toolState;
 
     public:
         double deltaTime;
-        Camera camera;
     };
     void KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods);
     void FramebufferSizeCallback(GLFWwindow* window, int width, int height);

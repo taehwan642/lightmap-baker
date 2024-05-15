@@ -10,98 +10,6 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-void LightmapBaker::Renderer::ToolState::RenderCompareModel(std::shared_ptr<CompareUI> compareUI)
-{
-	Renderer& renderer = Renderer::GetInstance();
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-	gluOrtho2D(0, renderer.framebufferWidth, renderer.framebufferHeight, 0);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	glEnable(GL_STENCIL_TEST);
-	glStencilFunc(GL_ALWAYS, 1, 0xFF);
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-	glStencilMask(0xFF);
-	glDepthMask(GL_FALSE);
-	glClear(GL_STENCIL_BUFFER_BIT);
-
-	glColor3f(0, 0.3f, 0.3f);
-	glBegin(GL_QUADS);
-	glVertex2f(compareUI->comparePositionX, 0);
-	glVertex2f(renderer.framebufferWidth, 0);
-	glVertex2f(renderer.framebufferWidth, renderer.framebufferHeight);
-	glVertex2f(compareUI->comparePositionX, renderer.framebufferHeight);
-	glEnd();
-
-	glMatrixMode(GL_PROJECTION);
-	glLoadIdentity();
-
-	float aspectRatio = renderer.screenHeight / (float)renderer.screenWidth;
-	Camera camera = renderer.camera;
-	gluPerspective(80, aspectRatio, 0.01f, camera.distance * 2 + 100);
-
-	glMatrixMode(GL_MODELVIEW);
-	glLoadIdentity();
-
-	float camX = (camera.distance * -sinf(camera.angle.x * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.x;
-	float camY = (camera.distance * -sinf((camera.angle.y) * (M_PI / 180))) + camera.position.y;
-	float camZ = (-camera.distance * cosf((camera.angle.x) * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.z;
-	gluLookAt(camX, camY, camZ,
-		camera.position.x, camera.position.y, camera.position.z,
-		0.0, 1.0, 0.0);
-
-	glStencilFunc(GL_EQUAL, 1, 0xFF);
-	glStencilMask(0x00);
-	glDepthMask(GL_TRUE);
-
-	glEnable(GL_CULL_FACE);
-	glEnable(GL_DEPTH_TEST);
-	glCullFace(GL_BACK);
-
-	// TODO: optimize every frame dynamic pointer casting
-	auto castedPointer = std::dynamic_pointer_cast<AfterLightmapBakeUI>(renderingUI);
-	int compareIndex = 0;
-	if (castedPointer == nullptr)
-	{
-		compareIndex = 0;
-	}
-	else
-	{
-		compareIndex = castedPointer->compareIndex;
-	}
-
-	switch (compareIndex)
-	{
-	case 0: // basic
-	{
-		const auto& vec = Light::RadiosityManager::GetInstance().models;
-		for (int i = 0; i < vec.size(); ++i)
-		{
-			vec[i]->Render({ GetIsDrawMeshLine() == true ? (GLenum)GL_LINES : (GLenum)GL_TRIANGLES });
-		}
-	}
-		break;
-	case 1: // radiosity
-	{
-		const auto& vec = Light::RadiosityManager::GetInstance().elements;
-		for (int i = 0; i < vec.size(); ++i)
-		{
-			vec[i]->mesh->Render({ GetIsDrawMeshLine() == true ? (GLenum)GL_LINES : (GLenum)GL_TRIANGLES });
-		}
-	}
-		break;
-	default:
-		break;
-	}
-
-	glDisable(GL_STENCIL_TEST);
-	glDisable(GL_CULL_FACE);
-	glDisable(GL_DEPTH_TEST);
-}
-
 void LightmapBaker::Renderer::ToolState::Initialize()
 {
 	uis.push_back(std::make_shared<BeforeRadiosityCalculationUI>());
@@ -118,12 +26,16 @@ void LightmapBaker::Renderer::ToolState::Initialize()
 		castedPointer->renderTexture = Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.renderTexture;
 	});
 	uis[(int)ToolStateEnum::BEFORE_LIGHTMAP_BAKE]->callbacks.emplace("BakeLightmapButton", [&] { UpdateCurrentState(ToolStateEnum::PROGRESS_LIGHTMAP_BAKE); } );
+	uis[(int)ToolStateEnum::AFTER_LIGHTMAP_BAKE]->callbacks.emplace("CompareButton", [&] {
+		auto castedPointer = std::dynamic_pointer_cast<AfterLightmapBakeUI>(renderingUI);
+		Renderer::GetInstance().SetSplitterRenderIndex(SplitterType::RIGHT, castedPointer->compareIndex);
+		});
 	uis[(int)ToolStateEnum::AFTER_LIGHTMAP_BAKE]->callbacks.emplace("NewLoadButton", [&] {
 		Light::RadiosityManager::GetInstance().Destroy();
-		Light::RadiosityManager::GetInstance().Initialize();
+		std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
+		Light::RadiosityManager::GetInstance().Initialize(dataManager->Load());
 		UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION); 
 	});
-
 	frameUI = std::make_shared<FrameUI>();
 	frameUI->InitializeUI();
 	loggerUI = std::make_shared<LoggerUI>();
@@ -184,14 +96,16 @@ void LightmapBaker::Renderer::ToolState::Update()
 				LoggerUI::AddLog("texture load failed");
 
 			stbi_image_free(data);
+			glBindTexture(GL_TEXTURE_2D, 0);
 
 			Renderer& renderer = Renderer::GetInstance();
-			renderer.renderMeshList.clear();
+			renderer.ClearRenderMesh(SplitterType::LEFT);
 
 			std::vector<std::shared_ptr<Mesh>> copiedMeshList = threadLightmap->GetAtlasUVMesh();
 			for (auto& mesh : copiedMeshList)
 			{
-				renderer.AddRenderMesh(mesh);
+				mesh->texture = Light::RadiosityManager::GetInstance().texture;
+				renderer.AddRenderMesh(SplitterType::LEFT, mesh);
 			}
 
 			threadLightmap->Destroy();
@@ -240,14 +154,10 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION:
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::BEFORE_LIGHTMAP_BAKE:
-		RenderCompareModel(std::dynamic_pointer_cast<CompareUI>(renderingUI));
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::PROGRESS_LIGHTMAP_BAKE:
 		break;
 	case LightmapBaker::Renderer::ToolStateEnum::AFTER_LIGHTMAP_BAKE:
-		glDisable(GL_TEXTURE_2D);
-		glBindTexture(GL_TEXTURE_2D, 0);
-		RenderCompareModel(std::dynamic_pointer_cast<CompareUI>(renderingUI));
 		break;
 	default:
 		break;
@@ -257,14 +167,19 @@ void LightmapBaker::Renderer::ToolState::RenderCurrentUI()
 	loggerUI->RenderUI();
 }
 
-float LightmapBaker::Renderer::ToolState::GetCompareXPosition()
+float LightmapBaker::Renderer::ToolState::GetSplitXPosition()
 {
 	auto castedPointer = std::dynamic_pointer_cast<CompareUI>(renderingUI);
-	return castedPointer == nullptr ? ImGui::GetMainViewport()->Size.x : castedPointer->comparePositionX;
+	return castedPointer == nullptr ? ImGui::GetMainViewport()->Size.x : castedPointer->splitPositionX;
 }
 
 bool LightmapBaker::Renderer::ToolState::GetIsDrawMeshLine()
 {
 	auto castedPointer = std::dynamic_pointer_cast<CompareUI>(renderingUI);
 	return castedPointer == nullptr ? false : castedPointer->isDrawMeshLine;
+}
+
+GLenum LightmapBaker::Renderer::ToolState::GetMeshDrawMode()
+{
+	return GetIsDrawMeshLine() == true ? (GLenum)GL_LINES : (GLenum)GL_TRIANGLES;
 }

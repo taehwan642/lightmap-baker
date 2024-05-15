@@ -1,13 +1,12 @@
 #include "GLEW/glew.h"
 #include "Light.hpp"
 #include <cmath>
-#include "../Data/DataManager.hpp"
-#include "../Renderer/Renderer.hpp"
 #include "GLFW/glfw3.h"
 #include "GLM/vec2.hpp"
 #include "GLM/geometric.hpp"
+#include "../Renderer/RenderEnums.hpp"
 
-void LightmapBaker::Light::RadiosityManager::Initialize()
+void LightmapBaker::Light::RadiosityManager::Initialize(std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> modelsInput)
 {
     radiosity = std::make_shared<Radiosity>(
         0.0001,
@@ -44,8 +43,7 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
     // r g b a -> times 4
     readBuffer.resize(hemiCube->view->resolutionX * hemiCube->view->resolutionY * 4);
 
-    std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
-    models = dataManager->Load();
+    models = modelsInput;
     for (int i = 0; i < models.size(); ++i)
     {
         models[i]->color = models[i]->reflectance;
@@ -99,7 +97,6 @@ void LightmapBaker::Light::RadiosityManager::Initialize()
         mesh->CreateIndexBuffer();
 
         elements[i]->mesh = mesh;
-        Renderer::Renderer::GetInstance().AddRenderMesh(elements[i]->mesh);
     }
 }
 
@@ -124,10 +121,6 @@ bool LightmapBaker::Light::RadiosityManager::Update()
 void LightmapBaker::Light::RadiosityManager::Destroy()
 {
     hemiCubeRenderTarget.Destroy();
-    for (int i = 0; i < elements.size(); ++i)
-    {
-        Renderer::Renderer::GetInstance().RemoveRenderMesh(elements[i]->mesh);
-    }
 
     models.clear();
     patches.clear();

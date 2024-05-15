@@ -42,6 +42,11 @@ void LightmapBaker::Renderer::Mesh::Initialize()
 
 void LightmapBaker::Renderer::Mesh::Render(RenderOption option)
 {
+	if (texture != 0)
+	{
+		glEnable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, texture);
+	}
 	glColor3f(color.r, color.g, color.b);
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_TEXTURE_COORD_ARRAY);
@@ -54,6 +59,12 @@ void LightmapBaker::Renderer::Mesh::Render(RenderOption option)
 	glDrawElements(option.drawMode, indices.size(), GL_UNSIGNED_INT, nullptr);
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+
+	if (texture != 0)
+	{
+		glDisable(GL_TEXTURE_2D);
+		glBindTexture(GL_TEXTURE_2D, 0);
+	}
 }
 
 void LightmapBaker::Renderer::Mesh::Destroy()

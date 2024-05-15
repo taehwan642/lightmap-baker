@@ -5,29 +5,20 @@
 #include <memory>
 #include "UI.hpp"
 #include "../Light/Lightmap.hpp"
+#include "../Utility/Singleton.hpp"
+#include "RenderEnums.hpp"
 
 namespace LightmapBaker
 {
 namespace Renderer
 {
-	enum class ToolStateEnum
+	class ToolState : public Utility::Singleton<ToolState>
 	{
-		BEFORE_RADIOSITY_CALCULATION,
-		PROGRESS_RADIOSITY_CALCULATION,
-		BEFORE_LIGHTMAP_BAKE,
-		PROGRESS_LIGHTMAP_BAKE,
-		AFTER_LIGHTMAP_BAKE
-	};
+	private:
+		ToolState() = default;
+		~ToolState() = default;
+		friend class Utility::Singleton<ToolState>;
 
-	enum class ThreadState
-	{
-		IDLE,
-		RUNNING,
-		DONE
-	};
-
-	class ToolState
-	{
 	private:
 		ToolStateEnum currentState = ToolStateEnum::BEFORE_RADIOSITY_CALCULATION;
 		std::vector<std::shared_ptr<UI>> uis;
@@ -37,14 +28,14 @@ namespace Renderer
 		ThreadState threadState = ThreadState::IDLE;
 		std::shared_ptr<Light::Lightmap> threadLightmap;
 
-		void RenderCompareModel(std::shared_ptr<CompareUI> compareUI);
 	public:
 		void Initialize();
 		void UpdateCurrentState(const ToolStateEnum& state);
 		void Update();
 		void RenderCurrentUI();
-		float GetCompareXPosition();
+		float GetSplitXPosition();
 		bool GetIsDrawMeshLine();
+		GLenum GetMeshDrawMode();
 	};
 }
 }

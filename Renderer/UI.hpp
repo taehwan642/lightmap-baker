@@ -31,7 +31,7 @@ namespace Renderer
 	class CompareUI : public UI
 	{
 	public:
-		float comparePositionX = 0.0f;
+		float splitPositionX = 0.0f;
 		bool isDrawMeshLine = false;
 		virtual void InitializeUI() override;
 		virtual void RenderUI() override;

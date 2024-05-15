@@ -22,7 +22,7 @@ void LightmapBaker::Renderer::ProgressUI::RenderUI()
 
 void LightmapBaker::Renderer::CompareUI::InitializeUI()
 {
-	comparePositionX = (ImGui::GetMainViewport()->Size.x / 2.0f);
+	splitPositionX = (ImGui::GetMainViewport()->Size.x / 2.0f);
 }
 
 void LightmapBaker::Renderer::CompareUI::RenderUI()
@@ -35,13 +35,13 @@ void LightmapBaker::Renderer::CompareUI::RenderUI()
 
 	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_LeftArrow)))
 	{
-		comparePositionX -= ImGui::GetIO().DeltaTime * 1000.0f;
-		if (comparePositionX < 0.0f) comparePositionX = 0.0f;
+		splitPositionX -= ImGui::GetIO().DeltaTime * 1000.0f;
+		if (splitPositionX < 0.0f) splitPositionX = 0.0f;
 	}
 	if (ImGui::IsKeyDown(ImGui::GetKeyIndex(ImGuiKey_RightArrow)))
 	{
-		comparePositionX += ImGui::GetIO().DeltaTime * 1000.0f;
-		if (ImGui::GetMainViewport()->Size.x < comparePositionX) comparePositionX = ImGui::GetMainViewport()->Size.x;
+		splitPositionX += ImGui::GetIO().DeltaTime * 1000.0f;
+		if (ImGui::GetMainViewport()->Size.x < splitPositionX) splitPositionX = ImGui::GetMainViewport()->Size.x;
 	}
 }
 
@@ -151,6 +151,7 @@ void LightmapBaker::Renderer::AfterLightmapBakeUI::RenderUI()
 			{
 				curItem = items[i];
 				compareIndex = i;
+				callbacks["CompareButton"]();
 			}
 			if (is_selected)
 			{

@@ -26,7 +26,20 @@ int main()
         exit(1);
     }
 
-    Light::RadiosityManager::GetInstance().Initialize();
+    Light::RadiosityManager& radiosityManager = Light::RadiosityManager::GetInstance();
+    radiosityManager.Initialize(dataManager->Load());
+    renderer.SetSplitterRenderIndex(Renderer::SplitterType::RIGHT, 0);
+    for (int i = 0; i < Light::RadiosityManager::GetInstance().models.size(); ++i)
+    {
+        renderer.AddRenderMesh(Renderer::SplitterType::RIGHT, radiosityManager.models[i]);
+    }
+    renderer.SetSplitterRenderIndex(Renderer::SplitterType::RIGHT, 1);
+    for (int i = 0; i < Light::RadiosityManager::GetInstance().elements.size(); ++i)
+    {
+        renderer.AddRenderMesh(Renderer::SplitterType::LEFT, radiosityManager.elements[i]->mesh);
+        renderer.AddRenderMesh(Renderer::SplitterType::RIGHT, radiosityManager.elements[i]->mesh);
+    }
+    renderer.SetSplitterRenderIndex(Renderer::SplitterType::RIGHT, 0);
 
     const int TARGET_FPS = 60;
     double lastTime = glfwGetTime();

@@ -157,7 +157,7 @@ namespace Light
         void ComputeFormFactors(int shootPatchIndex);
         void DistributeRadiosity(int shootPatchIndex);
     public:
-        void Initialize();
+        void Initialize(std::vector<std::shared_ptr<Renderer::Mesh>> modelsInput);
         bool Update();
         void Destroy();
         float InitRadiosityParameter();

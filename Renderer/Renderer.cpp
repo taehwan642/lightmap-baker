@@ -3,6 +3,8 @@
 #include "imgui/imgui_impl_glfw.h"
 #include "imgui/imgui_impl_opengl3.h"
 #include "UI.hpp"
+#include "Camera.hpp"
+#include "ToolState.hpp"
 
 void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scancode, int action, int mods)
 {
@@ -14,32 +16,33 @@ void LightmapBaker::Renderer::KeyCallBack(GLFWwindow* window, int key, int scanc
     
     if (action == GLFW_PRESS || action == GLFW_REPEAT)
     {
-        Renderer& renderer = Renderer::Renderer::GetInstance();
+        Renderer& renderer = Renderer::GetInstance();
+        MainCamera& camera = MainCamera::GetInstance();
         switch (key)
         {
         case GLFW_KEY_W:
-            renderer.camera.position.z += 100.0f * renderer.deltaTime * renderer.camera.speed;
+            camera.position.z += 100.0f * renderer.deltaTime * camera.speed;
             break;
         case GLFW_KEY_A:
-            renderer.camera.position.x += 100.0f * renderer.deltaTime * renderer.camera.speed;
+            camera.position.x += 100.0f * renderer.deltaTime * camera.speed;
             break;
         case GLFW_KEY_S:
-            renderer.camera.position.z -= 100.0f * renderer.deltaTime * renderer.camera.speed;
+            camera.position.z -= 100.0f * renderer.deltaTime * camera.speed;
             break;
         case GLFW_KEY_D:
-            renderer.camera.position.x -= 100.0f * renderer.deltaTime * renderer.camera.speed;
+            camera.position.x -= 100.0f * renderer.deltaTime * camera.speed;
             break;
         case GLFW_KEY_Q:
-            renderer.camera.position.y += 100.0f * renderer.deltaTime * renderer.camera.speed;
+            camera.position.y += 100.0f * renderer.deltaTime * camera.speed;
             break;
         case GLFW_KEY_E:
-            renderer.camera.position.y -= 100.0f * renderer.deltaTime * renderer.camera.speed;
+            camera.position.y -= 100.0f * renderer.deltaTime * camera.speed;
             break;
         case GLFW_KEY_Z:
-            renderer.camera.speed += 50.0f * renderer.deltaTime;
+            camera.speed += 50.0f * renderer.deltaTime;
             break;
         case GLFW_KEY_X:
-            renderer.camera.speed -= 50.0f * renderer.deltaTime;
+            camera.speed -= 50.0f * renderer.deltaTime;
             break;
         default:
             break;
@@ -51,25 +54,30 @@ void LightmapBaker::Renderer::FramebufferSizeCallback(GLFWwindow* window, int wi
 {
     glViewport(0, 0, width, height);
     Renderer& renderer = Renderer::Renderer::GetInstance();
-    renderer.framebufferWidth = width;
-    renderer.framebufferHeight = height;
+    renderer.SetFramebufferSize(width, height);
 }
 
 void LightmapBaker::Renderer::ScrollCallback(GLFWwindow* window, double xoffset, double yoffset)
 {
-    Renderer& renderer = Renderer::Renderer::GetInstance();
-    renderer.camera.distance += yoffset * renderer.camera.speed;
+    MainCamera& camera = MainCamera::GetInstance();
+    camera.distance += yoffset * camera.speed;
 }
 
 void LightmapBaker::Renderer::Renderer::Initialize()
 {
     GLFWInitialize();
     ImGuiInitialize();
+
+    leftSplitter = std::make_shared<Splitter>(SplitterType::LEFT);
+    rightSplitter = std::make_shared<Splitter>(SplitterType::RIGHT);
+
+    leftSplitter->SetFrameBufferWidthHeight(framebufferWidth, framebufferHeight);
+    rightSplitter->SetFrameBufferWidthHeight(framebufferWidth, framebufferHeight);
 }
 
 void LightmapBaker::Renderer::Renderer::Update()
 {
-    toolState.Update();
+    ToolState::GetInstance().Update();
     GLFWUpdate();
     ImGuiUpdate();
 }
@@ -104,6 +112,12 @@ void LightmapBaker::Renderer::Renderer::AddRenderMesh(const std::shared_ptr<Mesh
     renderMeshList.push_back(mesh);
 }
 
+void LightmapBaker::Renderer::Renderer::AddRenderMesh(SplitterType type, const std::shared_ptr<Mesh>& mesh)
+{
+    std::shared_ptr<Splitter>& splitter = type == SplitterType::LEFT ? leftSplitter : rightSplitter;
+    splitter->AddRenderMesh(mesh);
+}
+
 void LightmapBaker::Renderer::Renderer::RemoveRenderMesh(const std::shared_ptr<Mesh>& mesh)
 {
     for (std::vector<std::shared_ptr<Mesh>>::iterator iter = renderMeshList.begin(); iter != renderMeshList.end();)
@@ -117,6 +131,32 @@ void LightmapBaker::Renderer::Renderer::RemoveRenderMesh(const std::shared_ptr<M
             ++iter;
         }
     }
+}
+
+void LightmapBaker::Renderer::Renderer::RemoveRenderMesh(SplitterType type, const std::shared_ptr<Mesh>& mesh)
+{
+    std::shared_ptr<Splitter>& splitter = type == SplitterType::LEFT ? leftSplitter : rightSplitter;
+    splitter->RemoveRenderMesh(mesh);
+}
+
+void LightmapBaker::Renderer::Renderer::ClearRenderMesh(SplitterType type)
+{
+    std::shared_ptr<Splitter>& splitter = type == SplitterType::LEFT ? leftSplitter : rightSplitter;
+    splitter->ClearRenderMesh();
+}
+
+void LightmapBaker::Renderer::Renderer::SetFramebufferSize(int width, int height)
+{
+    framebufferWidth = width;
+    framebufferHeight = height;
+    leftSplitter->SetFrameBufferWidthHeight(width, height);
+    rightSplitter->SetFrameBufferWidthHeight(width, height);
+}
+
+void LightmapBaker::Renderer::Renderer::SetSplitterRenderIndex(SplitterType type, int index)
+{
+    std::shared_ptr<Splitter>& splitter = type == SplitterType::LEFT ? leftSplitter : rightSplitter;
+    splitter->SetRenderIndex(index);
 }
 
 void LightmapBaker::Renderer::Renderer::GLFWInitialize()
@@ -157,6 +197,7 @@ void LightmapBaker::Renderer::Renderer::GLFWUpdate()
     glfwGetCursorPos(glfwWindow, &xPos, &yPos);
     if (glfwGetMouseButton(glfwWindow, GLFW_MOUSE_BUTTON_LEFT) == GLFW_PRESS)
     {
+        MainCamera& camera = MainCamera::GetInstance();
         camera.angle.x += mousePositionX - xPos;
         camera.angle.y += mousePositionY - yPos;
 
@@ -172,46 +213,17 @@ void LightmapBaker::Renderer::Renderer::GLFWUpdate()
 
 void LightmapBaker::Renderer::Renderer::GLFWRender()
 {
-    glMatrixMode(GL_PROJECTION);
-    glLoadIdentity();
-    gluOrtho2D(0, framebufferWidth, framebufferHeight, 0);
-
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    glDisable(GL_TEXTURE_2D);
-
-    glEnable(GL_STENCIL_TEST);
-    glStencilFunc(GL_ALWAYS, 1, 0xFF);
-    glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-    glStencilMask(0xFF);
-    glDepthMask(GL_FALSE);
-    glClear(GL_STENCIL_BUFFER_BIT);
-
-    glColor3f(1, 0.3f, 0.3f);
-    glBegin(GL_QUADS);
-    glVertex2f(0, 0);
-    glVertex2f(toolState.GetCompareXPosition(), 0);
-    glVertex2f(toolState.GetCompareXPosition(), framebufferHeight);
-    glVertex2f(0, framebufferHeight);
-    glEnd();
-    glEnable(GL_TEXTURE_2D);
+    leftSplitter->Render();
+    rightSplitter->Render();
 
     glMatrixMode(GL_PROJECTION);
     glLoadIdentity();
 
+    MainCamera& camera = MainCamera::GetInstance();
     float aspectRatio = screenHeight / (float)screenWidth;
     gluPerspective(80, aspectRatio, 0.01f, camera.distance * 2 + 100);
 
-    glMatrixMode(GL_MODELVIEW);
-    glLoadIdentity();
-
-    float camX = (camera.distance * -sinf(camera.angle.x * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.x;
-    float camY = (camera.distance * -sinf((camera.angle.y) * (M_PI / 180))) + camera.position.y;
-    float camZ = (-camera.distance * cosf((camera.angle.x) * (M_PI / 180)) * cosf((camera.angle.y) * (M_PI / 180))) + camera.position.z;
-    gluLookAt(camX, camY, camZ,
-        camera.position.x, camera.position.y, camera.position.z,
-        0.0, 1.0, 0.0);
+    camera.Render();
 
     glStencilFunc(GL_EQUAL, 1, 0xFF);
     glStencilMask(0x00);
@@ -222,7 +234,7 @@ void LightmapBaker::Renderer::Renderer::GLFWRender()
     glCullFace(GL_BACK);
     for (int i = 0; i < renderMeshList.size(); ++i)
     {
-        renderMeshList[i]->Render({ toolState.GetIsDrawMeshLine() == true ? (GLenum)GL_LINES : (GLenum)GL_TRIANGLES });
+        renderMeshList[i]->Render({ ToolState::GetInstance().GetMeshDrawMode() });
     }
 
     glDisable(GL_STENCIL_TEST);
@@ -236,7 +248,8 @@ void LightmapBaker::Renderer::Renderer::GLFWExit()
     {
         renderMeshList[i]->Destroy();
     }
-
+    leftSplitter->Destroy();
+    rightSplitter->Destroy();
     glfwDestroyWindow(glfwWindow);
     glfwTerminate();
 }
@@ -254,6 +267,7 @@ void LightmapBaker::Renderer::Renderer::ImGuiInitialize()
     ImGui_ImplGlfw_InitForOpenGL(glfwWindow, true);
     ImGui_ImplOpenGL3_Init(glslVersion);
 
+    ToolState& toolState = ToolState::GetInstance();
     toolState.Initialize();
     toolState.UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION);
 }
@@ -267,7 +281,7 @@ void LightmapBaker::Renderer::Renderer::ImGuiUpdate()
 
 void LightmapBaker::Renderer::Renderer::ImGuiRender()
 {
-    toolState.RenderCurrentUI();
+    ToolState::GetInstance().RenderCurrentUI();
 
     ImGui::Render();
     ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());

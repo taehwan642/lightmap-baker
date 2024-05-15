@@ -312,6 +312,12 @@
     <ClInclude Include="Utility\Singleton.hpp">
       <Filter>Utility</Filter>
     </ClInclude>
+    <ClInclude Include="Renderer\Splitter.hpp">
+      <Filter>Renderer</Filter>
+    </ClInclude>
+    <ClInclude Include="Renderer\RenderEnums.hpp">
+      <Filter>Renderer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Data\DataManager.cpp">
@@ -364,6 +370,9 @@
       <Filter>Light</Filter>
     </ClCompile>
     <ClCompile Include="Renderer\UI.cpp">
+      <Filter>Renderer</Filter>
+    </ClCompile>
+    <ClCompile Include="Renderer\Splitter.cpp">
       <Filter>Renderer</Filter>
     </ClCompile>
   </ItemGroup>

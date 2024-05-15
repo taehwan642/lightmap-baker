@@ -34,6 +34,7 @@ namespace Renderer
         glm::vec3 reflectance;
         glm::vec3 emission;
         glm::vec3 color;
+        GLuint texture = 0;
 
     public:
         Mesh();
