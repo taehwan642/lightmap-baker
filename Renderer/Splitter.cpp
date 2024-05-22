@@ -14,6 +14,11 @@ LightmapBaker::Renderer::Splitter::Splitter(SplitterType type) : type(type)
 
 LightmapBaker::Renderer::Splitter::~Splitter()
 {
+    for (auto& iter : renderMeshList)
+    {
+        iter.second.clear();
+    }
+    renderMeshList.clear();
 }
 
 void LightmapBaker::Renderer::Splitter::Render()

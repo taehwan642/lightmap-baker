@@ -10,7 +10,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-LightmapBaker::Renderer::ToolState::ToolState()
+void LightmapBaker::Renderer::ToolState::Initialize()
 {
 	uis.push_back(std::make_shared<BeforeRadiosityCalculationUI>());
 	uis.push_back(std::make_shared<ProgressRadiosityCalculationUI>());

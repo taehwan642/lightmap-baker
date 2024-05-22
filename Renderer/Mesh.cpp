@@ -38,6 +38,9 @@ LightmapBaker::Renderer::Mesh::Mesh(const Mesh& mesh)
 
 LightmapBaker::Renderer::Mesh::~Mesh()
 {
+	glDeleteBuffers(1, &ibo);
+	vertices.clear();
+	indices.clear();
 }
 
 void LightmapBaker::Renderer::Mesh::Render(RenderOption option)

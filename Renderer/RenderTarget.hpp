@@ -9,7 +9,7 @@ namespace LightmapBaker
         class RenderTarget
         {
         public:
-            RenderTarget(glm::vec2 resolution = glm::vec2(1280, 720));
+            RenderTarget(glm::vec2 resolution = glm::vec2(1280.0f, 720.0f));
             ~RenderTarget();
 
             glm::vec2 resolution;

@@ -67,7 +67,7 @@ namespace Light
         glm::vec3 normal;
         glm::vec3 unShotRadiosity;
         float area;
-        Patch(){}
+        Patch() = default;
         Patch(glm::vec3 reflectance, glm::vec3 emission, glm::vec3 center, glm::vec3 normal, glm::vec3 unShotRadiosity, float area)
         {
             this->reflectance = reflectance;

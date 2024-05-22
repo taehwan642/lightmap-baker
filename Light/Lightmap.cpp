@@ -76,6 +76,7 @@ LightmapBaker::Light::Lightmap::~Lightmap()
     atlas_free(outputMesh);
     vertexColors.clear();
     meshVertices.clear();
+    bakedMeshList.clear();
 }
 
 void LightmapBaker::Light::Lightmap::Bake(const std::shared_ptr<Renderer::Mesh>& mesh)

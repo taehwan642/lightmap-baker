@@ -63,6 +63,18 @@ void LightmapBaker::Renderer::ScrollCallback(GLFWwindow* window, double xoffset,
     camera.distance += yoffset * camera.speed;
 }
 
+void LightmapBaker::Renderer::Renderer::Initialize()
+{
+    GLFWInitialize();
+    ImGuiInitialize();
+
+    leftSplitter = std::make_shared<Splitter>(SplitterType::LEFT);
+    rightSplitter = std::make_shared<Splitter>(SplitterType::RIGHT);
+
+    leftSplitter->SetFrameBufferWidthHeight(framebufferWidth, framebufferHeight);
+    rightSplitter->SetFrameBufferWidthHeight(framebufferWidth, framebufferHeight);
+}
+
 void LightmapBaker::Renderer::Renderer::Update()
 {
     ToolState::GetInstance().Update();
@@ -119,18 +131,6 @@ void LightmapBaker::Renderer::Renderer::RemoveRenderMesh(const std::shared_ptr<M
             ++iter;
         }
     }
-}
-
-LightmapBaker::Renderer::Renderer::Renderer()
-{
-    GLFWInitialize();
-    ImGuiInitialize();
-
-    leftSplitter = std::make_shared<Splitter>(SplitterType::LEFT);
-    rightSplitter = std::make_shared<Splitter>(SplitterType::RIGHT);
-
-    leftSplitter->SetFrameBufferWidthHeight(framebufferWidth, framebufferHeight);
-    rightSplitter->SetFrameBufferWidthHeight(framebufferWidth, framebufferHeight);
 }
 
 void LightmapBaker::Renderer::Renderer::RemoveRenderMesh(SplitterType type, const std::shared_ptr<Mesh>& mesh)
@@ -262,6 +262,7 @@ void LightmapBaker::Renderer::Renderer::ImGuiInitialize()
     ImGui_ImplOpenGL3_Init(glslVersion);
 
     ToolState& toolState = ToolState::GetInstance();
+    toolState.Initialize();
     toolState.UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION);
 }
 

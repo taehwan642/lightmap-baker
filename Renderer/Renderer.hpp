@@ -18,6 +18,8 @@ namespace Renderer
     class Renderer : public Utility::Singleton<Renderer>
     {
     private:
+        Renderer() = default;
+        ~Renderer() = default;
         friend class Utility::Singleton<Renderer>;
 
     private:
@@ -52,8 +54,7 @@ namespace Renderer
         void RemoveRenderMesh(const std::shared_ptr<Mesh>& mesh);
 
     public:
-        Renderer();
-
+        void Initialize();
         void Update();
         void BeforeRender();
         void Render();
