@@ -71,6 +71,13 @@ void LightmapBaker::Light::Lightmap::GetInputMesh(const std::vector<std::shared_
     }
 }
 
+LightmapBaker::Light::Lightmap::~Lightmap()
+{
+    atlas_free(outputMesh);
+    vertexColors.clear();
+    meshVertices.clear();
+}
+
 void LightmapBaker::Light::Lightmap::Bake(const std::shared_ptr<Renderer::Mesh>& mesh)
 {
     using namespace Thekla;
@@ -140,11 +147,4 @@ std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> LightmapBaker::Light
         meshList.push_back(mesh);
     }
     return meshList;
-}
-
-void LightmapBaker::Light::Lightmap::Destroy()
-{
-    atlas_free(outputMesh);
-    vertexColors.clear();
-    meshVertices.clear();
 }

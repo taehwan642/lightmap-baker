@@ -18,7 +18,6 @@ int main()
     Renderer::LoggerUI::AddLog(std::to_string(meshList.size()));
 
     Renderer::Renderer& renderer = Renderer::Renderer::GetInstance();
-    renderer.Initialize();
 
     GLenum err = glewInit();
     if (err != GLEW_OK) {

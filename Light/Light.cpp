@@ -5,6 +5,7 @@
 #include "GLM/vec2.hpp"
 #include "GLM/geometric.hpp"
 #include "../Renderer/RenderEnums.hpp"
+#include "../Renderer/UI.hpp"
 
 void LightmapBaker::Light::RadiosityManager::Initialize(std::vector<std::shared_ptr<LightmapBaker::Renderer::Mesh>> modelsInput)
 {
@@ -78,7 +79,7 @@ void LightmapBaker::Light::RadiosityManager::Initialize(std::vector<std::shared_
     totalEnergy = InitRadiosityParameter();
 
     glm::vec2 renderTargetSize = glm::vec2(hemiCube->view->resolutionX, hemiCube->view->resolutionY);
-    hemiCubeRenderTarget.Initialize(renderTargetSize);
+    hemiCubeRenderTarget = std::make_shared<Renderer::RenderTarget>(renderTargetSize);
     Renderer::RenderTarget::BindDefault();
 
     subDividedConvertVertices = subDividedVertices;
@@ -102,7 +103,7 @@ void LightmapBaker::Light::RadiosityManager::Initialize(std::vector<std::shared_
 
 bool LightmapBaker::Light::RadiosityManager::Update()
 {
-    hemiCubeRenderTarget.Bind();
+    hemiCubeRenderTarget->Bind();
     bool done = DoOneIteration();
     Renderer::RenderTarget::BindDefault();
     glClearColor(0.3f, 0.3f, 0.3f, 1.0f);
@@ -120,8 +121,6 @@ bool LightmapBaker::Light::RadiosityManager::Update()
 
 void LightmapBaker::Light::RadiosityManager::Destroy()
 {
-    hemiCubeRenderTarget.Destroy();
-
     models.clear();
     patches.clear();
     elements.clear();

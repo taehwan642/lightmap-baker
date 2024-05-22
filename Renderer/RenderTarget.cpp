@@ -4,7 +4,7 @@
 #include "Renderer.hpp"
 #include "UI.hpp"
 
-void LightmapBaker::Renderer::RenderTarget::Initialize(glm::vec2 resolution)
+LightmapBaker::Renderer::RenderTarget::RenderTarget(glm::vec2 resolution)
 {
     this->resolution = resolution;
     glGenFramebuffers(1, &frameBuffer);
@@ -34,6 +34,13 @@ void LightmapBaker::Renderer::RenderTarget::Initialize(glm::vec2 resolution)
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
+LightmapBaker::Renderer::RenderTarget::~RenderTarget()
+{
+    glDeleteFramebuffers(1, &frameBuffer);
+    glDeleteTextures(1, &renderTexture);
+    glDeleteRenderbuffers(1, &depthBuffer);
+}
+
 void LightmapBaker::Renderer::RenderTarget::BindDefault()
 {
     Renderer& renderer = Renderer::GetInstance();
@@ -46,11 +53,3 @@ void LightmapBaker::Renderer::RenderTarget::Bind()
     glBindFramebuffer(GL_FRAMEBUFFER, frameBuffer);
     glViewport(0, 0, resolution.x, resolution.y);
 }
-
-void LightmapBaker::Renderer::RenderTarget::Destroy()
-{
-    glDeleteFramebuffers(1, &frameBuffer);
-    glDeleteTextures(1, &renderTexture);
-    glDeleteRenderbuffers(1, &depthBuffer);
-}
-

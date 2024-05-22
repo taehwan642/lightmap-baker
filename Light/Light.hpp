@@ -133,7 +133,7 @@ namespace Light
         std::vector<float> formFactors;
         float totalEnergy;
 
-        Renderer::RenderTarget hemiCubeRenderTarget;
+        std::shared_ptr<Renderer::RenderTarget> hemiCubeRenderTarget;
         std::shared_ptr<Renderer::Camera> hemiCubeCamera;
 
         std::vector<UINT8> readBuffer;

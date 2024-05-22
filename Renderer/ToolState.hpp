@@ -15,7 +15,6 @@ namespace Renderer
 	class ToolState : public Utility::Singleton<ToolState>
 	{
 	private:
-		ToolState() = default;
 		~ToolState() = default;
 		friend class Utility::Singleton<ToolState>;
 
@@ -29,7 +28,8 @@ namespace Renderer
 		std::shared_ptr<Light::Lightmap> threadLightmap;
 
 	public:
-		void Initialize();
+		ToolState();
+
 		void UpdateCurrentState(const ToolStateEnum& state);
 		void Update();
 		void RenderCurrentUI();

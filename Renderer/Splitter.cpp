@@ -12,6 +12,10 @@ LightmapBaker::Renderer::Splitter::Splitter(SplitterType type) : type(type)
 {
 }
 
+LightmapBaker::Renderer::Splitter::~Splitter()
+{
+}
+
 void LightmapBaker::Renderer::Splitter::Render()
 {
     if (type == SplitterType::RIGHT)
@@ -83,17 +87,6 @@ void LightmapBaker::Renderer::Splitter::Render()
     glDisable(GL_CULL_FACE);
     glDisable(GL_DEPTH_TEST);
 
-}
-
-void LightmapBaker::Renderer::Splitter::Destroy()
-{
-    for (auto& iter : renderMeshList)
-    {
-        for (int j = 0; j < iter.second.size(); ++j)
-        {
-            iter.second[j]->Destroy();
-        }
-    }
 }
 
 void LightmapBaker::Renderer::Splitter::SetFrameBufferWidthHeight(int width, int height)

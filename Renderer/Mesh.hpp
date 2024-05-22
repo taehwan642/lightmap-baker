@@ -40,9 +40,9 @@ namespace Renderer
         Mesh();
         Mesh(const std::vector<Vertex>& vertices, const std::vector<GLuint>& indices, const glm::vec3& normal, const int& patchLevel, const int& elementLevel, const float& area, const glm::vec3& reflectance, const glm::vec3& emission);
         Mesh(const Mesh& mesh);
-        void Initialize();
+        ~Mesh();
+
         void Render(RenderOption option);
-        void Destroy();
         Vertex GetVertexByIndex(int index);
         void CreateIndexBuffer();
 	};

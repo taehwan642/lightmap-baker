@@ -36,7 +36,7 @@ LightmapBaker::Renderer::Mesh::Mesh(const Mesh& mesh)
 	color = mesh.color;
 }
 
-void LightmapBaker::Renderer::Mesh::Initialize()
+LightmapBaker::Renderer::Mesh::~Mesh()
 {
 }
 
@@ -65,10 +65,6 @@ void LightmapBaker::Renderer::Mesh::Render(RenderOption option)
 		glDisable(GL_TEXTURE_2D);
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
-}
-
-void LightmapBaker::Renderer::Mesh::Destroy()
-{
 }
 
 LightmapBaker::Renderer::Vertex LightmapBaker::Renderer::Mesh::GetVertexByIndex(int index)

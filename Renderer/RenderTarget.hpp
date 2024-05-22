@@ -9,15 +9,16 @@ namespace LightmapBaker
         class RenderTarget
         {
         public:
+            RenderTarget(glm::vec2 resolution = glm::vec2(1280, 720));
+            ~RenderTarget();
+
             glm::vec2 resolution;
             GLuint frameBuffer;
             GLuint renderTexture;
             GLuint depthBuffer;
 
-            void Initialize(glm::vec2 resolution);
             static void BindDefault();
             void Bind();
-            void Destroy();
         };
     }
 }

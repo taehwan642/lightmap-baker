@@ -10,7 +10,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb/stb_image.h"
 
-void LightmapBaker::Renderer::ToolState::Initialize()
+LightmapBaker::Renderer::ToolState::ToolState()
 {
 	uis.push_back(std::make_shared<BeforeRadiosityCalculationUI>());
 	uis.push_back(std::make_shared<ProgressRadiosityCalculationUI>());
@@ -21,11 +21,11 @@ void LightmapBaker::Renderer::ToolState::Initialize()
 	uis[(int)ToolStateEnum::BEFORE_RADIOSITY_CALCULATION]->callbacks.emplace("CalculateRadiosityButton", [&] {
 		UpdateCurrentState(ToolStateEnum::PROGRESS_RADIOSITY_CALCULATION);
 		auto castedPointer = std::dynamic_pointer_cast<ProgressRadiosityCalculationUI>(renderingUI);
-		castedPointer->resolutionX = Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.x;
-		castedPointer->resolutionY = Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.resolution.y;
-		castedPointer->renderTexture = Light::RadiosityManager::GetInstance().hemiCubeRenderTarget.renderTexture;
-	});
-	uis[(int)ToolStateEnum::BEFORE_LIGHTMAP_BAKE]->callbacks.emplace("BakeLightmapButton", [&] { UpdateCurrentState(ToolStateEnum::PROGRESS_LIGHTMAP_BAKE); } );
+		castedPointer->resolutionX = Light::RadiosityManager::GetInstance().hemiCubeRenderTarget->resolution.x;
+		castedPointer->resolutionY = Light::RadiosityManager::GetInstance().hemiCubeRenderTarget->resolution.y;
+		castedPointer->renderTexture = Light::RadiosityManager::GetInstance().hemiCubeRenderTarget->renderTexture;
+		});
+	uis[(int)ToolStateEnum::BEFORE_LIGHTMAP_BAKE]->callbacks.emplace("BakeLightmapButton", [&] { UpdateCurrentState(ToolStateEnum::PROGRESS_LIGHTMAP_BAKE); });
 	uis[(int)ToolStateEnum::AFTER_LIGHTMAP_BAKE]->callbacks.emplace("CompareButton", [&] {
 		auto castedPointer = std::dynamic_pointer_cast<AfterLightmapBakeUI>(renderingUI);
 		Renderer::GetInstance().SetSplitterRenderIndex(SplitterType::RIGHT, castedPointer->compareIndex);
@@ -34,8 +34,8 @@ void LightmapBaker::Renderer::ToolState::Initialize()
 		Light::RadiosityManager::GetInstance().Destroy();
 		std::shared_ptr<Data::DataManager> dataManager = std::make_shared<Data::DataManager>();
 		Light::RadiosityManager::GetInstance().Initialize(dataManager->Load());
-		UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION); 
-	});
+		UpdateCurrentState(ToolStateEnum::BEFORE_RADIOSITY_CALCULATION);
+		});
 	frameUI = std::make_shared<FrameUI>();
 	frameUI->InitializeUI();
 	loggerUI = std::make_shared<LoggerUI>();
@@ -108,7 +108,6 @@ void LightmapBaker::Renderer::ToolState::Update()
 				renderer.AddRenderMesh(SplitterType::LEFT, mesh);
 			}
 
-			threadLightmap->Destroy();
 			threadLightmap = nullptr;
 
 			UpdateCurrentState(ToolStateEnum::AFTER_LIGHTMAP_BAKE);

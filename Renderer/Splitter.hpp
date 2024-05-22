@@ -21,8 +21,9 @@ namespace LightmapBaker
             Splitter();
         public:
             Splitter(SplitterType type);
+            ~Splitter();
+
             void Render();
-            void Destroy();
 
             void SetFrameBufferWidthHeight(int width, int height);
             void SetRenderIndex(int index);
